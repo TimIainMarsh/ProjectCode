@@ -35,10 +35,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tim/git/ResearchProjectCode
+CMAKE_SOURCE_DIR = /home/tim/git/ProjectCode
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tim/git/ResearchProjectCode/build
+CMAKE_BINARY_DIR = /home/tim/git/ProjectCode/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/main.dir/depend.make
@@ -51,17 +51,17 @@ include CMakeFiles/main.dir/flags.make
 
 CMakeFiles/main.dir/main.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/main.cpp.o: ../main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ResearchProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/main.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/main.cpp.o -c /home/tim/git/ResearchProjectCode/main.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/main.cpp.o -c /home/tim/git/ProjectCode/main.cpp
 
 CMakeFiles/main.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/main.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ResearchProjectCode/main.cpp > CMakeFiles/main.dir/main.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ProjectCode/main.cpp > CMakeFiles/main.dir/main.cpp.i
 
 CMakeFiles/main.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/main.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ResearchProjectCode/main.cpp -o CMakeFiles/main.dir/main.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ProjectCode/main.cpp -o CMakeFiles/main.dir/main.cpp.s
 
 CMakeFiles/main.dir/main.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/main.cpp.o.requires
@@ -74,17 +74,17 @@ CMakeFiles/main.dir/main.cpp.o.provides.build: CMakeFiles/main.dir/main.cpp.o
 
 CMakeFiles/main.dir/src/timedate.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/timedate.cpp.o: ../src/timedate.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ResearchProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/src/timedate.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/timedate.cpp.o -c /home/tim/git/ResearchProjectCode/src/timedate.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/timedate.cpp.o -c /home/tim/git/ProjectCode/src/timedate.cpp
 
 CMakeFiles/main.dir/src/timedate.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/timedate.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ResearchProjectCode/src/timedate.cpp > CMakeFiles/main.dir/src/timedate.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ProjectCode/src/timedate.cpp > CMakeFiles/main.dir/src/timedate.cpp.i
 
 CMakeFiles/main.dir/src/timedate.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/timedate.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ResearchProjectCode/src/timedate.cpp -o CMakeFiles/main.dir/src/timedate.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ProjectCode/src/timedate.cpp -o CMakeFiles/main.dir/src/timedate.cpp.s
 
 CMakeFiles/main.dir/src/timedate.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/src/timedate.cpp.o.requires
@@ -97,17 +97,17 @@ CMakeFiles/main.dir/src/timedate.cpp.o.provides.build: CMakeFiles/main.dir/src/t
 
 CMakeFiles/main.dir/src/displayptcloud.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/displayptcloud.cpp.o: ../src/displayptcloud.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ResearchProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/src/displayptcloud.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/displayptcloud.cpp.o -c /home/tim/git/ResearchProjectCode/src/displayptcloud.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/displayptcloud.cpp.o -c /home/tim/git/ProjectCode/src/displayptcloud.cpp
 
 CMakeFiles/main.dir/src/displayptcloud.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/displayptcloud.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ResearchProjectCode/src/displayptcloud.cpp > CMakeFiles/main.dir/src/displayptcloud.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ProjectCode/src/displayptcloud.cpp > CMakeFiles/main.dir/src/displayptcloud.cpp.i
 
 CMakeFiles/main.dir/src/displayptcloud.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/displayptcloud.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ResearchProjectCode/src/displayptcloud.cpp -o CMakeFiles/main.dir/src/displayptcloud.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ProjectCode/src/displayptcloud.cpp -o CMakeFiles/main.dir/src/displayptcloud.cpp.s
 
 CMakeFiles/main.dir/src/displayptcloud.cpp.o.requires:
 .PHONY : CMakeFiles/main.dir/src/displayptcloud.cpp.o.requires
@@ -118,11 +118,35 @@ CMakeFiles/main.dir/src/displayptcloud.cpp.o.provides: CMakeFiles/main.dir/src/d
 
 CMakeFiles/main.dir/src/displayptcloud.cpp.o.provides.build: CMakeFiles/main.dir/src/displayptcloud.cpp.o
 
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: CMakeFiles/main.dir/flags.make
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: ../src/cloudoperations.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_4)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/src/cloudoperations.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/cloudoperations.cpp.o -c /home/tim/git/ProjectCode/src/cloudoperations.cpp
+
+CMakeFiles/main.dir/src/cloudoperations.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/cloudoperations.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ProjectCode/src/cloudoperations.cpp > CMakeFiles/main.dir/src/cloudoperations.cpp.i
+
+CMakeFiles/main.dir/src/cloudoperations.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/cloudoperations.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ProjectCode/src/cloudoperations.cpp -o CMakeFiles/main.dir/src/cloudoperations.cpp.s
+
+CMakeFiles/main.dir/src/cloudoperations.cpp.o.requires:
+.PHONY : CMakeFiles/main.dir/src/cloudoperations.cpp.o.requires
+
+CMakeFiles/main.dir/src/cloudoperations.cpp.o.provides: CMakeFiles/main.dir/src/cloudoperations.cpp.o.requires
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/cloudoperations.cpp.o.provides.build
+.PHONY : CMakeFiles/main.dir/src/cloudoperations.cpp.o.provides
+
+CMakeFiles/main.dir/src/cloudoperations.cpp.o.provides.build: CMakeFiles/main.dir/src/cloudoperations.cpp.o
+
 # Object files for target main
 main_OBJECTS = \
 "CMakeFiles/main.dir/main.cpp.o" \
 "CMakeFiles/main.dir/src/timedate.cpp.o" \
-"CMakeFiles/main.dir/src/displayptcloud.cpp.o"
+"CMakeFiles/main.dir/src/displayptcloud.cpp.o" \
+"CMakeFiles/main.dir/src/cloudoperations.cpp.o"
 
 # External object files for target main
 main_EXTERNAL_OBJECTS =
@@ -130,6 +154,7 @@ main_EXTERNAL_OBJECTS =
 main: CMakeFiles/main.dir/main.cpp.o
 main: CMakeFiles/main.dir/src/timedate.cpp.o
 main: CMakeFiles/main.dir/src/displayptcloud.cpp.o
+main: CMakeFiles/main.dir/src/cloudoperations.cpp.o
 main: CMakeFiles/main.dir/build.make
 main: /usr/lib/x86_64-linux-gnu/libboost_system.so
 main: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so
@@ -141,7 +166,6 @@ main: /usr/lib/x86_64-linux-gnu/libboost_chrono.so
 main: /usr/lib/x86_64-linux-gnu/libpthread.so
 main: /usr/local/lib/libpcl_common.so
 main: /usr/local/lib/libpcl_octree.so
-main: /usr/lib/libOpenNI.so
 main: /usr/lib/libvtkCommon.so.5.8.0
 main: /usr/lib/libvtkFiltering.so.5.8.0
 main: /usr/lib/libvtkImaging.so.5.8.0
@@ -166,6 +190,7 @@ main: /usr/local/lib/libpcl_filters.so
 main: /usr/local/lib/libpcl_features.so
 main: /usr/local/lib/libpcl_segmentation.so
 main: /usr/local/lib/libpcl_visualization.so
+main: /usr/lib/x86_64-linux-gnu/libqhull.so
 main: /usr/local/lib/libpcl_surface.so
 main: /usr/local/lib/libpcl_registration.so
 main: /usr/local/lib/libpcl_keypoints.so
@@ -181,7 +206,7 @@ main: /usr/lib/x86_64-linux-gnu/libboost_iostreams.so
 main: /usr/lib/x86_64-linux-gnu/libboost_serialization.so
 main: /usr/lib/x86_64-linux-gnu/libboost_chrono.so
 main: /usr/lib/x86_64-linux-gnu/libpthread.so
-main: /usr/lib/libOpenNI.so
+main: /usr/lib/x86_64-linux-gnu/libqhull.so
 main: /usr/lib/libflann_cpp_s.a
 main: /usr/lib/libvtkCommon.so.5.8.0
 main: /usr/lib/libvtkFiltering.so.5.8.0
@@ -239,6 +264,7 @@ CMakeFiles/main.dir/build: main
 CMakeFiles/main.dir/requires: CMakeFiles/main.dir/main.cpp.o.requires
 CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/timedate.cpp.o.requires
 CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/displayptcloud.cpp.o.requires
+CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/cloudoperations.cpp.o.requires
 .PHONY : CMakeFiles/main.dir/requires
 
 CMakeFiles/main.dir/clean:
@@ -246,6 +272,6 @@ CMakeFiles/main.dir/clean:
 .PHONY : CMakeFiles/main.dir/clean
 
 CMakeFiles/main.dir/depend:
-	cd /home/tim/git/ResearchProjectCode/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tim/git/ResearchProjectCode /home/tim/git/ResearchProjectCode /home/tim/git/ResearchProjectCode/build /home/tim/git/ResearchProjectCode/build /home/tim/git/ResearchProjectCode/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tim/git/ProjectCode/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tim/git/ProjectCode /home/tim/git/ProjectCode /home/tim/git/ProjectCode/build /home/tim/git/ProjectCode/build /home/tim/git/ProjectCode/build/CMakeFiles/main.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/main.dir/depend
 

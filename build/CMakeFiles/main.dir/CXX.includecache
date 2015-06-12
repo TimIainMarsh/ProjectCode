@@ -6,11 +6,13 @@
 
 #IncludeRegexTransform: 
 
+../includes/cloudoperations.h
+
 ../includes/displayptcloud.h
 
 ../includes/timedate.h
 
-/home/tim/git/ResearchProjectCode/main.cpp
+/home/tim/git/ProjectCode/main.cpp
 iostream
 -
 vector
@@ -32,6 +34,8 @@ boost/thread/thread.hpp
 timedate.h
 -
 displayptcloud.h
+-
+cloudoperations.h
 -
 pcl/filters/passthrough.h
 -

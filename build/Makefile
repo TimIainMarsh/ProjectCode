@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tim/git/ResearchProjectCode
+CMAKE_SOURCE_DIR = /home/tim/git/ProjectCode
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tim/git/ResearchProjectCode/build
+CMAKE_BINARY_DIR = /home/tim/git/ProjectCode/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -73,9 +73,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tim/git/ResearchProjectCode/build/CMakeFiles /home/tim/git/ResearchProjectCode/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tim/git/ProjectCode/build/CMakeFiles /home/tim/git/ProjectCode/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tim/git/ResearchProjectCode/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tim/git/ProjectCode/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -139,6 +139,30 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/cloudoperations.o: src/cloudoperations.cpp.o
+.PHONY : src/cloudoperations.o
+
+# target to build an object file
+src/cloudoperations.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/cloudoperations.cpp.o
+.PHONY : src/cloudoperations.cpp.o
+
+src/cloudoperations.i: src/cloudoperations.cpp.i
+.PHONY : src/cloudoperations.i
+
+# target to preprocess a source file
+src/cloudoperations.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/cloudoperations.cpp.i
+.PHONY : src/cloudoperations.cpp.i
+
+src/cloudoperations.s: src/cloudoperations.cpp.s
+.PHONY : src/cloudoperations.s
+
+# target to generate assembly for a file
+src/cloudoperations.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/cloudoperations.cpp.s
+.PHONY : src/cloudoperations.cpp.s
+
 src/displayptcloud.o: src/displayptcloud.cpp.o
 .PHONY : src/displayptcloud.o
 
@@ -199,6 +223,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... src/cloudoperations.o"
+	@echo "... src/cloudoperations.i"
+	@echo "... src/cloudoperations.s"
 	@echo "... src/displayptcloud.o"
 	@echo "... src/displayptcloud.i"
 	@echo "... src/displayptcloud.s"

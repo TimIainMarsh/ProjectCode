@@ -1,4 +1,4 @@
-# Install script for directory: /home/tim/git/ResearchProjectCode
+# Install script for directory: /home/tim/git/ProjectCode
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,7 +38,7 @@ else()
   set(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 endif()
 
-file(WRITE "/home/tim/git/ResearchProjectCode/build/${CMAKE_INSTALL_MANIFEST}" "")
+file(WRITE "/home/tim/git/ProjectCode/build/${CMAKE_INSTALL_MANIFEST}" "")
 foreach(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  file(APPEND "/home/tim/git/ResearchProjectCode/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  file(APPEND "/home/tim/git/ProjectCode/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 endforeach()
