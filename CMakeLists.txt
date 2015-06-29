@@ -8,6 +8,7 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
+
 include_directories(includes)
 INCLUDE_DIRECTORIES(src)
 
@@ -16,12 +17,14 @@ SET(SOURCE
 
   src/timedate.cpp
   src/displayptcloud.cpp
+  src/cloudoperations.cpp
 )
 
 SET(HEADERS
 
   includes/timedate.h
   includes/displayptcloud.h
+  includes/cloudoperations.h
 )
 
 ADD_EXECUTABLE(main ${SOURCE} ${HEADERS} ${PCL_DIR})

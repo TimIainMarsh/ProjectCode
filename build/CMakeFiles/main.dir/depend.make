@@ -778,6 +778,13 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/fe
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/feature.hpp
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/boost.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/filter.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/filter_indices.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/filter.hpp
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/filter_indices.hpp
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/passthrough.hpp
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/passthrough.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/for_each_type.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/geometry/planar_polygon.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/impl/cloud_iterator.hpp
@@ -818,6 +825,10 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/se
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/search/organized.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/search/pcl_search.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/search/search.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing.hpp
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing_rgb.hpp
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/region_growing_rgb.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/boost.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/cloud_viewer.h
