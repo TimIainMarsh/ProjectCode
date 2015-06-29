@@ -406,6 +406,11 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing_rgb.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h
  /usr/local/include/pcl-1.7/pcl/segmentation/region_growing_rgb.h
+ /usr/local/include/pcl-1.7/pcl/surface/boost.h
+ /usr/local/include/pcl-1.7/pcl/surface/gp3.h
+ /usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
+ /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
+ /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
  /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h
  /usr/local/include/pcl-1.7/pcl/visualization/boost.h
  /usr/local/include/pcl-1.7/pcl/visualization/cloud_viewer.h

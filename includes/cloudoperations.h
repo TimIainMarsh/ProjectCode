@@ -8,11 +8,13 @@ public:
 
     pcl::PointCloud <pcl::PointXYZRGB>::Ptr openCloud(char filename[]);
 
-    void simpleViewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals);
+    void Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals);
 
-    void simpleViewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud);
+    void Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud);
 
-//    pcl::PointCloud <pcl::Normal>::Ptr normalComp(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud);
+    void Viewer(pcl::PolygonMesh triangles);
+
+    pcl::PointCloud <pcl::Normal>::Ptr normalComp(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud);
 
 };
 

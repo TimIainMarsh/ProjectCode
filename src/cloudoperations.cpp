@@ -12,6 +12,7 @@
 
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing_rgb.h>
+
 #include "cloudoperations.h"
 
 
@@ -31,11 +32,12 @@ CloudOperations::openCloud(char filename[]){
     pcl::io::loadPCDFile (filename, *cloud);
 
     return cloud;
+
 }
 
 
 void
-CloudOperations::simpleViewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
+CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
 
     pcl::visualization::CloudViewer viewer ("The Cloud");
     viewer.showCloud (cloud);
@@ -46,7 +48,7 @@ CloudOperations::simpleViewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
 }
 
 void
-CloudOperations::simpleViewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals){
+CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals){
 
 //    std::cout<< "the knn value used is: "<< m_knn<<std::endl;
 
@@ -62,5 +64,34 @@ CloudOperations::simpleViewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl
     {
       viewer.spinOnce ();
     }
+}
+
+void
+CloudOperations::Viewer(pcl::PolygonMesh triangles){
+    pcl::visualization::PCLVisualizer viewer("Simple Cloud Viewer");
+    viewer.addPolygonMesh(triangles);
+    while(!viewer.wasStopped()) {
+       viewer.spinOnce();
+    }
+
+}
+
+pcl::PointCloud<pcl::Normal>::Ptr
+normalComp(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
+
+
+    // estimate normals
+    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
+
+    NormalEstimation<PointXYZRGB, Normal> ne;
+    ne.setInputCloud(cloud);
+
+    search::KdTree<PointXYZRGB>::Ptr tree (new search::KdTree<PointXYZRGB> ());
+    ne.setSearchMethod (tree);
+    ne.setKSearch(50);
+
+    ne.compute(*normals);
+
+    return normals;
 }
 

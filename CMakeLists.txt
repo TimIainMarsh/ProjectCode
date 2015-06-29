@@ -9,8 +9,8 @@ link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
 
-include_directories(includes)
-INCLUDE_DIRECTORIES(src)
+INCLUDE_DIRECTORIES(includes)
+INCLUDE_DIRECTORIES(source)
 
 SET(SOURCE
   main.cpp
@@ -31,4 +31,4 @@ ADD_EXECUTABLE(main ${SOURCE} ${HEADERS} ${PCL_DIR})
 
 
 
-target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} ${PCL_LIBRARIES})

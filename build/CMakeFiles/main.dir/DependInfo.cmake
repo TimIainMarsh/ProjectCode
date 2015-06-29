@@ -33,7 +33,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
   "/usr/local/include/pcl-1.7"
   "/usr/include/eigen3"
   "../includes"
-  "../src"
+  "../source"
   )
 set(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
 set(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
