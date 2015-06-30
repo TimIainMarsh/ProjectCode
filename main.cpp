@@ -106,46 +106,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     return segCloud;
 }
 
-void
-Triangulation(PointCloud<PointXYZ>::Ptr cloud, PointCloud<Normal>::Ptr normals){
-    std::cout<<"Start"<<std::endl;
-
-
-    // Concatenate the XYZ and normal fields*
-    pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals (new pcl::PointCloud<pcl::PointNormal>);
-    pcl::concatenateFields (*cloud, *normals, *cloud_with_normals);
-    //* cloud_with_normals = cloud + normals
-
-    // Create search tree*
-    pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
-    tree2->setInputCloud (cloud_with_normals);
-
-    // Initialize objects
-    pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
-    pcl::PolygonMesh triangles;
-
-    // Set the maximum distance between connected points (maximum edge length)
-    gp3.setSearchRadius (0.025);
-
-    // Set typical values for the parameters
-    gp3.setMu (2.5);
-    gp3.setMaximumNearestNeighbors (150);
-    gp3.setMaximumSurfaceAngle(M_PI/4); // 45 degrees
-    gp3.setMinimumAngle(M_PI/18); // 10 degrees
-    gp3.setMaximumAngle(2*M_PI/3); // 120 degrees
-    gp3.setNormalConsistency(true);
-
-    // Get result
-    gp3.setInputCloud (cloud_with_normals);
-    gp3.setSearchMethod (tree2);
-    gp3.reconstruct (triangles);
-
-
-
-//    CO.Viewer(triangles);
-
-
-}
 
 
 int
@@ -163,9 +123,8 @@ main(int argc, char** argv)
 
     PointCloud<PointXYZ>::Ptr cloud =  CO.openCloud(filename);
 
-//    PointCloud<Normal>::Ptr normals = CO.normalCalc(cloud);
 
-    Triangulation(cloud,normals);
+
 
     tmd.print(1);
     return 0;
