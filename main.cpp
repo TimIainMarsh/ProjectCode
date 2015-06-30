@@ -15,7 +15,7 @@
 
 //my includes
 #include <timedate.h>
-#include <displayptcloud.h>
+//#include <displayptcloud.h>
 #include <cloudoperations.h>
 //region growing
 
@@ -107,25 +107,9 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 }
 
 void
-Triangulation(){
+Triangulation(PointCloud<PointXYZ>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     std::cout<<"Start"<<std::endl;
-    // Load input file into a PointCloud<T> with an appropriate type
-    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
-    pcl::PCLPointCloud2 cloud_blob;
-    pcl::io::loadPCDFile ("../ptClouds/GTL_3 - Cloud.pcd", cloud_blob);
-    pcl::fromPCLPointCloud2 (cloud_blob, *cloud);
-    //* the data should be available in cloud
 
-    // Normal estimation*
-    pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
-    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
-    pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
-    tree->setInputCloud (cloud);
-    n.setInputCloud (cloud);
-    n.setSearchMethod (tree);
-    n.setKSearch (20);
-    n.compute (*normals);
-    //* normals should not contain the point normals + surface curvatures
 
     // Concatenate the XYZ and normal fields*
     pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_normals (new pcl::PointCloud<pcl::PointNormal>);
@@ -157,9 +141,8 @@ Triangulation(){
     gp3.reconstruct (triangles);
 
 
-    CloudOperations CO;
 
-    CO.Viewer(triangles);
+//    CO.Viewer(triangles);
 
 
 }
@@ -176,13 +159,13 @@ main(int argc, char** argv)
     tmd.print(1);
 
 
-
     char filename[] = "../ptClouds/GTL_3 - Cloud.pcd";
-    PointCloud<PointXYZRGB>::Ptr start_cloud = CO.openCloud(filename);
-    std::cout << start_cloud->size() << " points" <<std::endl;
 
+    PointCloud<PointXYZ>::Ptr cloud =  CO.openCloud(filename);
 
-    Triangulation();
+//    PointCloud<Normal>::Ptr normals = CO.normalCalc(cloud);
+
+    Triangulation(cloud,normals);
 
     tmd.print(1);
     return 0;

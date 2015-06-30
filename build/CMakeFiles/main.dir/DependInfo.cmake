@@ -6,7 +6,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/tim/git/ProjectCode/main.cpp" "/home/tim/git/ProjectCode/build/CMakeFiles/main.dir/main.cpp.o"
   "/home/tim/git/ProjectCode/src/cloudoperations.cpp" "/home/tim/git/ProjectCode/build/CMakeFiles/main.dir/src/cloudoperations.cpp.o"
-  "/home/tim/git/ProjectCode/src/displayptcloud.cpp" "/home/tim/git/ProjectCode/build/CMakeFiles/main.dir/src/displayptcloud.cpp.o"
   "/home/tim/git/ProjectCode/src/timedate.cpp" "/home/tim/git/ProjectCode/build/CMakeFiles/main.dir/src/timedate.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")

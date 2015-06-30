@@ -114,13 +114,9 @@
       </Unit>
       <Unit filename="/home/tim/git/ProjectCode/src/cloudoperations.cpp">
       </Unit>
-      <Unit filename="/home/tim/git/ProjectCode/src/displayptcloud.cpp">
-      </Unit>
       <Unit filename="/home/tim/git/ProjectCode/src/timedate.cpp">
       </Unit>
       <Unit filename="/home/tim/git/ProjectCode/includes/cloudoperations.h">
-      </Unit>
-      <Unit filename="/home/tim/git/ProjectCode/includes/displayptcloud.h">
       </Unit>
       <Unit filename="/home/tim/git/ProjectCode/includes/timedate.h">
       </Unit>

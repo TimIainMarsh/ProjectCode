@@ -16,14 +16,14 @@ SET(SOURCE
   main.cpp
 
   src/timedate.cpp
-  src/displayptcloud.cpp
+  #src/displayptcloud.cpp
   src/cloudoperations.cpp
 )
 
 SET(HEADERS
 
   includes/timedate.h
-  includes/displayptcloud.h
+  #includes/displayptcloud.h
   includes/cloudoperations.h
 )
 

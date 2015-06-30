@@ -8,8 +8,6 @@
 
 ../includes/cloudoperations.h
 
-../includes/displayptcloud.h
-
 ../includes/timedate.h
 
 /home/tim/git/ProjectCode/main.cpp
@@ -32,8 +30,6 @@ pcl/visualization/cloud_viewer.h
 pcl/features/normal_3d.h
 -
 timedate.h
--
-displayptcloud.h
 -
 cloudoperations.h
 -

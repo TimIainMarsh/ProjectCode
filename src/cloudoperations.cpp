@@ -23,13 +23,14 @@ CloudOperations::CloudOperations()
     //nothing
 }
 
-pcl::PointCloud <pcl::PointXYZRGB>::Ptr
+
+pcl::PointCloud <pcl::PointXYZ>::Ptr
 CloudOperations::openCloud(char filename[]){
 
-
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
-
-    pcl::io::loadPCDFile (filename, *cloud);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::PCLPointCloud2 cloud_blob;
+    pcl::io::loadPCDFile (filename, cloud_blob);
+    pcl::fromPCLPointCloud2 (cloud_blob, *cloud);
 
     return cloud;
 
@@ -76,22 +77,4 @@ CloudOperations::Viewer(pcl::PolygonMesh triangles){
 
 }
 
-pcl::PointCloud<pcl::Normal>::Ptr
-normalComp(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
-
-
-    // estimate normals
-    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
-
-    NormalEstimation<PointXYZRGB, Normal> ne;
-    ne.setInputCloud(cloud);
-
-    search::KdTree<PointXYZRGB>::Ptr tree (new search::KdTree<PointXYZRGB> ());
-    ne.setSearchMethod (tree);
-    ne.setKSearch(50);
-
-    ne.compute(*normals);
-
-    return normals;
-}
 

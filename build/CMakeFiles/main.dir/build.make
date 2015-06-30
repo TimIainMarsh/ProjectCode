@@ -95,32 +95,9 @@ CMakeFiles/main.dir/src/timedate.cpp.o.provides: CMakeFiles/main.dir/src/timedat
 
 CMakeFiles/main.dir/src/timedate.cpp.o.provides.build: CMakeFiles/main.dir/src/timedate.cpp.o
 
-CMakeFiles/main.dir/src/displayptcloud.cpp.o: CMakeFiles/main.dir/flags.make
-CMakeFiles/main.dir/src/displayptcloud.cpp.o: ../src/displayptcloud.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_3)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/src/displayptcloud.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/displayptcloud.cpp.o -c /home/tim/git/ProjectCode/src/displayptcloud.cpp
-
-CMakeFiles/main.dir/src/displayptcloud.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/main.dir/src/displayptcloud.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tim/git/ProjectCode/src/displayptcloud.cpp > CMakeFiles/main.dir/src/displayptcloud.cpp.i
-
-CMakeFiles/main.dir/src/displayptcloud.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/main.dir/src/displayptcloud.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tim/git/ProjectCode/src/displayptcloud.cpp -o CMakeFiles/main.dir/src/displayptcloud.cpp.s
-
-CMakeFiles/main.dir/src/displayptcloud.cpp.o.requires:
-.PHONY : CMakeFiles/main.dir/src/displayptcloud.cpp.o.requires
-
-CMakeFiles/main.dir/src/displayptcloud.cpp.o.provides: CMakeFiles/main.dir/src/displayptcloud.cpp.o.requires
-	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/displayptcloud.cpp.o.provides.build
-.PHONY : CMakeFiles/main.dir/src/displayptcloud.cpp.o.provides
-
-CMakeFiles/main.dir/src/displayptcloud.cpp.o.provides.build: CMakeFiles/main.dir/src/displayptcloud.cpp.o
-
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: CMakeFiles/main.dir/flags.make
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: ../src/cloudoperations.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tim/git/ProjectCode/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/main.dir/src/cloudoperations.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/main.dir/src/cloudoperations.cpp.o -c /home/tim/git/ProjectCode/src/cloudoperations.cpp
 
@@ -145,7 +122,6 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o.provides.build: CMakeFiles/main.di
 main_OBJECTS = \
 "CMakeFiles/main.dir/main.cpp.o" \
 "CMakeFiles/main.dir/src/timedate.cpp.o" \
-"CMakeFiles/main.dir/src/displayptcloud.cpp.o" \
 "CMakeFiles/main.dir/src/cloudoperations.cpp.o"
 
 # External object files for target main
@@ -153,7 +129,6 @@ main_EXTERNAL_OBJECTS =
 
 main: CMakeFiles/main.dir/main.cpp.o
 main: CMakeFiles/main.dir/src/timedate.cpp.o
-main: CMakeFiles/main.dir/src/displayptcloud.cpp.o
 main: CMakeFiles/main.dir/src/cloudoperations.cpp.o
 main: CMakeFiles/main.dir/build.make
 main: /usr/lib/x86_64-linux-gnu/libboost_system.so
@@ -263,7 +238,6 @@ CMakeFiles/main.dir/build: main
 
 CMakeFiles/main.dir/requires: CMakeFiles/main.dir/main.cpp.o.requires
 CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/timedate.cpp.o.requires
-CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/displayptcloud.cpp.o.requires
 CMakeFiles/main.dir/requires: CMakeFiles/main.dir/src/cloudoperations.cpp.o.requires
 .PHONY : CMakeFiles/main.dir/requires
 
