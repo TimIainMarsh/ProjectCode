@@ -20,7 +20,7 @@
 //region growing
 
 #include <pcl/filters/passthrough.h>
-#include <pcl/segmentation/region_growing_rgb.h>
+#include <pcl/segmentation/region_growing.h>
 
 //triangulation
 #include <pcl/surface/gp3.h>
@@ -29,76 +29,80 @@
 using namespace pcl;
 
 
+pcl::PointCloud<pcl::Normal>::Ptr
+normalCalc(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
 
+    pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> n;
+    pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
+    pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZRGB>);
+    tree->setInputCloud (cloud);
+    n.setInputCloud (cloud);
+    n.setSearchMethod (tree);
+    n.setKSearch (20);
+    n.compute (*normals);
 
-PointCloud <PointXYZRGB>::Ptr
-simpleColourSeg(PointCloud<PointXYZRGB>::Ptr cloud){
-
-    search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
-
-
-    IndicesPtr indices (new std::vector <int>);
-    PassThrough<PointXYZRGB> pass;
-    pass.setInputCloud (cloud);
-//    pass.setFilterFieldName ("z");
-//    pass.setFilterLimits (-10.0, 10.0);
-    pass.filter (*indices);
-
-    RegionGrowingRGB<PointXYZRGB> reg;
-    reg.setInputCloud (cloud);
-    reg.setIndices (indices);
-    reg.setSearchMethod (tree);
-    reg.setDistanceThreshold (10);
-    reg.setPointColorThreshold (6);
-    reg.setRegionColorThreshold (5);
-    reg.setMinClusterSize (600);
-
-    std::vector <PointIndices> clusters;
-    reg.extract (clusters);
-    PointCloud <PointXYZRGB>::Ptr colored_cloud = reg.getColoredCloud ();
-    return colored_cloud;
+    return normals;
 }
+
+
+//PointCloud <PointXYZRGB>::Ptr
+//simpleColourSeg(PointCloud<PointXYZRGB>::Ptr cloud){
+
+//    search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
+
+
+//    IndicesPtr indices (new std::vector <int>);
+//    PassThrough<PointXYZRGB> pass;
+//    pass.setInputCloud (cloud);
+////    pass.setFilterFieldName ("z");
+////    pass.setFilterLimits (-10.0, 10.0);
+//    pass.filter (*indices);
+
+//    RegionGrowing<PointXYZ, Normal> reg;
+//    reg.setInputCloud (cloud);
+//    reg.setIndices (indices);
+//    reg.setSearchMethod (tree);
+//    reg.setDistanceThreshold (10);
+//    reg.setPointColorThreshold (6);
+//    reg.setRegionColorThreshold (5);
+//    reg.setMinClusterSize (600);
+
+//    std::vector <PointIndices> clusters;
+//    reg.extract (clusters);
+//    PointCloud <PointXYZRGB>::Ptr colored_cloud = reg.getColoredCloud ();
+//    return colored_cloud;
+//}
 
 
 PointCloud<PointXYZRGB>::Ptr
 segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
-    int min_cluster = 600;
-    int max_cluster = 100000;
+//    int min_cluster = 50;
+//    int max_cluster = 10000000;
 
 
     search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
 
-    IndicesPtr indices (new std::vector <int>);
-    PassThrough<PointXYZRGB> pass;
+
+    pcl::IndicesPtr indices (new std::vector <int>);
+    pcl::PassThrough<pcl::PointXYZRGB> pass;
     pass.setInputCloud (cloud);
+    pass.setFilterFieldName ("z");
+    pass.setFilterLimits (0.0, 1.0);
     pass.filter (*indices);
-//    pass.setFilterFieldName ("z");
-//    pass.setFilterLimits (-5.0, 0.0);
-    pass.filter (*indices);
 
-    RegionGrowingRGB<PointXYZRGB> reg;
-
-    reg.setMinClusterSize (min_cluster);
-    reg.setMaxClusterSize (max_cluster);
-
-    reg.setInputCloud (cloud);
-    reg.setInputNormals (normals);
-    reg.setIndices (indices);
+    pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
+    reg.setMinClusterSize (50);
+    reg.setMaxClusterSize (1000000);
     reg.setSearchMethod (tree);
-
-    reg.setNumberOfNeighbours(30);
-
-//    reg.setDistanceThreshold (10);
-//    reg.setPointColorThreshold (6);
-//    reg.setRegionColorThreshold (5);
-
-
-    reg.setSmoothnessThreshold (3.0 / 180.0 * 3.14);
+    reg.setNumberOfNeighbours (30);
+    reg.setInputCloud (cloud);
+    //reg.setIndices (indices);
+    reg.setInputNormals (normals);
+    reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
     reg.setCurvatureThreshold (1.0);
 
-
-    std::vector <PointIndices> clusters;
+    std::vector <pcl::PointIndices> clusters;
     reg.extract (clusters);
 
     PointCloud<PointXYZRGB>::Ptr segCloud = reg.getColoredCloud();
@@ -121,11 +125,13 @@ main(int argc, char** argv)
 
     char filename[] = "../ptClouds/GTL_3 - Cloud.pcd";
 
-    PointCloud<PointXYZ>::Ptr cloud =  CO.openCloud(filename);
+    PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename);
 
+    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
 
+    PointCloud<PointXYZRGB>::Ptr segCloud = segmentor(cloud, normals);
 
-
+    CO.Viewer(segCloud);
     tmd.print(1);
     return 0;
 }

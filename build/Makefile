@@ -163,6 +163,30 @@ src/cloudoperations.cpp.s:
 	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/cloudoperations.cpp.s
 .PHONY : src/cloudoperations.cpp.s
 
+src/displayptcloud.o: src/displayptcloud.cpp.o
+.PHONY : src/displayptcloud.o
+
+# target to build an object file
+src/displayptcloud.cpp.o:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/displayptcloud.cpp.o
+.PHONY : src/displayptcloud.cpp.o
+
+src/displayptcloud.i: src/displayptcloud.cpp.i
+.PHONY : src/displayptcloud.i
+
+# target to preprocess a source file
+src/displayptcloud.cpp.i:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/displayptcloud.cpp.i
+.PHONY : src/displayptcloud.cpp.i
+
+src/displayptcloud.s: src/displayptcloud.cpp.s
+.PHONY : src/displayptcloud.s
+
+# target to generate assembly for a file
+src/displayptcloud.cpp.s:
+	$(MAKE) -f CMakeFiles/main.dir/build.make CMakeFiles/main.dir/src/displayptcloud.cpp.s
+.PHONY : src/displayptcloud.cpp.s
+
 src/timedate.o: src/timedate.cpp.o
 .PHONY : src/timedate.o
 
@@ -202,6 +226,9 @@ help:
 	@echo "... src/cloudoperations.o"
 	@echo "... src/cloudoperations.i"
 	@echo "... src/cloudoperations.s"
+	@echo "... src/displayptcloud.o"
+	@echo "... src/displayptcloud.i"
+	@echo "... src/displayptcloud.s"
 	@echo "... src/timedate.o"
 	@echo "... src/timedate.i"
 	@echo "... src/timedate.s"
