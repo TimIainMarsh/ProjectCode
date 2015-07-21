@@ -44,40 +44,10 @@ normalCalc(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
 }
 
 
-//PointCloud <PointXYZRGB>::Ptr
-//simpleColourSeg(PointCloud<PointXYZRGB>::Ptr cloud){
-
-//    search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
-
-
-//    IndicesPtr indices (new std::vector <int>);
-//    PassThrough<PointXYZRGB> pass;
-//    pass.setInputCloud (cloud);
-////    pass.setFilterFieldName ("z");
-////    pass.setFilterLimits (-10.0, 10.0);
-//    pass.filter (*indices);
-
-//    RegionGrowing<PointXYZ, Normal> reg;
-//    reg.setInputCloud (cloud);
-//    reg.setIndices (indices);
-//    reg.setSearchMethod (tree);
-//    reg.setDistanceThreshold (10);
-//    reg.setPointColorThreshold (6);
-//    reg.setRegionColorThreshold (5);
-//    reg.setMinClusterSize (600);
-
-//    std::vector <PointIndices> clusters;
-//    reg.extract (clusters);
-//    PointCloud <PointXYZRGB>::Ptr colored_cloud = reg.getColoredCloud ();
-//    return colored_cloud;
-//}
-
 
 PointCloud<PointXYZRGB>::Ptr
 segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
-//    int min_cluster = 50;
-//    int max_cluster = 10000000;
 
 
     search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
