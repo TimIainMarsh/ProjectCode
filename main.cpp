@@ -25,7 +25,6 @@
 //triangulation
 #include <pcl/surface/gp3.h>
 
-
 using namespace pcl;
 
 
@@ -38,7 +37,7 @@ normalCalc(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
     tree->setInputCloud (cloud);
     n.setInputCloud (cloud);
     n.setSearchMethod (tree);
-    n.setKSearch (20);
+    n.setKSearch (40);
     n.compute (*normals);
 
     return normals;
@@ -87,15 +86,16 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     pcl::IndicesPtr indices (new std::vector <int>);
     pcl::PassThrough<pcl::PointXYZRGB> pass;
     pass.setInputCloud (cloud);
-    pass.setFilterFieldName ("z");
-    pass.setFilterLimits (0.0, 1.0);
+//    pass.setFilterFieldName ("z");
+//    pass.setFilterLimits (0.0, 1.0);
     pass.filter (*indices);
 
     pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
-    reg.setMinClusterSize (50);
-    reg.setMaxClusterSize (1000000);
+
+    reg.setMinClusterSize (30);
+
     reg.setSearchMethod (tree);
-    reg.setNumberOfNeighbours (30);
+    reg.setNumberOfNeighbours (40);
     reg.setInputCloud (cloud);
     //reg.setIndices (indices);
     reg.setInputNormals (normals);
@@ -126,13 +126,14 @@ main(int argc, char** argv)
     char filename[] = "../ptClouds/GTL_3 - Cloud.pcd";
 
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename);
-
+    tmd.print(1);
     PointCloud<Normal>::Ptr normals = normalCalc(cloud);
-
+    tmd.print(1);
     PointCloud<PointXYZRGB>::Ptr segCloud = segmentor(cloud, normals);
-
+    tmd.print(1);
     CO.Viewer(segCloud);
     tmd.print(1);
+
     return 0;
 }
 
