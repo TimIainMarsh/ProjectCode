@@ -17,6 +17,7 @@
 
 
 using namespace pcl;
+using namespace std;
 
 CloudOperations::CloudOperations()
 {
@@ -38,19 +39,30 @@ CloudOperations::openCloud(char filename[]){
 
 
 void
-CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
+CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, std::vector <pcl::ModelCoefficients::Ptr> coeff){
 
     pcl::visualization::PCLVisualizer viewer("Cloud and Normals");
 
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
     viewer.addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "sample cloud");
 
-    pcl::ModelCoefficients coeffs;
-    coeffs.values.push_back (0.0);
-    coeffs.values.push_back (0.0);
-    coeffs.values.push_back (1.0);
-    coeffs.values.push_back (0.0);
-    viewer.addPlane (coeffs, "plane");
+//    pcl::ModelCoefficients coeffs;
+//    coeffs.values.push_back (-0.00137426 );
+//    coeffs.values.push_back ( 0.00015838 );
+//    coeffs.values.push_back ( 0.999999 );
+//    coeffs.values.push_back ( 1.74278);
+//    viewer.addPlane (coeffs, "plane");
+
+    for (int i=0; i < coeff.size(); i++){
+//        cout<< typeid(coeff[i]).name() <<endl;
+        string Result;
+        ostringstream convert;
+        convert << i;
+        Result = convert.str();
+
+        viewer.addPlane (*coeff[i],0,0,0,Result);
+
+    }
 
     while (!viewer.wasStopped ())
     {

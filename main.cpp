@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <tuple>
 
 //generic
 #include <pcl/point_types.h>
@@ -48,11 +49,11 @@ normalCalc(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
     return normals;
 }
 
-void
+pcl::ModelCoefficients::Ptr
 planeFitting(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
     /*http://pointclouds.org/documentation/tutorials/planar_segmentation.php*/
 
-    std::cout<<cloud->size()<<std::endl;
+//    std::cout<<cloud->size()<<std::endl;
 
     pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers (new pcl::PointIndices);
@@ -75,15 +76,16 @@ planeFitting(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
       exit(-1);
     }
 
-    std::cerr << "Model coefficients: " << coefficients->values[0] << " "
-                                        << coefficients->values[1] << " "
-                                        << coefficients->values[2] << " "
-                                        << coefficients->values[3] << std::endl; // 0=a, 1=b,2=c,3=d
+//    std::cerr << "Model coefficients: " << coefficients->values[0] << " "
+//                                        << coefficients->values[1] << " "
+//                                        << coefficients->values[2] << " "
+//                                        << coefficients->values[3] << std::endl; // 0=a, 1=b,2=c,3=d
 
+    return coefficients;
 
 }
 
-PointCloud<PointXYZRGB>::Ptr
+std::tuple<PointCloud<PointXYZRGB>::Ptr, std::vector <pcl::ModelCoefficients::Ptr>>
 segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
     /*http://pointclouds.org/documentation/tutorials/region_growing_segmentation.php*/
@@ -107,8 +109,8 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     reg.setInputCloud (cloud);
     //reg.setIndices (indices);
     reg.setInputNormals (normals);
-    reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
-    reg.setCurvatureThreshold (1.0);
+//    reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
+//    reg.setCurvatureThreshold (1.0);
 
     std::vector <pcl::PointIndices> clusters;
     reg.extract (clusters);
@@ -127,17 +129,30 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     pcl::PointCloud <pcl::PointXYZRGB>::Ptr result(new pcl::PointCloud <pcl::PointXYZRGB>);
     pcl::ExtractIndices<pcl::PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (segCloud);
+
+    std::vector <pcl::ModelCoefficients::Ptr> coeff;
+
     for (int i=0; i < clusters.size(); i++){
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr im(new pcl::PointCloud <pcl::PointXYZRGB>);
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr im2(new pcl::PointCloud <pcl::PointXYZRGB>);
         im2 = result;
         filtrerG.setIndices(my_clusters[i]);
         filtrerG.filter(*im);
-        planeFitting(im);
+
+
+       Eigen::Vector4f centroid;
+       pcl::compute3DCentroid(*im,centroid);
+       //cout<<new_centroid[0] << endl << new_centroid[1] << endl << new_centroid[2] << endl;
+
+
+        pcl::ModelCoefficients::Ptr coefficients = planeFitting(im);
+        coeff.push_back(coefficients);
+
         *result = (*im) + (*im2);
         }
 
-    return result;
+
+    return  std::make_tuple( result, coeff );
 }
 
 //planeFitting(fourth);
@@ -160,12 +175,15 @@ main(int argc, char** argv)
 
     PointCloud<Normal>::Ptr normals = normalCalc(cloud);
 
-    PointCloud<PointXYZRGB>::Ptr  segmented_cloud = segmentor(cloud, normals);
+    PointCloud<PointXYZRGB>::Ptr segmentedCloud;
+    std::vector <pcl::ModelCoefficients::Ptr> coeff;
+
+    std::tie(segmentedCloud, coeff) = segmentor(cloud, normals);
 
 
 
 
-    CO.Viewer(segmented_cloud);
+    CO.Viewer(segmentedCloud,coeff);
     tmd.print(1);
 
     return 0;
@@ -181,21 +199,6 @@ main(int argc, char** argv)
 
 
 
-
-//std::vector <pcl::PointIndices::Ptr> my_clusters;
-//my_clusters.resize(clusters.size());
-//for (int i=0; i < clusters.size(); i++)
-//{
-//     pcl::PointIndices::Ptr tmp_clusterR(new  pcl::PointIndices(clusters[i]));
-//     my_clusters[i] = tmp_clusterR;
-//}
-
-
-//pcl::PointCloud <pcl::PointXYZRGB>::Ptr fourth(new pcl::PointCloud <pcl::PointXYZRGB>);
-//pcl::ExtractIndices<pcl::PointXYZRGB> filtrerG (true);
-//filtrerG.setInputCloud (cloud);
-//filtrerG.setIndices(my_clusters[0]); //indices of the fouth cluster.
-//filtrerG.filter(*fourth);
 
 
 
