@@ -8,6 +8,8 @@
 
 ../includes/cloudoperations.h
 
+../includes/displayptcloud.h
+
 ../includes/timedate.h
 
 /home/tim/git/ProjectCode/main.cpp
@@ -31,13 +33,17 @@ pcl/features/normal_3d.h
 -
 timedate.h
 -
+displayptcloud.h
+-
 cloudoperations.h
 -
 pcl/filters/passthrough.h
 -
 pcl/segmentation/region_growing.h
 -
-pcl/surface/gp3.h
+pcl/filters/extract_indices.h
+-
+pcl/common/projection_matrix.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky
@@ -2042,6 +2048,12 @@ boost/function.hpp
 boost/optional.hpp
 -
 
+/usr/local/include/pcl-1.7/pcl/filters/extract_indices.h
+pcl/filters/filter_indices.h
+-
+pcl/filters/impl/extract_indices.hpp
+-
+
 /usr/local/include/pcl-1.7/pcl/filters/filter.h
 pcl/pcl_base.h
 -
@@ -2060,6 +2072,12 @@ pcl/filters/impl/filter.hpp
 pcl/filters/filter.h
 -
 pcl/filters/impl/filter_indices.hpp
+-
+
+/usr/local/include/pcl-1.7/pcl/filters/impl/extract_indices.hpp
+pcl/filters/extract_indices.h
+-
+pcl/common/io.h
 -
 
 /usr/local/include/pcl-1.7/pcl/filters/impl/filter.hpp
@@ -2634,64 +2652,6 @@ math.h
 time.h
 -
 pcl/segmentation/impl/region_growing.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/surface/boost.h
-boost/bind.hpp
--
-boost/function.hpp
--
-boost/random.hpp
--
-boost/unordered_map.hpp
--
-boost/dynamic_bitset/dynamic_bitset.hpp
--
-boost/shared_ptr.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/surface/gp3.h
-pcl/surface/reconstruction.h
--
-pcl/surface/boost.h
--
-pcl/conversions.h
--
-pcl/kdtree/kdtree.h
--
-pcl/kdtree/kdtree_flann.h
--
-pcl/PolygonMesh.h
--
-fstream
--
-iostream
--
-pcl/surface/impl/gp3.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
-pcl/surface/gp3.h
--
-pcl/kdtree/impl/kdtree_flann.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
-pcl/search/pcl_search.h
--
-
-/usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
-pcl/pcl_base.h
--
-pcl/PolygonMesh.h
--
-pcl/search/pcl_search.h
--
-pcl/conversions.h
--
-pcl/surface/boost.h
--
-pcl/surface/impl/reconstruction.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h

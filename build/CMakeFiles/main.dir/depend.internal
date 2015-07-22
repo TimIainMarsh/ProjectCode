@@ -3,6 +3,7 @@
 
 CMakeFiles/main.dir/main.cpp.o
  ../includes/cloudoperations.h
+ ../includes/displayptcloud.h
  ../includes/timedate.h
  /home/tim/git/ProjectCode/main.cpp
  /usr/include/eigen3/Eigen/Cholesky
@@ -355,8 +356,10 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
  /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
  /usr/local/include/pcl-1.7/pcl/filters/boost.h
+ /usr/local/include/pcl-1.7/pcl/filters/extract_indices.h
  /usr/local/include/pcl-1.7/pcl/filters/filter.h
  /usr/local/include/pcl-1.7/pcl/filters/filter_indices.h
+ /usr/local/include/pcl-1.7/pcl/filters/impl/extract_indices.hpp
  /usr/local/include/pcl-1.7/pcl/filters/impl/filter.hpp
  /usr/local/include/pcl-1.7/pcl/filters/impl/filter_indices.hpp
  /usr/local/include/pcl-1.7/pcl/filters/impl/passthrough.hpp
@@ -403,11 +406,6 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/search/search.h
  /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h
- /usr/local/include/pcl-1.7/pcl/surface/boost.h
- /usr/local/include/pcl-1.7/pcl/surface/gp3.h
- /usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
- /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
- /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
  /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h
  /usr/local/include/pcl-1.7/pcl/visualization/boost.h
  /usr/local/include/pcl-1.7/pcl/visualization/cloud_viewer.h
