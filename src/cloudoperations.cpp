@@ -60,7 +60,7 @@ CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, std::vect
         convert << i;
         Result = convert.str();
 
-        viewer.addPlane (*coeff[i],0,0,0,Result);
+        viewer.addPlane (*coeff[i],1,1,1,Result,0);
 
     }
 
