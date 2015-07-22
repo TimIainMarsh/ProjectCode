@@ -8,11 +8,7 @@
 
 ../includes/cloudoperations.h
 
-../includes/displayptcloud.h
-
-../includes/timedate.h
-
-/home/tim/git/ProjectCode/main.cpp
+/home/tim/git/ProjectCode/src/cloudoperations.cpp
 iostream
 -
 vector
@@ -25,26 +21,18 @@ pcl/search/search.h
 -
 pcl/search/kdtree.h
 -
-boost/thread/thread.hpp
--
 pcl/visualization/cloud_viewer.h
 -
 pcl/features/normal_3d.h
 -
-timedate.h
--
-displayptcloud.h
--
-cloudoperations.h
+boost/thread/thread.hpp
 -
 pcl/filters/passthrough.h
 -
-pcl/segmentation/region_growing.h
+pcl/segmentation/region_growing_rgb.h
 -
-pcl/filters/extract_indices.h
--
-pcl/common/projection_matrix.h
--
+cloudoperations.h
+/home/tim/git/ProjectCode/src/cloudoperations.h
 
 /usr/include/eigen3/Eigen/Cholesky
 Core
@@ -2048,12 +2036,6 @@ boost/function.hpp
 boost/optional.hpp
 -
 
-/usr/local/include/pcl-1.7/pcl/filters/extract_indices.h
-pcl/filters/filter_indices.h
--
-pcl/filters/impl/extract_indices.hpp
--
-
 /usr/local/include/pcl-1.7/pcl/filters/filter.h
 pcl/pcl_base.h
 -
@@ -2072,12 +2054,6 @@ pcl/filters/impl/filter.hpp
 pcl/filters/filter.h
 -
 pcl/filters/impl/filter_indices.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/filters/impl/extract_indices.hpp
-pcl/filters/extract_indices.h
--
-pcl/common/io.h
 -
 
 /usr/local/include/pcl-1.7/pcl/filters/impl/filter.hpp
@@ -2636,6 +2612,16 @@ cmath
 time.h
 -
 
+/usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing_rgb.hpp
+pcl/segmentation/region_growing_rgb.h
+-
+pcl/search/search.h
+-
+pcl/search/kdtree.h
+-
+queue
+-
+
 /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h
 pcl/pcl_base.h
 -
@@ -2652,6 +2638,12 @@ math.h
 time.h
 -
 pcl/segmentation/impl/region_growing.hpp
+-
+
+/usr/local/include/pcl-1.7/pcl/segmentation/region_growing_rgb.h
+pcl/segmentation/region_growing.h
+-
+pcl/segmentation/impl/region_growing_rgb.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h

@@ -45,7 +45,12 @@ CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
     viewer.addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "sample cloud");
 
-    viewer.setBackgroundColor (0.0, 0.0, 0.0);
+    pcl::ModelCoefficients coeffs;
+    coeffs.values.push_back (0.0);
+    coeffs.values.push_back (0.0);
+    coeffs.values.push_back (1.0);
+    coeffs.values.push_back (0.0);
+    viewer.addPlane (coeffs, "plane");
 
     while (!viewer.wasStopped ())
     {
