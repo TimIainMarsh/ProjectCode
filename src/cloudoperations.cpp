@@ -71,6 +71,22 @@ CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, std::vect
 }
 
 void
+CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
+
+    pcl::visualization::PCLVisualizer viewer("Cloud and Normals");
+
+    pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
+    viewer.addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "sample cloud");
+
+    viewer.setBackgroundColor (0.0, 0.0, 0.0);
+
+    while (!viewer.wasStopped ())
+    {
+      viewer.spinOnce ();
+    }
+}
+
+void
 CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals){
 
     pcl::visualization::PCLVisualizer viewer("Cloud and Normals");

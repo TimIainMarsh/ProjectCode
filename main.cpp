@@ -96,21 +96,20 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     pcl::IndicesPtr indices (new std::vector <int>);
     pcl::PassThrough<pcl::PointXYZRGB> pass;
     pass.setInputCloud (cloud);
-//    pass.setFilterFieldName ("z");
-//    pass.setFilterLimits (0.0, 1.0);
+
     pass.filter (*indices);
 
     pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
 
-    reg.setMinClusterSize (100);
+    reg.setMinClusterSize (200);
 
     reg.setSearchMethod (tree);
     reg.setNumberOfNeighbours (20); //20
     reg.setInputCloud (cloud);
     //reg.setIndices (indices);
     reg.setInputNormals (normals);
-//    reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
-//    reg.setCurvatureThreshold (1.0);
+    reg.setSmoothnessThreshold (3.0 / 180.0 * M_PI);
+    reg.setCurvatureThreshold (1.0);
 
     std::vector <pcl::PointIndices> clusters;
     reg.extract (clusters);
@@ -136,7 +135,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr im(new pcl::PointCloud <pcl::PointXYZRGB>);
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr im2(new pcl::PointCloud <pcl::PointXYZRGB>);
         im2 = result;
-        filtrerG.setIndices(my_clusters[i]);
+        filtrerG.setIndices(my_clusters[1]);
         filtrerG.filter(*im);
 
 
@@ -155,7 +154,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     return  std::make_tuple( result, coeff );
 }
 
-//planeFitting(fourth);
 
 int
 main(int argc, char** argv)
@@ -182,8 +180,8 @@ main(int argc, char** argv)
 
 
 
-
-    CO.Viewer(segmentedCloud,coeff);
+    tmd.print(1);
+    CO.Viewer(segmentedCloud);
     tmd.print(1);
 
     return 0;
