@@ -166,6 +166,7 @@ main: /usr/lib/x86_64-linux-gnu/libboost_chrono.so
 main: /usr/lib/x86_64-linux-gnu/libpthread.so
 main: /usr/local/lib/libpcl_common.so
 main: /usr/local/lib/libpcl_octree.so
+main: /usr/lib/libOpenNI.so
 main: /usr/lib/libvtkCommon.so.5.8.0
 main: /usr/lib/libvtkFiltering.so.5.8.0
 main: /usr/lib/libvtkImaging.so.5.8.0
@@ -207,6 +208,7 @@ main: /usr/lib/x86_64-linux-gnu/libboost_serialization.so
 main: /usr/lib/x86_64-linux-gnu/libboost_chrono.so
 main: /usr/lib/x86_64-linux-gnu/libpthread.so
 main: /usr/lib/x86_64-linux-gnu/libqhull.so
+main: /usr/lib/libOpenNI.so
 main: /usr/lib/libflann_cpp_s.a
 main: /usr/lib/libvtkCommon.so.5.8.0
 main: /usr/lib/libvtkFiltering.so.5.8.0

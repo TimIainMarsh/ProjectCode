@@ -13,7 +13,6 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # Preprocessor definitions for this target.
 set(CMAKE_TARGET_DEFINITIONS
-  "DISABLE_OPENNI"
   "DISABLE_OPENNI2"
   "DISABLE_PCAP"
   "DISABLE_PNG"
@@ -32,6 +31,7 @@ set(CMAKE_C_TARGET_INCLUDE_PATH
   "/usr/include/vtk-5.8"
   "/usr/local/include/pcl-1.7"
   "/usr/include/eigen3"
+  "/usr/include/openni"
   "../includes"
   "../source"
   )

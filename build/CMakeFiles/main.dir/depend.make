@@ -357,10 +357,12 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/copy_
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/eigen.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/io.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/projection_matrix.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/transforms.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/io.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/point_tests.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/projection_matrix.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/time.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/transforms.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/console/print.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/conversions.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/correspondence.h
@@ -470,6 +472,14 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/sac_segmentation.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/sac_segmentation.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/boost.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/concave_hull.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/convex_hull.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/concave_hull.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/convex_hull.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/qhull.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/boost.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/cloud_viewer.h

@@ -34,7 +34,6 @@
          <Option type="1" />
          <Option compiler="gcc" />
          <Compiler>
-            <Add option="-DDISABLE_OPENNI" />
             <Add option="-DDISABLE_OPENNI2" />
             <Add option="-DDISABLE_PCAP" />
             <Add option="-DDISABLE_PNG" />
@@ -48,6 +47,7 @@
             <Add directory="/usr/include/c++/4.9" />
             <Add directory="/usr/include/c++/4.9/backward" />
             <Add directory="/usr/include/eigen3" />
+            <Add directory="/usr/include/openni" />
             <Add directory="/usr/include/vtk-5.8" />
             <Add directory="/usr/include/x86_64-linux-gnu" />
             <Add directory="/usr/include/x86_64-linux-gnu/c++/4.9" />
@@ -70,7 +70,6 @@
          <Option type="1" />
          <Option compiler="gcc" />
          <Compiler>
-            <Add option="-DDISABLE_OPENNI" />
             <Add option="-DDISABLE_OPENNI2" />
             <Add option="-DDISABLE_PCAP" />
             <Add option="-DDISABLE_PNG" />
@@ -84,6 +83,7 @@
             <Add directory="/usr/include/c++/4.9" />
             <Add directory="/usr/include/c++/4.9/backward" />
             <Add directory="/usr/include/eigen3" />
+            <Add directory="/usr/include/openni" />
             <Add directory="/usr/include/vtk-5.8" />
             <Add directory="/usr/include/x86_64-linux-gnu" />
             <Add directory="/usr/include/x86_64-linux-gnu/c++/4.9" />
