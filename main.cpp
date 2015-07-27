@@ -38,6 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <pcl/features/normal_3d_omp.h>
 
 using namespace pcl;
 
@@ -46,7 +47,7 @@ pcl::PointCloud<pcl::Normal>::Ptr
 normalCalc(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
     /*http://pointclouds.org/documentation/tutorials/normal_estimation.php*/
 
-    pcl::NormalEstimation<pcl::PointXYZRGB, pcl::Normal> n;
+    pcl::NormalEstimationOMP<pcl::PointXYZRGB, pcl::Normal> n;
     pcl::PointCloud<pcl::Normal>::Ptr normals (new pcl::PointCloud<pcl::Normal>);
     pcl::search::KdTree<pcl::PointXYZRGB>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZRGB>);
     tree->setInputCloud (cloud);
@@ -128,9 +129,10 @@ fitting(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
         hull.setKeepInformation(true);
         // Set alpha, which is the maximum length from a vertex to the center of the voronoi cell
         // (the smaller, the greater the resolution of the hull).
-        hull.setAlpha(0.3);   //--->0.1
+        hull.setAlpha(0.1);   //--->0.1
         hull.reconstruct(*concaveHull);
     }
+
     return concaveHull;
 }
 
@@ -158,28 +160,10 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     reg.setInputCloud (cloud);
     //reg.setIndices (indices);
     reg.setInputNormals (normals);
-    reg.setSmoothnessThreshold (0.5 / 180.0 * M_PI);
-    reg.setCurvatureThreshold (1.0); // ----> 1.0
+//    reg.setSmoothnessThreshold (0.5 / 180.0 * M_PI);
+//    reg.setCurvatureThreshold (1.0); // ----> 1.0
 
     std::vector <pcl::PointIndices> clusters;
-
-    std::cout<<"Here"<<std::endl;
-
-    int nthreads, tid;
-
-//    /* Fork a team of threads giving them their own copies of variables */
-//    #pragma omp parallel private(nthreads, tid)
-//    {
-//        reg.extract (clusters);
-
-//        if (tid == 0)
-//            {
-//            nthreads = omp_get_num_threads();
-//            printf("Number of threads = %d\n", nthreads);
-//            }
-
-//    }  /* All threads join master thread and disband */
-//    std::cout<<"Here"<<std::endl;
 
 
     reg.extract (clusters);
@@ -211,7 +195,9 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr inter(new pcl::PointCloud <pcl::PointXYZRGB>);
         inter = fitting(clusterCloud);
         *result = *inter + *inter2;
+
     }
+
     std::cout<<result->points.size()<<std::endl;
     return  result;
 }
@@ -241,7 +227,20 @@ main(int argc, char** argv)
 
 
     tmd.print(1);
-    CO.Viewer(segmentedCloud);
+
+    pcl::visualization::PCLVisualizer viewer("Cloud and Normals");
+
+    viewer.addPointCloud(cloud,"C1");
+    viewer.addPointCloud(segmentedCloud,"C2");
+
+    while (!viewer.wasStopped ())
+    {
+      viewer.spinOnce ();
+    }
+
+
+
+//    CO.Viewer(segmentedCloud);
     tmd.print(1);
 
     return 0;

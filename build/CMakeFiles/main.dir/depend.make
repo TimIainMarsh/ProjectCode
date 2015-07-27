@@ -370,7 +370,9 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/exceptions.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/feature.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/feature.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d_omp.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/normal_3d_omp.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/boost.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/extract_indices.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/filter.h

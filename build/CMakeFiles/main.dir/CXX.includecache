@@ -63,6 +63,8 @@ stdio.h
 -
 stdlib.h
 -
+pcl/features/normal_3d_omp.h
+-
 
 /usr/include/eigen3/Eigen/Cholesky
 Core
@@ -2118,12 +2120,22 @@ pcl/search/pcl_search.h
 pcl/features/normal_3d.h
 -
 
+/usr/local/include/pcl-1.7/pcl/features/impl/normal_3d_omp.hpp
+pcl/features/normal_3d_omp.h
+-
+
 /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
 pcl/features/feature.h
 -
 pcl/common/centroid.h
 -
 pcl/features/impl/normal_3d.hpp
+-
+
+/usr/local/include/pcl-1.7/pcl/features/normal_3d_omp.h
+pcl/features/normal_3d.h
+-
+pcl/features/impl/normal_3d_omp.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/filters/boost.h
