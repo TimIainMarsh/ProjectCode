@@ -33,7 +33,7 @@ boost/thread/thread.hpp
 -
 pcl/visualization/cloud_viewer.h
 -
-pcl/features/normal_3d.h
+pcl/features/normal_3d_omp.h
 -
 timedate.h
 -
@@ -56,14 +56,6 @@ pcl/sample_consensus/model_types.h
 pcl/segmentation/sac_segmentation.h
 -
 pcl/surface/concave_hull.h
--
-omp.h
--
-stdio.h
--
-stdlib.h
--
-pcl/features/normal_3d_omp.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky

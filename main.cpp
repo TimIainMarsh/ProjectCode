@@ -14,14 +14,14 @@
 #include <pcl/visualization/cloud_viewer.h>
 
 //normals
-#include <pcl/features/normal_3d.h>
+#include <pcl/features/normal_3d_omp.h>
 
 //my includes
 #include <timedate.h>
 #include <displayptcloud.h>
 #include <cloudoperations.h>
-//region growing
 
+//region growing
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing.h>
 #include <pcl/filters/extract_indices.h>
@@ -33,12 +33,10 @@
 
 #include <pcl/surface/concave_hull.h>
 
-//openMP
-#include <omp.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <pcl/features/normal_3d_omp.h>
+////openMP
+//#include <omp.h>
+//#include <stdio.h>
+//#include <stdlib.h>
 
 using namespace pcl;
 
@@ -129,7 +127,7 @@ fitting(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
         hull.setKeepInformation(true);
         // Set alpha, which is the maximum length from a vertex to the center of the voronoi cell
         // (the smaller, the greater the resolution of the hull).
-        hull.setAlpha(0.1);   //--->0.1
+        hull.setAlpha(0.03);   //--->0.1
         hull.reconstruct(*concaveHull);
     }
 
@@ -153,15 +151,15 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
     pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
 
-    reg.setMinClusterSize (1000);
+    reg.setMinClusterSize (2000);
 
     reg.setSearchMethod (tree);
     reg.setNumberOfNeighbours (20); //20
     reg.setInputCloud (cloud);
-    //reg.setIndices (indices);
+//    reg.setIndices (indices);
     reg.setInputNormals (normals);
-//    reg.setSmoothnessThreshold (0.5 / 180.0 * M_PI);
-//    reg.setCurvatureThreshold (1.0); // ----> 1.0
+//    reg.setSmoothnessThreshold (1.0 / 180.0 * M_PI);
+//    reg.setCurvatureThreshold (1.0);
 
     std::vector <pcl::PointIndices> clusters;
 
@@ -194,8 +192,8 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr inter(new pcl::PointCloud <pcl::PointXYZRGB>);
         inter = fitting(clusterCloud);
+//        inter = clusterCloud;
         *result = *inter + *inter2;
-
     }
 
     std::cout<<result->points.size()<<std::endl;
@@ -216,7 +214,7 @@ main(int argc, char** argv)
     tmd.print(1);
 
 
-    char filename[] = "../ptClouds/GTL-CutDown.pcd";
+    char filename[] = "../ptClouds/Staff.pcd";
 
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename);
 
