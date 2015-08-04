@@ -3,10 +3,11 @@
 #include <tuple>
 
 //generic
-#include <pcl/common/copy_point.h>
+#include <pcl/common/io.h>
 
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
+#include <pcl/io/ply_io.h>
 #include <pcl/search/search.h>
 #include <pcl/search/kdtree.h>
 #include <boost/thread/thread.hpp>
@@ -33,10 +34,16 @@
 
 #include <pcl/surface/concave_hull.h>
 
-////openMP
-//#include <omp.h>
-//#include <stdio.h>
-//#include <stdlib.h>
+//Triangulation
+#include <pcl/surface/gp3.h>
+#include <pcl/point_types.h>
+#include <pcl/io/pcd_io.h>
+#include <pcl/features/normal_3d.h>
+
+#include <pcl/io/vtk_io.h>
+
+
+
 
 using namespace pcl;
 
@@ -127,12 +134,59 @@ fitting(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
         hull.setKeepInformation(true);
         // Set alpha, which is the maximum length from a vertex to the center of the voronoi cell
         // (the smaller, the greater the resolution of the hull).
-        hull.setAlpha(0.03);   //--->0.1
+        hull.setAlpha(0.1);   //--->0.1
         hull.reconstruct(*concaveHull);
     }
 
     return concaveHull;
 }
+
+//void
+//saveTriangles(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
+
+//    // Normal estimation*
+//    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
+
+
+//    pcl::PointCloud<pcl::PointNormal>::Ptr cloud_with_Normals (new pcl::PointCloud<pcl::PointNormal>);
+
+//    for(int i = 0; i<cloud->points.size(); i++){
+//        cloud_with_Normals->points[i].x = cloud->points[i].x;
+//        cloud_with_Normals->points[i].y = cloud->points[i].y;
+//        cloud_with_Normals->points[i].z = cloud->points[i].z;
+//        cloud_with_Normals->points[i].normal[0] = normals->points[i].normal[0];
+//        cloud_with_Normals->points[i].normal[1] = normals->points[i].normal[1];
+//        cloud_with_Normals->points[i].normal[2] = normals->points[i].normal[2];
+//    }
+//std::cout<<"here"<<std::endl;
+//    pcl::search::KdTree<pcl::PointNormal>::Ptr tree2 (new pcl::search::KdTree<pcl::PointNormal>);
+//    tree2.setInputCloud (cloud_with_Normals);
+
+//    // Initialize objects
+//    pcl::GreedyProjectionTriangulation<pcl::PointNormal> gp3;
+//    pcl::PolygonMesh triangles;
+
+//    // Set the maximum distance between connected points (maximum edge length)
+//    gp3.setSearchRadius (0.025);
+
+//    // Set typical values for the parameters
+//    gp3.setMu (2.5);
+//    gp3.setMaximumNearestNeighbors (100);
+//    gp3.setMaximumSurfaceAngle(M_PI/4); // 45 degrees
+//    gp3.setMinimumAngle(M_PI/18); // 10 degrees
+//    gp3.setMaximumAngle(2*M_PI/3); // 120 degrees
+//    gp3.setNormalConsistency(false);
+
+//    // Get result
+//    gp3.setInputCloud (cloud_with_Normals);
+//    gp3.setSearchMethod (tree2);
+//    gp3.reconstruct (triangles);
+
+
+//    std::cout<<"here2"<<std::endl;
+//    pcl::io::saveVTKFile ("mesh.vtk", triangles);
+////    pcl::io::save
+//}
 
 
 pcl::PointCloud <pcl::PointXYZRGB>::Ptr
@@ -142,7 +196,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
     search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
 
-
     pcl::IndicesPtr indices (new std::vector <int>);
     pcl::PassThrough<pcl::PointXYZRGB> pass;
     pass.setInputCloud (cloud);
@@ -151,7 +204,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
     pcl::RegionGrowing<pcl::PointXYZRGB, pcl::Normal> reg;
 
-    reg.setMinClusterSize (2000);
+    reg.setMinClusterSize (1000);
 
     reg.setSearchMethod (tree);
     reg.setNumberOfNeighbours (20); //20
@@ -162,7 +215,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 //    reg.setCurvatureThreshold (1.0);
 
     std::vector <pcl::PointIndices> clusters;
-
 
     reg.extract (clusters);
 
@@ -187,8 +239,10 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr clusterCloud(new pcl::PointCloud <pcl::PointXYZRGB>);
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr inter2(new pcl::PointCloud <pcl::PointXYZRGB>);
         inter2 = result;
-        filtrerG.setIndices(my_clusters[i]);
+        filtrerG.setIndices(my_clusters[1]);
         filtrerG.filter(*clusterCloud);
+
+//        saveTriangles(clusterCloud);
 
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr inter(new pcl::PointCloud <pcl::PointXYZRGB>);
         inter = fitting(clusterCloud);
@@ -207,6 +261,18 @@ main(int argc, char** argv)
 {
     std::cout<<"START"<< std::endl;
 
+
+//    QApplication app(argc, argv);
+//    MainWindow w;
+//    w.show();
+
+//    app.exec();
+
+
+
+
+
+
     timeDate tmd;
     CloudOperations CO;
 //    displayPTcloud dPT;
@@ -214,7 +280,7 @@ main(int argc, char** argv)
     tmd.print(1);
 
 
-    char filename[] = "../ptClouds/Staff.pcd";
+    char filename[] = "../ptClouds/GTL-CutDown.pcd";
 
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename);
 
@@ -224,11 +290,12 @@ main(int argc, char** argv)
     PointCloud<PointXYZRGB>::Ptr segmentedCloud = segmentor(cloud, normals);
 
 
+
     tmd.print(1);
 
     pcl::visualization::PCLVisualizer viewer("Cloud and Normals");
 
-    viewer.addPointCloud(cloud,"C1");
+//    viewer.addPointCloud(cloud,"C1");
     viewer.addPointCloud(segmentedCloud,"C2");
 
     while (!viewer.wasStopped ())

@@ -393,6 +393,12 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/io/impl/pcd_io.hpp
  /usr/local/include/pcl-1.7/pcl/io/lzf.h
  /usr/local/include/pcl-1.7/pcl/io/pcd_io.h
+ /usr/local/include/pcl-1.7/pcl/io/ply/byte_order.h
+ /usr/local/include/pcl-1.7/pcl/io/ply/io_operators.h
+ /usr/local/include/pcl-1.7/pcl/io/ply/ply.h
+ /usr/local/include/pcl-1.7/pcl/io/ply/ply_parser.h
+ /usr/local/include/pcl-1.7/pcl/io/ply_io.h
+ /usr/local/include/pcl-1.7/pcl/io/vtk_io.h
  /usr/local/include/pcl-1.7/pcl/kdtree/flann.h
  /usr/local/include/pcl-1.7/pcl/kdtree/impl/kdtree_flann.hpp
  /usr/local/include/pcl-1.7/pcl/kdtree/kdtree.h
@@ -478,8 +484,10 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/surface/boost.h
  /usr/local/include/pcl-1.7/pcl/surface/concave_hull.h
  /usr/local/include/pcl-1.7/pcl/surface/convex_hull.h
+ /usr/local/include/pcl-1.7/pcl/surface/gp3.h
  /usr/local/include/pcl-1.7/pcl/surface/impl/concave_hull.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/convex_hull.hpp
+ /usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
  /usr/local/include/pcl-1.7/pcl/surface/qhull.h
  /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
