@@ -239,7 +239,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr clusterCloud(new pcl::PointCloud <pcl::PointXYZRGB>);
         pcl::PointCloud <pcl::PointXYZRGB>::Ptr inter2(new pcl::PointCloud <pcl::PointXYZRGB>);
         inter2 = result;
-        filtrerG.setIndices(my_clusters[1]);
+        filtrerG.setIndices(my_clusters[i]);
         filtrerG.filter(*clusterCloud);
 
 //        saveTriangles(clusterCloud);
