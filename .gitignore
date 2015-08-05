@@ -1,1 +1,4 @@
+*.ply
+*.vtk
+*.obj
 *.pcd
