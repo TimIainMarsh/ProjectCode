@@ -391,6 +391,7 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/boost.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/file_io.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/impl/pcd_io.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/lzf.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/obj_io.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/pcd_io.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/ply/byte_order.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/io/ply/io_operators.h
@@ -483,11 +484,14 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/sac_
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/boost.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/concave_hull.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/convex_hull.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/ear_clipping.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/gp3.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/concave_hull.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/convex_hull.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/processing.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/processing.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/qhull.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h

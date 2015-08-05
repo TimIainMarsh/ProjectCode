@@ -11,32 +11,25 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
-
 #set(CMAKE_PREFIX_PATH "/usr/lib/x86_64-linux-gnu/cmake")
 
 #find_package(Qt5Widgets REQUIRED)
 
-
-
 INCLUDE_DIRECTORIES(includes)
 INCLUDE_DIRECTORIES(source)
 #INCLUDE_DIRECTORIES(UI)
-
 
 #SET(UI_Files
 #     UI/mainwindow.ui
 
 #)
 
-
 SET(SOURCE
-  main.cpp
-
-     src/timedate.cpp
-     src/displayptcloud.cpp
-     src/cloudoperations.cpp
+    main.cpp
+    src/timedate.cpp
+    src/displayptcloud.cpp
+    src/cloudoperations.cpp
 #     src/mainwindow.cpp
-
 )
 
 SET(HEADERS
@@ -61,16 +54,11 @@ ADD_EXECUTABLE(
 
 )
 
-
-
 target_link_libraries(
 
     ${PROJECT_NAME}
     ${PCL_LIBRARIES}
     ${Qt5Core_QTMAIN_LIBRARIES}
-
-
 )
-
 
 #qt5_use_modules(main Widgets)

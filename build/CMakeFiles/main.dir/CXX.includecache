@@ -27,6 +27,8 @@ pcl/io/pcd_io.h
 -
 pcl/io/ply_io.h
 -
+pcl/io/obj_io.h
+-
 pcl/search/search.h
 -
 pcl/search/kdtree.h
@@ -68,6 +70,8 @@ pcl/io/pcd_io.h
 pcl/features/normal_3d.h
 -
 pcl/io/vtk_io.h
+-
+pcl/surface/ear_clipping.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky
@@ -2376,6 +2380,16 @@ pcl/io/lzf.h
 pcl/pcl_macros.h
 -
 
+/usr/local/include/pcl-1.7/pcl/io/obj_io.h
+pcl/pcl_macros.h
+-
+pcl/TextureMesh.h
+-
+pcl/PolygonMesh.h
+-
+pcl/io/file_io.h
+-
+
 /usr/local/include/pcl-1.7/pcl/io/pcd_io.h
 pcl/point_cloud.h
 -
@@ -3298,6 +3312,12 @@ pcl/PolygonMesh.h
 pcl/surface/impl/convex_hull.hpp
 -
 
+/usr/local/include/pcl-1.7/pcl/surface/ear_clipping.h
+pcl/point_types.h
+-
+pcl/surface/processing.h
+-
+
 /usr/local/include/pcl-1.7/pcl/surface/gp3.h
 pcl/surface/reconstruction.h
 -
@@ -3370,9 +3390,21 @@ pcl/surface/gp3.h
 pcl/kdtree/impl/kdtree_flann.hpp
 -
 
+/usr/local/include/pcl-1.7/pcl/surface/impl/processing.hpp
+
 /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
 pcl/search/pcl_search.h
 -
+
+/usr/local/include/pcl-1.7/pcl/surface/processing.h
+pcl/pcl_base.h
+-
+pcl/point_cloud.h
+-
+pcl/PolygonMesh.h
+-
+pcl/surface/impl/processing.hpp
+/usr/local/include/pcl-1.7/pcl/surface/pcl/surface/impl/processing.hpp
 
 /usr/local/include/pcl-1.7/pcl/surface/qhull.h
 pcl/pcl_config.h

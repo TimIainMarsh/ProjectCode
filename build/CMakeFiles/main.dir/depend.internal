@@ -392,6 +392,7 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/io/file_io.h
  /usr/local/include/pcl-1.7/pcl/io/impl/pcd_io.hpp
  /usr/local/include/pcl-1.7/pcl/io/lzf.h
+ /usr/local/include/pcl-1.7/pcl/io/obj_io.h
  /usr/local/include/pcl-1.7/pcl/io/pcd_io.h
  /usr/local/include/pcl-1.7/pcl/io/ply/byte_order.h
  /usr/local/include/pcl-1.7/pcl/io/ply/io_operators.h
@@ -484,11 +485,14 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/surface/boost.h
  /usr/local/include/pcl-1.7/pcl/surface/concave_hull.h
  /usr/local/include/pcl-1.7/pcl/surface/convex_hull.h
+ /usr/local/include/pcl-1.7/pcl/surface/ear_clipping.h
  /usr/local/include/pcl-1.7/pcl/surface/gp3.h
  /usr/local/include/pcl-1.7/pcl/surface/impl/concave_hull.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/convex_hull.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
+ /usr/local/include/pcl-1.7/pcl/surface/impl/processing.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
+ /usr/local/include/pcl-1.7/pcl/surface/processing.h
  /usr/local/include/pcl-1.7/pcl/surface/qhull.h
  /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
  /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h
