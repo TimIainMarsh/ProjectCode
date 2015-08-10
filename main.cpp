@@ -45,8 +45,7 @@
 
 #include <pcl/io/vtk_io.h>
 
-#include <pcl/surface/ear_clipping.h>
-
+#include <pcl/filters/voxel_grid.h>
 
 
 
@@ -71,6 +70,10 @@ normalCalc(PointCloud<PointXYZRGB>::Ptr cloud){
 
 ModelCoefficients::Ptr
 planeFitting(PointCloud <PointXYZRGB>::Ptr cloud){
+
+    //not being used
+    std::cout<<"not used"<<std::endl;
+
     /*http://pointclouds.org/documentation/tutorials/planar_segmentation.php*/
 
 //    std::cout<<cloud->size()<<std::endl;
@@ -95,12 +98,6 @@ planeFitting(PointCloud <PointXYZRGB>::Ptr cloud){
       PCL_ERROR ("Could not estimate a planar model for the given dataset.");
       exit(-1);
     }
-
-//    std::cerr << "Model coefficients: " << coefficients->values[0] << " "
-//                                        << coefficients->values[1] << " "
-//                                        << coefficients->values[2] << " "
-//                                        << coefficients->values[3] << std::endl; // 0=a, 1=b,2=c,3=d
-
     return coefficients;
 
 }
@@ -126,8 +123,8 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
 
 
 
-    if (decide == 1)
-    {
+    if (decide == 1){   
+        //CONCAVE HULL
 
         // Copy the points of the plane to a new cloud.
         ExtractIndices<PointXYZRGB> extract;
@@ -141,13 +138,16 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
         hull.setKeepInformation(true);
         // Set alpha, which is the maximum length from a vertex to the center of the voronoi cell
         // (the smaller, the greater the resolution of the hull).
-        hull.setAlpha(0.1);   //--->0.1
+        hull.setAlpha(0.05);   //--->0.1
         hull.reconstruct(*cloudHull);
 
         return cloudHull;
     }
 
     if(decide == 2){
+
+        //CONVEX HULL
+
 
         ExtractIndices<PointXYZRGB> extract;
         extract.setInputCloud(cloud);
@@ -189,12 +189,20 @@ XYZRGBtoPointNormal(PointCloud <PointXYZRGB>::Ptr cloud,PointCloud<Normal>::Ptr 
 }
 
 
-
-
 void
-saveTriangles(PointCloud <PointXYZRGB>::Ptr cloud,int i){
+saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <PointXYZRGB>::Ptr hull,int i){
 
     // Normal estimation*
+    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);;
+
+    pcl::VoxelGrid<PointXYZRGB> sor;
+    sor.setInputCloud (pre_Filtered_cloud);
+    sor.setLeafSize (0.1f, 0.1f, 0.1f);
+    sor.filter (*cloud);
+
+    *cloud = *cloud + *hull;
+
+
     PointCloud<Normal>::Ptr normals = normalCalc(cloud);
 
     PointCloud<PointNormal>::Ptr cloud_with_Normals = XYZRGBtoPointNormal(cloud,normals);
@@ -207,15 +215,14 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr cloud,int i){
     PolygonMesh triangles;
 
     // Set the maximum distance between connected points (maximum edge length)
-    gp3.setSearchRadius (5);
+    gp3.setSearchRadius (2);
 
     // Set typical values for the parameters
-    gp3.setMu (2.5);
-    gp3.setMaximumNearestNeighbors (200);
-//    gp3.setMaximumSurfaceAngle(M_PI/18); // 10 degrees
-//    gp3.setMinimumAngle(M_PI/36); // 5 degrees
-//    gp3.setMaximumAngle(M_PI/2); // 90 degrees
-    gp3.setNormalConsistency(false);
+    gp3.setMu (1);
+    gp3.setMaximumSurfaceAngle(M_PI/4); // 45 degrees
+    gp3.setMinimumAngle(M_PI/18); // 10 degrees
+    gp3.setMaximumAngle((2*M_PI)/3); // 120 degrees
+    gp3.setNormalConsistency(true);
 
     // Get result
     gp3.setInputCloud (cloud_with_Normals);
@@ -226,6 +233,8 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr cloud,int i){
 
     std::string name = "mesh/PLY/mesh" + s + ".ply";
     std::cout<<"Writing .. " + name<< std::endl;
+
+
     io::savePLYFile (name, triangles);
 
 }
@@ -246,12 +255,11 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
     RegionGrowing<PointXYZRGB, Normal> reg;
 
-    reg.setMinClusterSize (1000);
-
+    reg.setMinClusterSize (500);
     reg.setSearchMethod (tree);
     reg.setNumberOfNeighbours (20); //20
     reg.setInputCloud (cloud);
-//    reg.setIndices (indices);
+    reg.setIndices (indices);
     reg.setInputNormals (normals);
 //    reg.setSmoothnessThreshold (1.0 / 180.0 * M_PI);
 //    reg.setCurvatureThreshold (1.0);
@@ -265,11 +273,13 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     my_clusters.resize(clusters.size());
     for (int i=0; i < clusters.size(); i++)
     {
-         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
-         my_clusters[i] = tmp_clusterR;
+        PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
+        my_clusters[i] = tmp_clusterR;
     }
 
     PointCloud<PointXYZRGB>::Ptr segCloud = reg.getColoredCloud();
+
+
 
 
 
@@ -284,14 +294,12 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         filtrerG.setIndices(my_clusters[i]);
         filtrerG.filter(*clusterCloud);
 
-
-
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
 
         //   1 --> Concave hull  2 --> Convex hull
         inter = BoundryDetection(clusterCloud,1);
-
-        saveTriangles(inter,i);
+//        inter = clusterCloud;
+//        saveTriangles(clusterCloud,inter,i);
         *result = *inter + *inter2;
     }
 
@@ -309,25 +317,27 @@ main(int argc, char** argv)
     tmd.print(1);
     std::cout<<"START"<< std::endl;
 
-
     CloudOperations CO;
-//    displayPTcloud dPT;
-
-
-
 
     char filename[] = "../ptClouds/GTL-CutDown.pcd";
-
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename);
+
+
+
+    std::cout<<"Calculating Normals..."<< std::endl;
 
     PointCloud<Normal>::Ptr normals = normalCalc(cloud);
 
+    std::cout<<"Normals Calculated..."<< std::endl;
 
-    std::cout<<"Cloud Read... Segmentation Starting..."<< std::endl;
+
+
+    std::cout<<"Segmentation Starting..."<< std::endl;
+
     PointCloud<PointXYZRGB>::Ptr segmentedCloud = segmentor(cloud, normals);
 
-
     std::cout<<"Displaying Cloud..."<< std::endl;
+
     CO.Viewer(segmentedCloud);
 
     std::cout<<"End"<< std::endl;

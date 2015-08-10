@@ -71,7 +71,7 @@ pcl/features/normal_3d.h
 -
 pcl/io/vtk_io.h
 -
-pcl/surface/ear_clipping.h
+pcl/filters/voxel_grid.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky
@@ -2220,10 +2220,28 @@ pcl/filters/passthrough.h
 pcl/common/io.h
 -
 
+/usr/local/include/pcl-1.7/pcl/filters/impl/voxel_grid.hpp
+pcl/common/common.h
+-
+pcl/common/io.h
+-
+pcl/filters/voxel_grid.h
+-
+
 /usr/local/include/pcl-1.7/pcl/filters/passthrough.h
 pcl/filters/filter_indices.h
 -
 pcl/filters/impl/passthrough.hpp
+-
+
+/usr/local/include/pcl-1.7/pcl/filters/voxel_grid.h
+pcl/filters/boost.h
+-
+pcl/filters/filter.h
+-
+map
+-
+pcl/filters/impl/voxel_grid.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/for_each_type.h
@@ -3312,12 +3330,6 @@ pcl/PolygonMesh.h
 pcl/surface/impl/convex_hull.hpp
 -
 
-/usr/local/include/pcl-1.7/pcl/surface/ear_clipping.h
-pcl/point_types.h
--
-pcl/surface/processing.h
--
-
 /usr/local/include/pcl-1.7/pcl/surface/gp3.h
 pcl/surface/reconstruction.h
 -
@@ -3390,21 +3402,9 @@ pcl/surface/gp3.h
 pcl/kdtree/impl/kdtree_flann.hpp
 -
 
-/usr/local/include/pcl-1.7/pcl/surface/impl/processing.hpp
-
 /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
 pcl/search/pcl_search.h
 -
-
-/usr/local/include/pcl-1.7/pcl/surface/processing.h
-pcl/pcl_base.h
--
-pcl/point_cloud.h
--
-pcl/PolygonMesh.h
--
-pcl/surface/impl/processing.hpp
-/usr/local/include/pcl-1.7/pcl/surface/pcl/surface/impl/processing.hpp
 
 /usr/local/include/pcl-1.7/pcl/surface/qhull.h
 pcl/pcl_config.h

@@ -381,7 +381,9 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/extr
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/filter.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/filter_indices.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/passthrough.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/impl/voxel_grid.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/passthrough.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/voxel_grid.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/for_each_type.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/geometry/planar_polygon.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/impl/cloud_iterator.hpp
@@ -484,14 +486,11 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/sac_
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/boost.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/concave_hull.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/convex_hull.h
-CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/ear_clipping.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/gp3.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/concave_hull.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/convex_hull.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
-CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/processing.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
-CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/processing.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/qhull.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h

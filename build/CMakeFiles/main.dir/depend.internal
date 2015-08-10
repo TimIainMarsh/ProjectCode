@@ -382,7 +382,9 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/filters/impl/filter.hpp
  /usr/local/include/pcl-1.7/pcl/filters/impl/filter_indices.hpp
  /usr/local/include/pcl-1.7/pcl/filters/impl/passthrough.hpp
+ /usr/local/include/pcl-1.7/pcl/filters/impl/voxel_grid.hpp
  /usr/local/include/pcl-1.7/pcl/filters/passthrough.h
+ /usr/local/include/pcl-1.7/pcl/filters/voxel_grid.h
  /usr/local/include/pcl-1.7/pcl/for_each_type.h
  /usr/local/include/pcl-1.7/pcl/geometry/planar_polygon.h
  /usr/local/include/pcl-1.7/pcl/impl/cloud_iterator.hpp
@@ -485,14 +487,11 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/surface/boost.h
  /usr/local/include/pcl-1.7/pcl/surface/concave_hull.h
  /usr/local/include/pcl-1.7/pcl/surface/convex_hull.h
- /usr/local/include/pcl-1.7/pcl/surface/ear_clipping.h
  /usr/local/include/pcl-1.7/pcl/surface/gp3.h
  /usr/local/include/pcl-1.7/pcl/surface/impl/concave_hull.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/convex_hull.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/gp3.hpp
- /usr/local/include/pcl-1.7/pcl/surface/impl/processing.hpp
  /usr/local/include/pcl-1.7/pcl/surface/impl/reconstruction.hpp
- /usr/local/include/pcl-1.7/pcl/surface/processing.h
  /usr/local/include/pcl-1.7/pcl/surface/qhull.h
  /usr/local/include/pcl-1.7/pcl/surface/reconstruction.h
  /usr/local/include/pcl-1.7/pcl/visualization/area_picking_event.h

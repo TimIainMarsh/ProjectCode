@@ -27,7 +27,7 @@ displayPTcloud::Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
 void
 displayPTcloud::write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
 
-    pcl::io::savePCDFileASCII("/home/tim/git/ResearchProjectCode/ptClouds/test_new.pcd", *cloud);
+    pcl::io::savePCDFileASCII("../ptClouds/H8.pcd", *cloud);
     std::cout << "Saved " << cloud->points.size () << " data points to test_pcd.pcd." << std::endl;
 
 }
