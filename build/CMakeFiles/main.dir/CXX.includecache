@@ -8,6 +8,14 @@
 
 ../includes/cloudoperations.h
 
+../includes/constants.h
+math.h
+-
+iostream
+-
+string
+-
+
 ../includes/displayptcloud.h
 
 ../includes/timedate.h
@@ -18,6 +26,8 @@ iostream
 vector
 -
 tuple
+-
+string
 -
 pcl/common/io.h
 -
@@ -72,6 +82,8 @@ pcl/features/normal_3d.h
 pcl/io/vtk_io.h
 -
 pcl/filters/voxel_grid.h
+-
+constants.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky

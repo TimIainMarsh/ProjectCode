@@ -1,6 +1,6 @@
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
-
+#include <iostream>
 #include "displayptcloud.h"
 
 displayPTcloud::displayPTcloud()
@@ -25,9 +25,9 @@ displayPTcloud::Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
 }
 
 void
-displayPTcloud::write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
+displayPTcloud::write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename){
 
-    pcl::io::savePCDFileASCII("../ptClouds/H8.pcd", *cloud);
-    std::cout << "Saved " << cloud->points.size () << " data points to test_pcd.pcd." << std::endl;
+    pcl::io::savePCDFileASCII(filename, *cloud);
+    std::cout << "Saved " << cloud->points.size () << " data points to"<< filename << std::endl;
 
 }

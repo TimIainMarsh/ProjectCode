@@ -6,7 +6,7 @@ class CloudOperations
 public:
     CloudOperations();
 
-    pcl::PointCloud <pcl::PointXYZRGB>::Ptr openCloud(char filename[]);
+    pcl::PointCloud <pcl::PointXYZRGB>::Ptr openCloud(std::string filename);
 
     void Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals);
 

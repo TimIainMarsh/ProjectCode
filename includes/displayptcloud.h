@@ -8,7 +8,7 @@ public:
 
     void Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
 
-    void write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
+    void write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename);
 };
 
 #endif // DISPLAYPTCLOUD_H

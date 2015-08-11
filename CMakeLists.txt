@@ -29,6 +29,7 @@ SET(SOURCE
     src/timedate.cpp
     src/displayptcloud.cpp
     src/cloudoperations.cpp
+#    src/constants.cpp
 #     src/mainwindow.cpp
 )
 
@@ -37,6 +38,7 @@ SET(HEADERS
     includes/timedate.h
     includes/displayptcloud.h
     includes/cloudoperations.h
+    includes/constants.h
 #    includes/mainwindow.h
 )
 

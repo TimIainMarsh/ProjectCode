@@ -26,7 +26,7 @@ CloudOperations::CloudOperations()
 
 
 pcl::PointCloud <pcl::PointXYZRGB>::Ptr
-CloudOperations::openCloud(char filename[]){
+CloudOperations::openCloud(std::string filename){
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::PCLPointCloud2 cloud_blob;
