@@ -327,10 +327,10 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         inter = BoundryDetection(clusterCloud,1);
 //        inter = clusterCloud;
         saveTriangles(clusterCloud,inter,i);
+
         *result = *inter + *inter2;
     }
-
-    std::cout<<"output cloud:"<<result->points.size()<<"Points"<<std::endl;
+    std::cout<<" "<<std::endl;
     return  result;
 }
 
@@ -365,8 +365,8 @@ main(int argc, char** argv)
 
     PointCloud<PointXYZRGB>::Ptr segmentedCloud = segmentor(cloud, normals);
 
-    std::cout<<"writing Cloud to File..."<<std::endl;
-    std::string outputFileName = filename + "Segmented";
+    std::cout<<"Writing Cloud to File..."<<std::endl;
+    std::string outputFileName = filename + "-Segmented";
     DPT.write(segmentedCloud,outputFileName + ".pcd");
 
 
