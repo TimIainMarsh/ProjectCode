@@ -481,6 +481,8 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/search/organized.h
  /usr/local/include/pcl-1.7/pcl/search/pcl_search.h
  /usr/local/include/pcl-1.7/pcl/search/search.h
+ /usr/local/include/pcl-1.7/pcl/segmentation/extract_polygonal_prism_data.h
+ /usr/local/include/pcl-1.7/pcl/segmentation/impl/extract_polygonal_prism_data.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/impl/sac_segmentation.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h

@@ -480,6 +480,8 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/octree.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/organized.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/pcl_search.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/search.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/extract_polygonal_prism_data.h
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/extract_polygonal_prism_data.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/sac_segmentation.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h

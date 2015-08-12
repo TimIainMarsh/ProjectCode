@@ -333,6 +333,69 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     std::cout<<" "<<std::endl;
     return  result;
 }
+#include <pcl/segmentation/extract_polygonal_prism_data.h>
+void
+ExtractPolygonalPrismDataFunction(PointCloud<PointXYZRGB>::Ptr cloud){
+    // Objects for storing the point clouds.
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr plane(new pcl::PointCloud<pcl::PointXYZRGB>);
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr convexHull(new pcl::PointCloud<pcl::PointXYZRGB>);
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr objects(new pcl::PointCloud<pcl::PointXYZRGB>);
+
+    // Get the plane model, if present.
+    pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
+    pcl::SACSegmentation<pcl::PointXYZRGB> segmentation;
+    segmentation.setInputCloud(cloud);
+    segmentation.setModelType(pcl::SACMODEL_PLANE);
+    segmentation.setMethodType(pcl::SAC_RANSAC);
+    segmentation.setDistanceThreshold(0.01);
+    segmentation.setOptimizeCoefficients(true);
+    pcl::PointIndices::Ptr planeIndices(new pcl::PointIndices);
+    segmentation.segment(*planeIndices, *coefficients);
+
+    if (planeIndices->indices.size() == 0)
+        std::cout << "Could not find a plane in the scene." << std::endl;
+    else
+    {
+        // Copy the points of the plane to a new cloud.
+        pcl::ExtractIndices<pcl::PointXYZRGB> extract;
+        extract.setInputCloud(cloud);
+        extract.setIndices(planeIndices);
+        extract.filter(*plane);
+
+        // Retrieve the convex hull.
+        pcl::ConvexHull<pcl::PointXYZRGB> hull;
+        hull.setInputCloud(plane);
+        // Make sure that the resulting hull is bidimensional.
+        hull.setDimension(2);
+        hull.reconstruct(*convexHull);
+
+        // Redundant check.
+        if (hull.getDimension() == 2)
+        {
+            // Prism object.
+            pcl::ExtractPolygonalPrismData<pcl::PointXYZRGB> prism;
+            prism.setInputCloud(cloud);
+            prism.setInputPlanarHull(convexHull);
+            // First parameter: minimum Z value. Set to 0, segments objects lying on the plane (can be negative).
+            // Second parameter: maximum Z value, set to 10cm. Tune it according to the height of the objects you expect.
+            prism.setHeightLimits(0.0f, 0.5f);
+            pcl::PointIndices::Ptr objectIndices(new pcl::PointIndices);
+
+            prism.segment(*objectIndices);
+
+            // Get and show all points retrieved by the hull.
+            extract.setIndices(objectIndices);
+            extract.filter(*objects);
+            pcl::visualization::CloudViewer viewerObjects("Objects on table");
+            viewerObjects.showCloud(objects);
+            while (!viewerObjects.wasStopped())
+            {
+                // Do nothing but wait.
+            }
+        }
+        else std::cout << "The chosen hull is not planar." << std::endl;
+    }
+}
 
 
 
@@ -348,30 +411,32 @@ main(int argc, char** argv)
     CloudOperations CO;
     displayPTcloud DPT;
 
-    std::string filename = "../ptClouds/GTL-CutDown";
+    std::string filename = "../ptClouds/GTL-Full";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
 
+    //Cuts slices out of the room. dont think its relivent
+    ExtractPolygonalPrismDataFunction(cloud);
 
-    std::cout<<"Calculating Normals..."<< std::endl;
+//    std::cout<<"Calculating Normals..."<< std::endl;
 
-    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
+//    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
 
-    std::cout<<"Normals Calculated..."<< std::endl;
-
-
-
-    std::cout<<"Segmentation Starting..."<< std::endl;
-
-    PointCloud<PointXYZRGB>::Ptr segmentedCloud = segmentor(cloud, normals);
-
-    std::cout<<"Writing Cloud to File..."<<std::endl;
-    std::string outputFileName = filename + "-Segmented";
-    DPT.write(segmentedCloud,outputFileName + ".pcd");
+//    std::cout<<"Normals Calculated..."<< std::endl;
 
 
-    std::cout<<"Displaying Cloud..."<< std::endl;
-    CO.Viewer(segmentedCloud);
+
+//    std::cout<<"Segmentation Starting..."<< std::endl;
+
+//    cloud = segmentor(cloud, normals);
+
+//    std::cout<<"Writing Cloud to File..."<<std::endl;
+//    std::string outputFileName = filename + "-Segmented";
+//    DPT.write(cloud,outputFileName + ".pcd");
+
+
+//    std::cout<<"Displaying Cloud..."<< std::endl;
+//    CO.Viewer(cloud);
 
 
 
