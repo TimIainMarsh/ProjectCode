@@ -14,7 +14,7 @@ public:
 
     void Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, std::vector <pcl::ModelCoefficients::Ptr> coeff);
 
-    void Viewer(pcl::PointCloud <pcl::PointNormal>::Ptr cloud);
+    pcl::PointCloud<pcl::Normal>::Ptr normalCalc2(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
 
 };
 

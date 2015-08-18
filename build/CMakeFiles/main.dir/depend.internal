@@ -481,8 +481,6 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/search/organized.h
  /usr/local/include/pcl-1.7/pcl/search/pcl_search.h
  /usr/local/include/pcl-1.7/pcl/search/search.h
- /usr/local/include/pcl-1.7/pcl/segmentation/extract_polygonal_prism_data.h
- /usr/local/include/pcl-1.7/pcl/segmentation/impl/extract_polygonal_prism_data.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/impl/sac_segmentation.hpp
  /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h
@@ -520,6 +518,7 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/visualization/point_picking_event.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o
  ../includes/cloudoperations.h
+ ../includes/constants.h
  /home/tim/git/ProjectCode/src/cloudoperations.cpp
  /usr/include/eigen3/Eigen/Cholesky
  /usr/include/eigen3/Eigen/Core
@@ -869,7 +868,9 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o
  /usr/local/include/pcl-1.7/pcl/features/feature.h
  /usr/local/include/pcl-1.7/pcl/features/impl/feature.hpp
  /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
+ /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d_omp.hpp
  /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
+ /usr/local/include/pcl-1.7/pcl/features/normal_3d_omp.h
  /usr/local/include/pcl-1.7/pcl/filters/boost.h
  /usr/local/include/pcl-1.7/pcl/filters/filter.h
  /usr/local/include/pcl-1.7/pcl/filters/filter_indices.h

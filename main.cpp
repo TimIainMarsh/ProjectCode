@@ -24,6 +24,8 @@
 #include <timedate.h>
 #include <displayptcloud.h>
 #include <cloudoperations.h>
+#include <constants.h>
+
 //region growing
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing.h>
@@ -46,7 +48,7 @@
 
 #include <pcl/filters/voxel_grid.h>
 
-#include <constants.h>
+
 
 using namespace pcl;
 
@@ -129,7 +131,6 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
 
     if (decide == 1){   
         //CONCAVE HULL
-
         // Copy the points of the plane to a new cloud.
         ExtractIndices<PointXYZRGB> extract;
         extract.setInputCloud(cloud);
@@ -142,6 +143,8 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
         hull.setKeepInformation(HC.KeepInfo);
         // Set alpha, which is the maximum length from a vertex to the center of the voronoi cell
         // (the smaller, the greater the resolution of the hull).
+        hull.setDimension(HC.setDimConcave);
+
         hull.setAlpha(HC.Alpha);   //--->0.1
         hull.reconstruct(*cloudHull);
 
@@ -161,6 +164,7 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
 
         ConvexHull<PointXYZRGB> hull;
         hull.setInputCloud(plane);
+        hull.setDimension(HC.setDimConvex);
         hull.reconstruct(*cloudHull);
         return cloudHull;
 
@@ -199,21 +203,20 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
     TriangulationConst TC;
     VoxGridConst VG;
 
-    // Normal estimation*
-    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);;
+    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+    PointCloud<Normal>::Ptr normals (new PointCloud<Normal>);
 
-    pcl::VoxelGrid<PointXYZRGB> sor;
-    sor.setInputCloud (pre_Filtered_cloud);
+    pcl::VoxelGrid<PointXYZRGB> Vox;
+    Vox.setInputCloud (pre_Filtered_cloud);
+    Vox.setLeafSize (VG.leafSizeX,VG.leafSizeY, VG.leafSizeZ);
+    Vox.filter (*cloud);
 
+    *cloud = *hull;
 
+//    CloudOperations CO;
+//    CO.Viewer(cloud);
 
-    sor.setLeafSize (VG.leafSizeX,VG.leafSizeY, VG.leafSizeZ);
-    sor.filter (*cloud);
-
-    *cloud = *cloud + *hull;
-
-
-    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
+    normals = normalCalc(cloud);
 
     PointCloud<PointNormal>::Ptr cloud_with_Normals = XYZRGBtoPointNormal(cloud,normals);
 
@@ -223,8 +226,6 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
     // Initialize objects
     GreedyProjectionTriangulation<PointNormal> gp3;
     PolygonMesh triangles;
-
-
 
 
     gp3.setSearchRadius (TC.SearchRadius);
@@ -242,20 +243,15 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
 
     std::string s = std::to_string(i);
 
-    if (TC.PLY_OBJ_VTK == "PLY"){
+    if (TC.PLY_OBJ == "PLY"){
         std::string name = "mesh/PLY/mesh" + s + ".ply";
-        std::cout<<"Writing .. " + name<< std::endl;
+//        std::cout<<"Writing .. " + name<< std::endl;
         io::savePLYFile (name, triangles);
     }
-    else if (TC.PLY_OBJ_VTK == "OBJ"){
+    else if (TC.PLY_OBJ == "OBJ"){
         std::string name = "mesh/OBJ/mesh" + s + ".obj";
-        std::cout<<"Writing .. " + name<< std::endl;
+//        std::cout<<"Writing .. " + name<< std::endl;
         io::saveOBJFile (name, triangles);
-    }
-    else if (TC.PLY_OBJ_VTK == "VTK"){
-        std::string name = "mesh/VTK/mesh" + s + ".vtk";
-        std::cout<<"Writing .. " + name<< std::endl;
-        io::saveVTKFile (name, triangles);
     }
     else{
         PCL_ERROR ("Please select a valid file format of either VTK, PLY of OBJ");
@@ -324,80 +320,18 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
 
         //   1 --> Concave hull  2 --> Convex hull
-        inter = BoundryDetection(clusterCloud,1);
+        inter = BoundryDetection(clusterCloud,RGC.Concave_or_Convex);
 //        inter = clusterCloud;
-        saveTriangles(clusterCloud,inter,i);
 
-        *result = *inter + *inter2;
+        if (RGC.Triangulation_Y_N){
+            saveTriangles(clusterCloud,inter,i);
+        }
+
+        *result = *inter2 + *inter;
     }
     std::cout<<" "<<std::endl;
     return  result;
 }
-#include <pcl/segmentation/extract_polygonal_prism_data.h>
-void
-ExtractPolygonalPrismDataFunction(PointCloud<PointXYZRGB>::Ptr cloud){
-    // Objects for storing the point clouds.
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr plane(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr convexHull(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr objects(new pcl::PointCloud<pcl::PointXYZRGB>);
-
-    // Get the plane model, if present.
-    pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
-    pcl::SACSegmentation<pcl::PointXYZRGB> segmentation;
-    segmentation.setInputCloud(cloud);
-    segmentation.setModelType(pcl::SACMODEL_PLANE);
-    segmentation.setMethodType(pcl::SAC_RANSAC);
-    segmentation.setDistanceThreshold(0.01);
-    segmentation.setOptimizeCoefficients(true);
-    pcl::PointIndices::Ptr planeIndices(new pcl::PointIndices);
-    segmentation.segment(*planeIndices, *coefficients);
-
-    if (planeIndices->indices.size() == 0)
-        std::cout << "Could not find a plane in the scene." << std::endl;
-    else
-    {
-        // Copy the points of the plane to a new cloud.
-        pcl::ExtractIndices<pcl::PointXYZRGB> extract;
-        extract.setInputCloud(cloud);
-        extract.setIndices(planeIndices);
-        extract.filter(*plane);
-
-        // Retrieve the convex hull.
-        pcl::ConvexHull<pcl::PointXYZRGB> hull;
-        hull.setInputCloud(plane);
-        // Make sure that the resulting hull is bidimensional.
-        hull.setDimension(2);
-        hull.reconstruct(*convexHull);
-
-        // Redundant check.
-        if (hull.getDimension() == 2)
-        {
-            // Prism object.
-            pcl::ExtractPolygonalPrismData<pcl::PointXYZRGB> prism;
-            prism.setInputCloud(cloud);
-            prism.setInputPlanarHull(convexHull);
-            // First parameter: minimum Z value. Set to 0, segments objects lying on the plane (can be negative).
-            // Second parameter: maximum Z value, set to 10cm. Tune it according to the height of the objects you expect.
-            prism.setHeightLimits(0.0f, 0.5f);
-            pcl::PointIndices::Ptr objectIndices(new pcl::PointIndices);
-
-            prism.segment(*objectIndices);
-
-            // Get and show all points retrieved by the hull.
-            extract.setIndices(objectIndices);
-            extract.filter(*objects);
-            pcl::visualization::CloudViewer viewerObjects("Objects on table");
-            viewerObjects.showCloud(objects);
-            while (!viewerObjects.wasStopped())
-            {
-                // Do nothing but wait.
-            }
-        }
-        else std::cout << "The chosen hull is not planar." << std::endl;
-    }
-}
-
-
 
 int
 main(int argc, char** argv)
@@ -411,38 +345,33 @@ main(int argc, char** argv)
     CloudOperations CO;
     displayPTcloud DPT;
 
-    std::string filename = "../ptClouds/GTL-Full";
+    std::string filename = "../ptClouds/GTL-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
+    std::cout<<"Calculating Normals..."<< std::endl;
 
-    //Cuts slices out of the room. dont think its relivent
-    ExtractPolygonalPrismDataFunction(cloud);
+    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
 
-//    std::cout<<"Calculating Normals..."<< std::endl;
-
-//    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
-
-//    std::cout<<"Normals Calculated..."<< std::endl;
+    std::cout<<"Normals Calculated..."<< std::endl;
 
 
+    std::cout<<"Segmentation Starting..."<< std::endl;
 
-//    std::cout<<"Segmentation Starting..."<< std::endl;
+    cloud = segmentor(cloud, normals);
 
-//    cloud = segmentor(cloud, normals);
+    std::cout<<"Writing Cloud to File..."<<std::endl;
+    std::string outputFileName = filename + "-Segmented";
+    DPT.write(cloud,outputFileName + ".pcd");
 
-//    std::cout<<"Writing Cloud to File..."<<std::endl;
-//    std::string outputFileName = filename + "-Segmented";
-//    DPT.write(cloud,outputFileName + ".pcd");
-
-
-//    std::cout<<"Displaying Cloud..."<< std::endl;
-//    CO.Viewer(cloud);
+    tmd.print(1);
+    std::cout<<"Displaying Cloud..."<< std::endl;
+    CO.Viewer(cloud);
 
 
 
 
     std::cout<<"End"<< std::endl;
-    tmd.print(1);
+
 
     return 0;
 }

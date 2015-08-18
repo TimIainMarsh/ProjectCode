@@ -55,6 +55,8 @@ displayptcloud.h
 -
 cloudoperations.h
 -
+constants.h
+-
 pcl/filters/passthrough.h
 -
 pcl/segmentation/region_growing.h
@@ -82,10 +84,6 @@ pcl/features/normal_3d.h
 pcl/io/vtk_io.h
 -
 pcl/filters/voxel_grid.h
--
-constants.h
--
-pcl/segmentation/extract_polygonal_prism_data.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky
@@ -3200,22 +3198,6 @@ pcl/common/concatenate.h
 pcl/common/copy_point.h
 -
 pcl/search/impl/search.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/segmentation/extract_polygonal_prism_data.h
-pcl/pcl_base.h
--
-pcl/sample_consensus/sac_model_plane.h
--
-pcl/segmentation/impl/extract_polygonal_prism_data.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/segmentation/impl/extract_polygonal_prism_data.hpp
-pcl/segmentation/extract_polygonal_prism_data.h
--
-pcl/common/centroid.h
--
-pcl/common/eigen.h
 -
 
 /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing.hpp

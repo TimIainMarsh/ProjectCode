@@ -7,13 +7,14 @@
 #include <pcl/search/kdtree.h>
 #include <pcl/visualization/cloud_viewer.h>
 
-#include <pcl/features/normal_3d.h>
+#include <pcl/features/normal_3d_omp.h>
 #include <boost/thread/thread.hpp>
 
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing_rgb.h>
 
-#include "cloudoperations.h"
+#include <cloudoperations.h>
+#include <constants.h>
 
 
 using namespace pcl;
@@ -34,7 +35,6 @@ CloudOperations::openCloud(std::string filename){
     pcl::fromPCLPointCloud2 (cloud_blob, *cloud);
 
     return cloud;
-
 }
 
 
@@ -78,7 +78,7 @@ CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
     viewer.addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "sample cloud");
 
-//    viewer.setBackgroundColor (0.0, 0.0, 0.0);
+    viewer.setBackgroundColor (0.0, 0.0, 0.0);
 
     while (!viewer.wasStopped ())
     {
@@ -103,18 +103,23 @@ CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::Poin
     }
 }
 
-void
-CloudOperations::Viewer(pcl::PointCloud <pcl::PointNormal>::Ptr cloud){
 
-    pcl::visualization::PCLVisualizer viewer("Cloud");
 
-//    pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointNormal> rgb(cloud);
-    viewer.addPointCloud<pcl::PointNormal> (cloud, "sample cloud");
+PointCloud<Normal>::Ptr
+normalCalc2(PointCloud<PointXYZRGB>::Ptr cloud){
+    /*http://pointclouds.org/documentation/tutorials/normal_estimation.php*/
 
-//    viewer.setBackgroundColor (0.0, 0.0, 0.0);
+    NormalEstConst NE;
 
-    while (!viewer.wasStopped ())
-    {
-      viewer.spinOnce ();
-    }
+
+    NormalEstimationOMP<PointXYZRGB, Normal> n;
+    PointCloud<Normal>::Ptr normals (new PointCloud<Normal>);
+    search::KdTree<PointXYZRGB>::Ptr tree (new search::KdTree<PointXYZRGB>);
+    tree->setInputCloud (cloud);
+    n.setInputCloud (cloud);
+    n.setSearchMethod (tree);
+    n.setKSearch (NE.KSearch);
+    n.compute (*normals);
+
+    return normals;
 }

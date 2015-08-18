@@ -480,8 +480,6 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/octree.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/organized.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/pcl_search.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/search/search.h
-CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/extract_polygonal_prism_data.h
-CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/extract_polygonal_prism_data.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/impl/sac_segmentation.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/segmentation/region_growing.h
@@ -519,6 +517,7 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/poi
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/visualization/point_picking_event.h
 
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: ../includes/cloudoperations.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: ../includes/constants.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: ../src/cloudoperations.cpp
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/include/eigen3/Eigen/Cholesky
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/include/eigen3/Eigen/Core
@@ -868,7 +867,9 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/ex
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/feature.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/feature.hpp
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d_omp.hpp
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
+CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/features/normal_3d_omp.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/boost.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/filter.h
 CMakeFiles/main.dir/src/cloudoperations.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/filter_indices.h
