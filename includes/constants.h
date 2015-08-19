@@ -11,11 +11,11 @@ private:
 
 
 public:
-    bool fast = true;  //faster Calculation of segments. faster = not as good
+    bool fast = false;  //faster Calculation of segments. faster = not as good
 
     bool Triangulation_Y_N = true; //triangulate segments and save them
 
-    int MinClusterSize = 300;
+    int MinClusterSize = 500;
     int NumberOfNeighbours = 20;
     float SmoothnessThreshold = (SmoothTresh * M_PI / 180);
     float CurvatureThreshold = 1.0;
