@@ -11,11 +11,11 @@ private:
 
 
 public:
-    bool fast = false;  //faster Calculation of segments. faster = not as good
+    bool fast = true;  //faster Calculation of segments. faster = not as good
 
     bool Triangulation_Y_N = true; //triangulate segments and save them
 
-    int MinClusterSize = 500;
+    int MinClusterSize = 750;
     int NumberOfNeighbours = 20;
     float SmoothnessThreshold = (SmoothTresh * M_PI / 180);
     float CurvatureThreshold = 1.0;
@@ -49,9 +49,9 @@ public:
 
 class VoxGridConst{
 public:
-    float leafSizeX = 0.05f;
-    float leafSizeY = 0.05f;
-    float leafSizeZ = 0.05f;
+    float leafSizeX = 0.05;
+    float leafSizeY = 0.05;
+    float leafSizeZ = 0.05;
 };
 
 class HullConst{

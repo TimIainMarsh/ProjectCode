@@ -1,5 +1,5 @@
-	
-for files in range(449):
+f2 = open("fixed/objtest.obj","w")
+for files in range(10):
 	lines = []
 	f = open('mesh'+str(files)+'.ply','r')
 	for line in f:
@@ -12,27 +12,25 @@ for files in range(449):
 
 	lines = lines[10:]
 	count = 0
-	vertex = len(lines)
-	for i in range(len(lines)):
-		lines.append(str(i) + " " + str(i+1) + "     \n" )
-		count +=1
-	lines.append(str(vertex) + " " + str(0) + "     \n" )
 
-	f2 = open("fixed/Zmesh" + str(files) + ".ply","w")
+	f2.write("o Object."+ str(files)+"\n")
 
-	f2.write("ply\n")
-	f2.write("format ascii 1.0\n")
-	f2.write("comment PCL generated\n")
-	f2.write("element vertex " + str(vertex) + "\n")
-	f2.write("property float x"+ "\n")
-	f2.write("property float y"+ "\n")
-	f2.write("property float z"+ "\n")
-	f2.write("element edge " + str(count)+ "\n")
-	f2.write("property int vertex1"+ "\n")
-	f2.write("property int vertex2"+ "\n")
-	f2.write("end_header"+ "\n")
+	f2.write("# List of geometric vertices, with (x,y,z[,w]) coordinates, w is optional and defaults to 1.0.\n")
+	for l in lines:
+		f2.write("v " + l)
 
-	for length in lines:
-		f2.write(length)
+	face = "f"
+	for i in range(1,len(lines)):
+		face = face + " " + str(i)
 
-	print("finished " + str(files))
+	f2.write("")
+
+	f2.write("# Polygonal face element (see below)"+"\n")
+
+	f2.write("")
+
+	f2.write(face+"\n")
+
+	f2.write("# End of object\n")
+
+	print("finished with " + str(files))
