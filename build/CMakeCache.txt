@@ -229,28 +229,16 @@ EIGEN_INCLUDE_DIRS:PATH=/usr/include/eigen3
 FLANN_INCLUDE_DIRS:PATH=/usr/include
 
 //Path to a library.
-FLANN_LIBRARY:FILEPATH=/usr/lib/libflann_cpp_s.a
+FLANN_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libflann_cpp_s.a
 
 //Path to a library.
-FLANN_LIBRARY_DEBUG:FILEPATH=/usr/lib/libflann_cpp_s.a
+FLANN_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libflann_cpp_s.a
 
 //Path to a file.
-LIBUSB_1_INCLUDE_DIR:PATH=/usr/include
+LIBUSB_1_INCLUDE_DIR:PATH=LIBUSB_1_INCLUDE_DIR-NOTFOUND
 
 //Path to a library.
-LIBUSB_1_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libusb-1.0.so
-
-//Path to a file.
-OPENGL_INCLUDE_DIR:PATH=OPENGL_INCLUDE_DIR-NOTFOUND
-
-//Path to a library.
-OPENGL_gl_LIBRARY:FILEPATH=OPENGL_gl_LIBRARY-NOTFOUND
-
-//Path to a library.
-OPENGL_glu_LIBRARY:FILEPATH=OPENGL_glu_LIBRARY-NOTFOUND
-
-//Path to a file.
-OPENGL_xmesa_INCLUDE_DIR:PATH=OPENGL_xmesa_INCLUDE_DIR-NOTFOUND
+LIBUSB_1_LIBRARY:FILEPATH=LIBUSB_1_LIBRARY-NOTFOUND
 
 //Path to a file.
 OPENNI2_INCLUDE_DIRS:PATH=OPENNI2_INCLUDE_DIRS-NOTFOUND
@@ -259,7 +247,7 @@ OPENNI2_INCLUDE_DIRS:PATH=OPENNI2_INCLUDE_DIRS-NOTFOUND
 OPENNI2_LIBRARY:FILEPATH=OPENNI2_LIBRARY-NOTFOUND
 
 //Path to a file.
-OPENNI_INCLUDE_DIRS:PATH=/usr/include/openni
+OPENNI_INCLUDE_DIRS:PATH=OPENNI_INCLUDE_DIRS-NOTFOUND
 
 //Path to a library.
 OPENNI_LIBRARY:FILEPATH=/usr/lib/libOpenNI.so
@@ -435,27 +423,6 @@ QHULL_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libqhull.so
 //Path to a library.
 QHULL_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libqhull.so
 
-//The directory containing a CMake configuration file for Qt4Declarative.
-Qt4Declarative_DIR:PATH=Qt4Declarative_DIR-NOTFOUND
-
-//The directory containing a CMake configuration file for Qt4Widgets.
-Qt4Widgets_DIR:PATH=Qt4Widgets_DIR-NOTFOUND
-
-//The directory containing a CMake configuration file for Qt5Core.
-Qt5Core_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Core
-
-//The directory containing a CMake configuration file for Qt5Declarative.
-Qt5Declarative_DIR:PATH=Qt5Declarative_DIR-NOTFOUND
-
-//The directory containing a CMake configuration file for Qt5Gui.
-Qt5Gui_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Gui
-
-//The directory containing a CMake configuration file for Qt5Widgets.
-Qt5Widgets_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets
-
-//The directory containing a CMake configuration file for Qt5.
-Qt5_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5
-
 //Value Computed by CMake
 main_BINARY_DIR:STATIC=/home/tim/git/ProjectCode/build
 
@@ -626,9 +593,6 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_STRIP
 CMAKE_STRIP-ADVANCED:INTERNAL=1
-//Suppress Warnings that are meant for the author of the CMakeLists.txt
-// files.
-CMAKE_SUPPRESS_DEVELOPER_WARNINGS:INTERNAL=TRUE
 //uname command
 CMAKE_UNAME:INTERNAL=/bin/uname
 //ADVANCED property for variable: CMAKE_USE_RELATIVE_PATHS
@@ -636,9 +600,9 @@ CMAKE_USE_RELATIVE_PATHS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Flann
-FIND_PACKAGE_MESSAGE_DETAILS_Flann:INTERNAL=[/usr/lib/libflann_cpp_s.a][/usr/include][v()]
+FIND_PACKAGE_MESSAGE_DETAILS_Flann:INTERNAL=[/usr/lib/x86_64-linux-gnu/libflann_cpp_s.a][/usr/include][v()]
 //Details about finding PCL
-FIND_PACKAGE_MESSAGE_DETAILS_PCL:INTERNAL=[/usr/lib/x86_64-linux-gnu/libboost_system.so;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;/usr/lib/x86_64-linux-gnu/libboost_thread.so;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;/usr/lib/x86_64-linux-gnu/libboost_iostreams.so;/usr/lib/x86_64-linux-gnu/libboost_serialization.so;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;/usr/lib/x86_64-linux-gnu/libpthread.so;optimized;/usr/local/lib/libpcl_common.so;debug;/usr/local/lib/libpcl_common.so;optimized;/usr/local/lib/libpcl_octree.so;debug;/usr/local/lib/libpcl_octree.so;/usr/lib/libOpenNI.so;vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;vtkWidgets;vtkParallel;vtkInfovis;vtkGeovis;vtkViews;vtkCharts;optimized;/usr/local/lib/libpcl_io.so;debug;/usr/local/lib/libpcl_io.so;optimized;/usr/lib/libflann_cpp_s.a;debug;/usr/lib/libflann_cpp_s.a;optimized;/usr/local/lib/libpcl_kdtree.so;debug;/usr/local/lib/libpcl_kdtree.so;optimized;/usr/local/lib/libpcl_search.so;debug;/usr/local/lib/libpcl_search.so;optimized;/usr/local/lib/libpcl_sample_consensus.so;debug;/usr/local/lib/libpcl_sample_consensus.so;optimized;/usr/local/lib/libpcl_filters.so;debug;/usr/local/lib/libpcl_filters.so;optimized;/usr/local/lib/libpcl_features.so;debug;/usr/local/lib/libpcl_features.so;optimized;/usr/local/lib/libpcl_segmentation.so;debug;/usr/local/lib/libpcl_segmentation.so;optimized;/usr/local/lib/libpcl_visualization.so;debug;/usr/local/lib/libpcl_visualization.so;optimized;/usr/lib/x86_64-linux-gnu/libqhull.so;debug;/usr/lib/x86_64-linux-gnu/libqhull.so;optimized;/usr/local/lib/libpcl_surface.so;debug;/usr/local/lib/libpcl_surface.so;optimized;/usr/local/lib/libpcl_registration.so;debug;/usr/local/lib/libpcl_registration.so;optimized;/usr/local/lib/libpcl_keypoints.so;debug;/usr/local/lib/libpcl_keypoints.so;optimized;/usr/local/lib/libpcl_tracking.so;debug;/usr/local/lib/libpcl_tracking.so;optimized;/usr/local/lib/libpcl_recognition.so;debug;/usr/local/lib/libpcl_recognition.so;optimized;/usr/local/lib/libpcl_people.so;debug;/usr/local/lib/libpcl_people.so;optimized;/usr/local/lib/libpcl_outofcore.so;debug;/usr/local/lib/libpcl_outofcore.so;/usr/lib/x86_64-linux-gnu/libboost_system.so;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;/usr/lib/x86_64-linux-gnu/libboost_thread.so;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;/usr/lib/x86_64-linux-gnu/libboost_iostreams.so;/usr/lib/x86_64-linux-gnu/libboost_serialization.so;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;/usr/lib/x86_64-linux-gnu/libpthread.so;optimized;/usr/lib/x86_64-linux-gnu/libqhull.so;debug;/usr/lib/x86_64-linux-gnu/libqhull.so;/usr/lib/libOpenNI.so;optimized;/usr/lib/libflann_cpp_s.a;debug;/usr/lib/libflann_cpp_s.a;vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;vtkWidgets;vtkParallel;vtkInfovis;vtkGeovis;vtkViews;vtkCharts][/usr/local/include/pcl-1.7;/usr/include/eigen3;/usr/include;/usr/include/openni;/usr/include/vtk-5.8][v(1.7)]
+FIND_PACKAGE_MESSAGE_DETAILS_PCL:INTERNAL=[/usr/lib/x86_64-linux-gnu/libboost_system.so;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;/usr/lib/x86_64-linux-gnu/libboost_thread.so;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;/usr/lib/x86_64-linux-gnu/libboost_iostreams.so;/usr/lib/x86_64-linux-gnu/libboost_serialization.so;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;/usr/lib/x86_64-linux-gnu/libpthread.so;optimized;/usr/local/lib/libpcl_common.so;debug;/usr/local/lib/libpcl_common.so;optimized;/usr/lib/x86_64-linux-gnu/libflann_cpp_s.a;debug;/usr/lib/x86_64-linux-gnu/libflann_cpp_s.a;optimized;/usr/local/lib/libpcl_kdtree.so;debug;/usr/local/lib/libpcl_kdtree.so;optimized;/usr/local/lib/libpcl_octree.so;debug;/usr/local/lib/libpcl_octree.so;optimized;/usr/local/lib/libpcl_search.so;debug;/usr/local/lib/libpcl_search.so;optimized;/usr/local/lib/libpcl_sample_consensus.so;debug;/usr/local/lib/libpcl_sample_consensus.so;optimized;/usr/local/lib/libpcl_filters.so;debug;/usr/local/lib/libpcl_filters.so;optimized;/usr/local/lib/libpcl_features.so;debug;/usr/local/lib/libpcl_features.so;optimized;/usr/local/lib/libpcl_registration.so;debug;/usr/local/lib/libpcl_registration.so;vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;vtkWidgets;vtkParallel;vtkInfovis;vtkGeovis;vtkViews;vtkCharts;optimized;/usr/local/lib/libpcl_io.so;debug;/usr/local/lib/libpcl_io.so;optimized;/usr/local/lib/libpcl_recognition.so;debug;/usr/local/lib/libpcl_recognition.so;optimized;/usr/local/lib/libpcl_keypoints.so;debug;/usr/local/lib/libpcl_keypoints.so;optimized;/usr/local/lib/libpcl_segmentation.so;debug;/usr/local/lib/libpcl_segmentation.so;optimized;/usr/local/lib/libpcl_visualization.so;debug;/usr/local/lib/libpcl_visualization.so;optimized;/usr/local/lib/libpcl_outofcore.so;debug;/usr/local/lib/libpcl_outofcore.so;optimized;/usr/lib/x86_64-linux-gnu/libqhull.so;debug;/usr/lib/x86_64-linux-gnu/libqhull.so;optimized;/usr/local/lib/libpcl_surface.so;debug;/usr/local/lib/libpcl_surface.so;optimized;/usr/local/lib/libpcl_people.so;debug;/usr/local/lib/libpcl_people.so;optimized;/usr/local/lib/libpcl_tracking.so;debug;/usr/local/lib/libpcl_tracking.so;/usr/lib/x86_64-linux-gnu/libboost_system.so;/usr/lib/x86_64-linux-gnu/libboost_filesystem.so;/usr/lib/x86_64-linux-gnu/libboost_thread.so;/usr/lib/x86_64-linux-gnu/libboost_date_time.so;/usr/lib/x86_64-linux-gnu/libboost_iostreams.so;/usr/lib/x86_64-linux-gnu/libboost_serialization.so;/usr/lib/x86_64-linux-gnu/libboost_chrono.so;/usr/lib/x86_64-linux-gnu/libpthread.so;optimized;/usr/lib/x86_64-linux-gnu/libqhull.so;debug;/usr/lib/x86_64-linux-gnu/libqhull.so;optimized;/usr/lib/x86_64-linux-gnu/libflann_cpp_s.a;debug;/usr/lib/x86_64-linux-gnu/libflann_cpp_s.a;vtkCommon;vtkFiltering;vtkImaging;vtkGraphics;vtkGenericFiltering;vtkIO;vtkRendering;vtkVolumeRendering;vtkHybrid;vtkWidgets;vtkParallel;vtkInfovis;vtkGeovis;vtkViews;vtkCharts][/usr/local/include/pcl-1.7;/usr/include/eigen3;/usr/include;/usr/include/vtk-5.8][v(1.7)]
 //Details about finding PCL_COMMON
 FIND_PACKAGE_MESSAGE_DETAILS_PCL_COMMON:INTERNAL=[/usr/local/lib/libpcl_common.so][/usr/local/include/pcl-1.7][v()]
 //Details about finding PCL_FEATURES
@@ -677,10 +641,6 @@ FIND_PACKAGE_MESSAGE_DETAILS_PCL_TRACKING:INTERNAL=[/usr/local/lib/libpcl_tracki
 FIND_PACKAGE_MESSAGE_DETAILS_PCL_VISUALIZATION:INTERNAL=[/usr/local/lib/libpcl_visualization.so][/usr/local/include/pcl-1.7][v()]
 //Details about finding eigen
 FIND_PACKAGE_MESSAGE_DETAILS_eigen:INTERNAL=[/usr/include/eigen3][v()]
-//Details about finding libusb-1.0
-FIND_PACKAGE_MESSAGE_DETAILS_libusb-1.0:INTERNAL=[/usr/include][v()]
-//Details about finding openni
-FIND_PACKAGE_MESSAGE_DETAILS_openni:INTERNAL=[/usr/lib/libOpenNI.so][/usr/include/openni][v()]
 //Details about finding qhull
 FIND_PACKAGE_MESSAGE_DETAILS_qhull:INTERNAL=[/usr/lib/x86_64-linux-gnu/libqhull.so][/usr/include][v()]
 //ADVANCED property for variable: PCL_COMMON_LIBRARY
@@ -793,7 +753,7 @@ PC_FLANN_INCLUDEDIR:INTERNAL=/usr/include
 PC_FLANN_INCLUDE_DIRS:INTERNAL=
 PC_FLANN_LDFLAGS:INTERNAL=-lflann_cpp
 PC_FLANN_LDFLAGS_OTHER:INTERNAL=
-PC_FLANN_LIBDIR:INTERNAL=/usr/lib
+PC_FLANN_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
 PC_FLANN_LIBRARIES:INTERNAL=flann_cpp
 PC_FLANN_LIBRARY_DIRS:INTERNAL=
 PC_FLANN_LIBS:INTERNAL=
@@ -814,7 +774,7 @@ PC_FLANN_STATIC_LIBS:INTERNAL=
 PC_FLANN_STATIC_LIBS_L:INTERNAL=
 PC_FLANN_STATIC_LIBS_OTHER:INTERNAL=
 PC_FLANN_STATIC_LIBS_PATHS:INTERNAL=
-PC_FLANN_VERSION:INTERNAL=1.7.1
+PC_FLANN_VERSION:INTERNAL=1.8.4
 PC_FLANN_flann_INCLUDEDIR:INTERNAL=
 PC_FLANN_flann_LIBDIR:INTERNAL=
 PC_FLANN_flann_PREFIX:INTERNAL=
@@ -843,36 +803,26 @@ PC_OPENNI2_openni2-dev_INCLUDEDIR:INTERNAL=
 PC_OPENNI2_openni2-dev_LIBDIR:INTERNAL=
 PC_OPENNI2_openni2-dev_PREFIX:INTERNAL=
 PC_OPENNI2_openni2-dev_VERSION:INTERNAL=
-PC_OPENNI_CFLAGS:INTERNAL=-I/usr/include/libusb-1.0;-I/usr/include/openni
+PC_OPENNI_CFLAGS:INTERNAL=
 PC_OPENNI_CFLAGS_I:INTERNAL=
 PC_OPENNI_CFLAGS_OTHER:INTERNAL=
-PC_OPENNI_FOUND:INTERNAL=1
-PC_OPENNI_INCLUDEDIR:INTERNAL=/usr/include/openni
-PC_OPENNI_INCLUDE_DIRS:INTERNAL=/usr/include/libusb-1.0;/usr/include/openni
-PC_OPENNI_LDFLAGS:INTERNAL=-lOpenNI;-lusb-1.0
-PC_OPENNI_LDFLAGS_OTHER:INTERNAL=
-PC_OPENNI_LIBDIR:INTERNAL=/usr/lib
-PC_OPENNI_LIBRARIES:INTERNAL=OpenNI;usb-1.0
-PC_OPENNI_LIBRARY_DIRS:INTERNAL=
+PC_OPENNI_FOUND:INTERNAL=
+PC_OPENNI_INCLUDEDIR:INTERNAL=
+PC_OPENNI_LIBDIR:INTERNAL=
 PC_OPENNI_LIBS:INTERNAL=
 PC_OPENNI_LIBS_L:INTERNAL=
 PC_OPENNI_LIBS_OTHER:INTERNAL=
 PC_OPENNI_LIBS_PATHS:INTERNAL=
-PC_OPENNI_PREFIX:INTERNAL=/usr
-PC_OPENNI_STATIC_CFLAGS:INTERNAL=-I/usr/include/libusb-1.0;-I/usr/include/openni
+PC_OPENNI_PREFIX:INTERNAL=
+PC_OPENNI_STATIC_CFLAGS:INTERNAL=
 PC_OPENNI_STATIC_CFLAGS_I:INTERNAL=
 PC_OPENNI_STATIC_CFLAGS_OTHER:INTERNAL=
-PC_OPENNI_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include/libusb-1.0;/usr/include/openni
-PC_OPENNI_STATIC_LDFLAGS:INTERNAL=-lOpenNI;-lusb-1.0;-ludev;-pthread
-PC_OPENNI_STATIC_LDFLAGS_OTHER:INTERNAL=-pthread
 PC_OPENNI_STATIC_LIBDIR:INTERNAL=
-PC_OPENNI_STATIC_LIBRARIES:INTERNAL=OpenNI;usb-1.0;udev
-PC_OPENNI_STATIC_LIBRARY_DIRS:INTERNAL=
 PC_OPENNI_STATIC_LIBS:INTERNAL=
 PC_OPENNI_STATIC_LIBS_L:INTERNAL=
 PC_OPENNI_STATIC_LIBS_OTHER:INTERNAL=
 PC_OPENNI_STATIC_LIBS_PATHS:INTERNAL=
-PC_OPENNI_VERSION:INTERNAL=1.3.2.1
+PC_OPENNI_VERSION:INTERNAL=
 PC_OPENNI_openni-dev_INCLUDEDIR:INTERNAL=
 PC_OPENNI_openni-dev_LIBDIR:INTERNAL=
 PC_OPENNI_openni-dev_PREFIX:INTERNAL=
