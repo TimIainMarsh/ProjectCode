@@ -1,6 +1,6 @@
 #include <iostream>
 #include <ctime>
-#include "timedate.h"
+#include <timedate.h>
 using namespace std;
 timeDate::timeDate()
 {
