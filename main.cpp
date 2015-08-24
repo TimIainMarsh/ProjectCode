@@ -344,7 +344,7 @@ main(int argc, char** argv)
     CloudOperations CO;
     displayPTcloud DPT;
 
-    std::string filename = "../ptClouds/GTL-CutDown";
+    std::string filename = "../ptClouds/DeepSpace";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
     std::cout<<"Calculating Normals..."<< std::endl;
