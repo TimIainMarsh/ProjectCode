@@ -84,6 +84,34 @@ pcl/io/vtk_io.h
 pcl/filters/voxel_grid.h
 -
 
+/home/tim/git/ProjectCode/src/cloudoperations.cpp
+iostream
+-
+vector
+-
+pcl/point_types.h
+-
+pcl/io/pcd_io.h
+-
+pcl/search/search.h
+-
+pcl/search/kdtree.h
+-
+pcl/visualization/cloud_viewer.h
+-
+pcl/features/normal_3d_omp.h
+-
+boost/thread/thread.hpp
+-
+pcl/filters/passthrough.h
+-
+pcl/segmentation/region_growing_rgb.h
+-
+cloudoperations.h
+-
+constants.h
+-
+
 /usr/include/eigen3/Eigen/Cholesky
 Core
 /usr/include/eigen3/Eigen/Core
@@ -3218,6 +3246,16 @@ cmath
 time.h
 -
 
+/usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing_rgb.hpp
+pcl/segmentation/region_growing_rgb.h
+-
+pcl/search/search.h
+-
+pcl/search/kdtree.h
+-
+queue
+-
+
 /usr/local/include/pcl-1.7/pcl/segmentation/impl/sac_segmentation.hpp
 pcl/segmentation/sac_segmentation.h
 -
@@ -3284,6 +3322,12 @@ math.h
 time.h
 -
 pcl/segmentation/impl/region_growing.hpp
+-
+
+/usr/local/include/pcl-1.7/pcl/segmentation/region_growing_rgb.h
+pcl/segmentation/region_growing.h
+-
+pcl/segmentation/impl/region_growing_rgb.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/segmentation/sac_segmentation.h
