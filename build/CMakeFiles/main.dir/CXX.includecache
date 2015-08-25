@@ -83,33 +83,7 @@ pcl/io/vtk_io.h
 -
 pcl/filters/voxel_grid.h
 -
-
-/home/tim/git/ProjectCode/src/cloudoperations.cpp
-iostream
--
-vector
--
-pcl/point_types.h
--
-pcl/io/pcd_io.h
--
-pcl/search/search.h
--
-pcl/search/kdtree.h
--
-pcl/visualization/cloud_viewer.h
--
-pcl/features/normal_3d_omp.h
--
-boost/thread/thread.hpp
--
-pcl/filters/passthrough.h
--
-pcl/segmentation/region_growing_rgb.h
--
-cloudoperations.h
--
-constants.h
+pcl/common/pca.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky
@@ -1744,12 +1718,6 @@ climits
 vtkPolyDataAlgorithm.h
 /usr/include/vtk-5.8/vtkPolyDataAlgorithm.h
 
-/usr/include/vtk-5.8/vtkVersion.h
-vtkObject.h
-/usr/include/vtk-5.8/vtkObject.h
-vtksys/DateStamp.h
--
-
 /usr/include/vtk-5.8/vtkViewport.h
 vtkObject.h
 /usr/include/vtk-5.8/vtkObject.h
@@ -1817,8 +1785,6 @@ vtkConfigure.h
 /usr/include/vtk-5.8/vtkstd/vtkConfigure.h
 vector
 -
-
-/usr/include/vtk-5.8/vtksys/DateStamp.h
 
 /usr/local/include/pcl-1.7/pcl/ModelCoefficients.h
 string
@@ -1941,8 +1907,6 @@ pcl/PointIndices.h
 -
 pcl/cloud_iterator.h
 -
-pcl/common/impl/accumulators.hpp
--
 pcl/common/impl/centroid.hpp
 -
 
@@ -1958,18 +1922,12 @@ pcl/common/impl/common.hpp
 pcl/conversions.h
 -
 
-/usr/local/include/pcl-1.7/pcl/common/copy_point.h
-pcl/common/impl/copy_point.hpp
--
-
 /usr/local/include/pcl-1.7/pcl/common/distances.h
 pcl/common/common.h
 -
 
 /usr/local/include/pcl-1.7/pcl/common/eigen.h
 cmath
--
-pcl/ModelCoefficients.h
 -
 Eigen/StdVector
 -
@@ -1990,20 +1948,6 @@ Eigen/Eigenvalues
 pcl/common/impl/eigen.hpp
 -
 
-/usr/local/include/pcl-1.7/pcl/common/impl/accumulators.hpp
-map
--
-boost/mpl/filter_view.hpp
--
-boost/fusion/include/mpl.hpp
--
-boost/fusion/include/for_each.hpp
--
-boost/fusion/include/as_vector.hpp
--
-pcl/point_types.h
--
-
 /usr/local/include/pcl-1.7/pcl/common/impl/centroid.hpp
 pcl/common/centroid.h
 -
@@ -2018,26 +1962,26 @@ pcl/point_types.h
 pcl/common/common.h
 -
 
-/usr/local/include/pcl-1.7/pcl/common/impl/copy_point.hpp
-pcl/point_types.h
--
-pcl/point_traits.h
--
-pcl/for_each_type.h
--
-pcl/common/concatenate.h
--
-
 /usr/local/include/pcl-1.7/pcl/common/impl/eigen.hpp
-pcl/console/print.h
+pcl/pcl_macros.h
 -
 
 /usr/local/include/pcl-1.7/pcl/common/impl/io.hpp
 pcl/common/concatenate.h
 -
-pcl/common/copy_point.h
--
 pcl/point_types.h
+-
+
+/usr/local/include/pcl-1.7/pcl/common/impl/pca.hpp
+pcl/point_types.h
+-
+pcl/common/centroid.h
+-
+pcl/common/eigen.h
+-
+pcl/common/transforms.h
+-
+pcl/exceptions.h
 -
 
 /usr/local/include/pcl-1.7/pcl/common/impl/projection_matrix.hpp
@@ -2055,11 +1999,17 @@ pcl/PointIndices.h
 -
 pcl/conversions.h
 -
-pcl/exceptions.h
--
 locale
 -
 pcl/common/impl/io.hpp
+-
+
+/usr/local/include/pcl-1.7/pcl/common/pca.h
+pcl/pcl_base.h
+-
+pcl/pcl_macros.h
+-
+pcl/common/impl/pca.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/common/point_tests.h
@@ -2373,8 +2323,6 @@ boost/algorithm/string.hpp
 -
 boost/date_time/posix_time/posix_time.hpp
 -
-boost/chrono.hpp
--
 boost/tokenizer.hpp
 -
 boost/foreach.hpp
@@ -2384,8 +2332,6 @@ boost/shared_array.hpp
 boost/interprocess/sync/file_lock.hpp
 -
 boost/interprocess/permissions.hpp
--
-boost/iostreams/device/mapped_file.hpp
 -
 boost/signals2.hpp
 -
@@ -2402,10 +2348,6 @@ pcl/io/boost.h
 cmath
 -
 sstream
--
-pcl/PolygonMesh.h
--
-pcl/TextureMesh.h
 -
 
 /usr/local/include/pcl-1.7/pcl/io/impl/pcd_io.hpp
@@ -2442,8 +2384,6 @@ pcl/pcl_macros.h
 pcl/TextureMesh.h
 -
 pcl/PolygonMesh.h
--
-pcl/io/file_io.h
 -
 
 /usr/local/include/pcl-1.7/pcl/io/pcd_io.h
@@ -2539,15 +2479,9 @@ pcl/point_representation.h
 -
 pcl/common/io.h
 -
-pcl/common/copy_point.h
--
 
 /usr/local/include/pcl-1.7/pcl/kdtree/kdtree_flann.h
 pcl/kdtree/kdtree.h
--
-pcl/kdtree/flann.h
--
-boost/shared_array.hpp
 -
 pcl/kdtree/impl/kdtree_flann.hpp
 -
@@ -2625,8 +2559,6 @@ cstring
 -
 string.h
 -
-Eigen/Core
--
 pcl/pcl_macros.h
 -
 octree_container.h
@@ -2657,8 +2589,6 @@ pcl/point_types.h
 -
 octree_pointcloud.h
 /usr/local/include/pcl-1.7/pcl/octree/octree_pointcloud.h
-pcl/octree/impl/octree_search.hpp
--
 
 /usr/local/include/pcl-1.7/pcl/pcl_base.h
 pcl/pcl_macros.h
@@ -2741,10 +2671,6 @@ boost/mpl/assert.hpp
 -
 boost/mpl/bool.hpp
 -
-Eigen/Core
--
-Eigen/src/StlSupport/details.h
--
 
 /usr/local/include/pcl-1.7/pcl/point_types.h
 pcl/pcl_macros.h
@@ -2752,12 +2678,6 @@ pcl/pcl_macros.h
 bitset
 -
 pcl/register_point_struct.h
--
-boost/mpl/contains.hpp
--
-boost/mpl/fold.hpp
--
-boost/mpl/vector.hpp
 -
 pcl/impl/point_types.hpp
 -
@@ -2832,14 +2752,6 @@ pcl/sample_consensus/rransac.h
 pcl/sample_consensus/eigen.h
 -
 pcl/sample_consensus/sac_model_circle.h
--
-pcl/common/concatenate.h
--
-
-/usr/local/include/pcl-1.7/pcl/sample_consensus/impl/sac_model_circle3d.hpp
-pcl/sample_consensus/eigen.h
--
-pcl/sample_consensus/sac_model_circle3d.h
 -
 pcl/common/concatenate.h
 -
@@ -3027,8 +2939,6 @@ pcl/sample_consensus/sac_model.h
 -
 pcl/sample_consensus/model_types.h
 -
-pcl/sample_consensus/impl/sac_model_circle3d.hpp
--
 
 /usr/local/include/pcl-1.7/pcl/sample_consensus/sac_model_cone.h
 pcl/sample_consensus/sac_model.h
@@ -3067,7 +2977,11 @@ pcl/sample_consensus/impl/sac_model_line.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/sample_consensus/sac_model_normal_parallel_plane.h
-pcl/sample_consensus/sac_model_normal_plane.h
+pcl/sample_consensus/sac_model.h
+-
+pcl/sample_consensus/sac_model_plane.h
+-
+pcl/sample_consensus/sac_model_perpendicular_plane.h
 -
 pcl/sample_consensus/model_types.h
 -
@@ -3148,12 +3062,6 @@ pcl/common/eigen.h
 pcl/sample_consensus/impl/sac_model_stick.hpp
 -
 
-/usr/local/include/pcl-1.7/pcl/search/impl/kdtree.hpp
-pcl/search/kdtree.h
--
-pcl/search/impl/search.hpp
--
-
 /usr/local/include/pcl-1.7/pcl/search/impl/organized.hpp
 pcl/search/organized.h
 -
@@ -3172,8 +3080,6 @@ pcl/search/search.h
 pcl/search/search.h
 -
 pcl/kdtree/kdtree_flann.h
--
-pcl/search/impl/kdtree.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/search/octree.h
@@ -3221,8 +3127,6 @@ pcl/for_each_type.h
 -
 pcl/common/concatenate.h
 -
-pcl/common/copy_point.h
--
 pcl/search/impl/search.hpp
 -
 
@@ -3244,16 +3148,6 @@ list
 cmath
 -
 time.h
--
-
-/usr/local/include/pcl-1.7/pcl/segmentation/impl/region_growing_rgb.hpp
-pcl/segmentation/region_growing_rgb.h
--
-pcl/search/search.h
--
-pcl/search/kdtree.h
--
-queue
 -
 
 /usr/local/include/pcl-1.7/pcl/segmentation/impl/sac_segmentation.hpp
@@ -3322,12 +3216,6 @@ math.h
 time.h
 -
 pcl/segmentation/impl/region_growing.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/segmentation/region_growing_rgb.h
-pcl/segmentation/region_growing.h
--
-pcl/segmentation/impl/region_growing_rgb.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/segmentation/sac_segmentation.h
@@ -3619,8 +3507,6 @@ Eigen/Dense
 -
 
 /usr/local/include/pcl-1.7/pcl/visualization/impl/pcl_visualizer.hpp
-vtkVersion.h
--
 vtkSmartPointer.h
 -
 vtkCellArray.h
@@ -3706,8 +3592,6 @@ pcl/correspondence.h
 pcl/ModelCoefficients.h
 -
 pcl/PolygonMesh.h
--
-pcl/TextureMesh.h
 -
 pcl/console/print.h
 -

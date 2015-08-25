@@ -7,18 +7,18 @@
 
 class RegionGrowingConst{
 private:
-    int SmoothTresh = 0; //Degrees
+    int SmoothTresh = 3.0; //Degrees
 
 
 public:
-    bool fast = true;  //faster Calculation of segments. faster = not as good
+    bool fast = false;  //faster Calculation of segments. faster = not as good
 
     bool Triangulation_Y_N = true; //triangulate segments and save them
 
     int MinClusterSize = 750;
     int NumberOfNeighbours = 20;
     float SmoothnessThreshold = (SmoothTresh * M_PI / 180);
-    float CurvatureThreshold = 0.0;
+    float CurvatureThreshold = 1.0;
 
     int Concave_or_Convex = 1; // 1 == Concave 2 == Convex
 };

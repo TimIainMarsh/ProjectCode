@@ -29,12 +29,10 @@
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing.h>
 #include <pcl/filters/extract_indices.h>
-
 #include <pcl/ModelCoefficients.h>
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
-
 #include <pcl/surface/concave_hull.h>
 
 //Triangulation
@@ -42,14 +40,15 @@
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 #include <pcl/features/normal_3d.h>
-
 #include <pcl/io/vtk_io.h>
-
 #include <pcl/filters/voxel_grid.h>
+//PCA
+#include <pcl/common/pca.h>
 
 
 
 using namespace pcl;
+using namespace std;
 
 
 PointCloud<Normal>::Ptr
@@ -243,12 +242,12 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
     std::string s = std::to_string(i);
 
     if (TC.PLY_OBJ == "PLY"){
-        std::string name = "mesh/PLY/mesh" + s + ".ply";
+        std::string name = "../mesh/PLY/mesh" + s + ".ply";
 //        std::cout<<"Writing .. " + name<< std::endl;
         io::savePLYFile (name, triangles);
     }
     else if (TC.PLY_OBJ == "OBJ"){
-        std::string name = "mesh/OBJ/mesh" + s + ".obj";
+        std::string name = "../mesh/OBJ/mesh" + s + ".obj";
 //        std::cout<<"Writing .. " + name<< std::endl;
         io::saveOBJFile (name, triangles);
     }
@@ -258,12 +257,62 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
 
 }
 
+int
+removeClusterOnCondition(PointCloud<PointXYZRGB>::Ptr cloud, PointIndices::Ptr cluster){
+
+    if (cluster->indices.size() == 0)
+        return false;
+
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (cloud);
+    PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+    filtrerG.setIndices(cluster);
+    filtrerG.filter(*clusterCloud);
+
+
+    ///////////////////////////////////////////
+    /// CLLUSTER CLOUD READY FOR CHECKING
+    ///////////////////////////////////////////
+    /// Fitting a plae and taking the a,b,c values as normal to the plane
+    /// should probaby fix with a pca. but later
+    //////////////////////////////////////////
+
+    ModelCoefficients::Ptr coefficients(new ModelCoefficients);
+    SACSegmentation<PointXYZRGB> segmentation;
+    segmentation.setInputCloud(clusterCloud);
+    segmentation.setModelType(SACMODEL_PLANE);
+    segmentation.setMethodType(SAC_RANSAC);
+    segmentation.setDistanceThreshold(0.01);
+    segmentation.setOptimizeCoefficients(true);
+    PointIndices::Ptr inlierIndices(new PointIndices);
+    segmentation.segment(*inlierIndices, *coefficients);
+
+    //Model Coeff and vert axis creating angle from vertical
+
+    Eigen::Vector3f plane_normal(coefficients->values[0],coefficients->values[1],coefficients->values[2]);
+//    cout<<coefficients->values[0]<<coefficients->values[1]<<coefficients->values[2]<<endl;
+    Eigen::Vector3f vert_axis(0.0,0.0,1.0);
+
+    float ang = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
+    cout<<ang<<endl;
+    bool TF;
+    if (ang <= 45.0){
+            TF == 1;
+    }
+    else{
+        TF = 2;
+    }
+
+    return TF;
+
+}
+
 
 PointCloud <PointXYZRGB>::Ptr
 segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
-
-    /*http://pointclouds.org/documentation/tutorials/region_growing_segmentation.php*/
-
+    ///////////////////////////////////////////////
+    //http://pointclouds.org/documentation/tutorials/region_growing_segmentation.php
+    ///////////////////////////////////////////////
     RegionGrowingConst RGC;
 
     search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
@@ -292,24 +341,32 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     reg.extract (clusters);
     std::cout<<"Cluster Extracton Sucessfull..."<< std::endl;
 
+    cloud = reg.getColoredCloud();
+
+
+
+
     std::vector <PointIndices::Ptr> my_clusters;
     my_clusters.resize(clusters.size());
     for (int i=0; i < clusters.size(); i++)
     {
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
-        my_clusters[i] = tmp_clusterR;
+        if (removeClusterOnCondition(cloud,tmp_clusterR) == 1){
+            my_clusters[i] = tmp_clusterR;
+            cout<<"added cluster..."<<endl;
+        }
+        else{
+            my_clusters[i] = 0;
+        }
     }
-    PointCloud<PointXYZRGB>::Ptr segCloud = reg.getColoredCloud();
-
-
-
-
 
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
-    filtrerG.setInputCloud (segCloud);
-
-    for (int i=0; i < clusters.size(); i++){
+    filtrerG.setInputCloud (cloud);
+    for (int i=0; i < my_clusters.size(); i++){
+        if (my_clusters[i] == 0){
+            continue;
+        }
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
         inter2 = result;
@@ -317,18 +374,19 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         filtrerG.filter(*clusterCloud);
 
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
+        inter = clusterCloud;
+
+//        cout<<"here"<<endl;
+        *result = *inter2 + *inter;
+
 
         //   1 --> Concave hull  2 --> Convex hull
-        inter = BoundryDetection(clusterCloud,RGC.Concave_or_Convex);
-//        inter = clusterCloud;
+        //        inter = BoundryDetection(clusterCloud,RGC.Concave_or_Convex);
+        //        if (RGC.Triangulation_Y_N){
+        //            saveTriangles(clusterCloud,inter,i);
+        //        }
 
-        if (RGC.Triangulation_Y_N){
-            saveTriangles(clusterCloud,inter,i);
-        }
-
-        *result = *inter2 + *inter;
     }
-    std::cout<<" "<<std::endl;
     return  result;
 }
 
@@ -344,7 +402,7 @@ main(int argc, char** argv)
     CloudOperations CO;
     displayPTcloud DPT;
 
-    std::string filename = "../ptClouds/DeepSpace";
+    std::string filename = "../ptClouds/DeepSpace-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
     std::cout<<"Calculating Normals..."<< std::endl;

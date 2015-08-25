@@ -322,7 +322,6 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/include/vtk-5.8/vtkVariant.h
  /usr/include/vtk-5.8/vtkVariantInlineOperators.h
  /usr/include/vtk-5.8/vtkVectorText.h
- /usr/include/vtk-5.8/vtkVersion.h
  /usr/include/vtk-5.8/vtkViewport.h
  /usr/include/vtk-5.8/vtkVolume.h
  /usr/include/vtk-5.8/vtkVolumeCollection.h
@@ -335,7 +334,6 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/include/vtk-5.8/vtkstd/string
  /usr/include/vtk-5.8/vtkstd/utility
  /usr/include/vtk-5.8/vtkstd/vector
- /usr/include/vtk-5.8/vtksys/DateStamp.h
  /usr/local/include/pcl-1.7/pcl/ModelCoefficients.h
  /usr/local/include/pcl-1.7/pcl/PCLHeader.h
  /usr/local/include/pcl-1.7/pcl/PCLImage.h
@@ -349,18 +347,17 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/common/centroid.h
  /usr/local/include/pcl-1.7/pcl/common/common.h
  /usr/local/include/pcl-1.7/pcl/common/concatenate.h
- /usr/local/include/pcl-1.7/pcl/common/copy_point.h
  /usr/local/include/pcl-1.7/pcl/common/distances.h
  /usr/local/include/pcl-1.7/pcl/common/eigen.h
- /usr/local/include/pcl-1.7/pcl/common/impl/accumulators.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/centroid.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/common.hpp
- /usr/local/include/pcl-1.7/pcl/common/impl/copy_point.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/eigen.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/io.hpp
+ /usr/local/include/pcl-1.7/pcl/common/impl/pca.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/projection_matrix.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/transforms.hpp
  /usr/local/include/pcl-1.7/pcl/common/io.h
+ /usr/local/include/pcl-1.7/pcl/common/pca.h
  /usr/local/include/pcl-1.7/pcl/common/point_tests.h
  /usr/local/include/pcl-1.7/pcl/common/projection_matrix.h
  /usr/local/include/pcl-1.7/pcl/common/time.h
@@ -435,7 +432,6 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/sample_consensus/impl/rmsac.hpp
  /usr/local/include/pcl-1.7/pcl/sample_consensus/impl/rransac.hpp
  /usr/local/include/pcl-1.7/pcl/sample_consensus/impl/sac_model_circle.hpp
- /usr/local/include/pcl-1.7/pcl/sample_consensus/impl/sac_model_circle3d.hpp
  /usr/local/include/pcl-1.7/pcl/sample_consensus/impl/sac_model_cone.hpp
  /usr/local/include/pcl-1.7/pcl/sample_consensus/impl/sac_model_cylinder.hpp
  /usr/local/include/pcl-1.7/pcl/sample_consensus/impl/sac_model_line.hpp
@@ -473,7 +469,6 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/sample_consensus/sac_model_plane.h
  /usr/local/include/pcl-1.7/pcl/sample_consensus/sac_model_sphere.h
  /usr/local/include/pcl-1.7/pcl/sample_consensus/sac_model_stick.h
- /usr/local/include/pcl-1.7/pcl/search/impl/kdtree.hpp
  /usr/local/include/pcl-1.7/pcl/search/impl/organized.hpp
  /usr/local/include/pcl-1.7/pcl/search/impl/search.hpp
  /usr/local/include/pcl-1.7/pcl/search/kdtree.h
@@ -821,7 +816,6 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o
  /usr/include/vtk-5.8/vtkVariant.h
  /usr/include/vtk-5.8/vtkVariantInlineOperators.h
  /usr/include/vtk-5.8/vtkVectorText.h
- /usr/include/vtk-5.8/vtkVersion.h
  /usr/include/vtk-5.8/vtkViewport.h
  /usr/include/vtk-5.8/vtkVolume.h
  /usr/include/vtk-5.8/vtkVolumeCollection.h
@@ -834,7 +828,6 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o
  /usr/include/vtk-5.8/vtkstd/string
  /usr/include/vtk-5.8/vtkstd/utility
  /usr/include/vtk-5.8/vtkstd/vector
- /usr/include/vtk-5.8/vtksys/DateStamp.h
  /usr/local/include/pcl-1.7/pcl/ModelCoefficients.h
  /usr/local/include/pcl-1.7/pcl/PCLHeader.h
  /usr/local/include/pcl-1.7/pcl/PCLImage.h
@@ -842,18 +835,14 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o
  /usr/local/include/pcl-1.7/pcl/PCLPointField.h
  /usr/local/include/pcl-1.7/pcl/PointIndices.h
  /usr/local/include/pcl-1.7/pcl/PolygonMesh.h
- /usr/local/include/pcl-1.7/pcl/TextureMesh.h
  /usr/local/include/pcl-1.7/pcl/Vertices.h
  /usr/local/include/pcl-1.7/pcl/cloud_iterator.h
  /usr/local/include/pcl-1.7/pcl/common/centroid.h
  /usr/local/include/pcl-1.7/pcl/common/common.h
  /usr/local/include/pcl-1.7/pcl/common/concatenate.h
- /usr/local/include/pcl-1.7/pcl/common/copy_point.h
  /usr/local/include/pcl-1.7/pcl/common/eigen.h
- /usr/local/include/pcl-1.7/pcl/common/impl/accumulators.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/centroid.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/common.hpp
- /usr/local/include/pcl-1.7/pcl/common/impl/copy_point.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/eigen.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/io.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/projection_matrix.hpp
@@ -910,7 +899,6 @@ CMakeFiles/main.dir/src/cloudoperations.cpp.o
  /usr/local/include/pcl-1.7/pcl/point_traits.h
  /usr/local/include/pcl-1.7/pcl/point_types.h
  /usr/local/include/pcl-1.7/pcl/register_point_struct.h
- /usr/local/include/pcl-1.7/pcl/search/impl/kdtree.hpp
  /usr/local/include/pcl-1.7/pcl/search/impl/organized.hpp
  /usr/local/include/pcl-1.7/pcl/search/impl/search.hpp
  /usr/local/include/pcl-1.7/pcl/search/kdtree.h
@@ -1155,12 +1143,7 @@ CMakeFiles/main.dir/src/displayptcloud.cpp.o
  /usr/local/include/pcl-1.7/pcl/PCLPointCloud2.h
  /usr/local/include/pcl-1.7/pcl/PCLPointField.h
  /usr/local/include/pcl-1.7/pcl/PointIndices.h
- /usr/local/include/pcl-1.7/pcl/PolygonMesh.h
- /usr/local/include/pcl-1.7/pcl/TextureMesh.h
- /usr/local/include/pcl-1.7/pcl/Vertices.h
  /usr/local/include/pcl-1.7/pcl/common/concatenate.h
- /usr/local/include/pcl-1.7/pcl/common/copy_point.h
- /usr/local/include/pcl-1.7/pcl/common/impl/copy_point.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/io.hpp
  /usr/local/include/pcl-1.7/pcl/common/io.h
  /usr/local/include/pcl-1.7/pcl/common/point_tests.h
