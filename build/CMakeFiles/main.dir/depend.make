@@ -352,11 +352,9 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/centr
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/common.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/eigen.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/io.hpp
-CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/pca.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/projection_matrix.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/impl/transforms.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/io.h
-CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/pca.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/point_tests.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/projection_matrix.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/common/time.h
@@ -367,8 +365,10 @@ CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/correspondence.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/exceptions.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/feature.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/feature.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/moment_of_inertia_estimation.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d_omp.hpp
+CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/moment_of_inertia_estimation.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/features/normal_3d_omp.h
 CMakeFiles/main.dir/main.cpp.o: /usr/local/include/pcl-1.7/pcl/filters/boost.h

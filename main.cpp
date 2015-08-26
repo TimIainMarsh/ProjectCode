@@ -42,8 +42,9 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/io/vtk_io.h>
 #include <pcl/filters/voxel_grid.h>
-//PCA
-#include <pcl/common/pca.h>
+//OBB
+#include <pcl/features/moment_of_inertia_estimation.h>
+
 
 
 
@@ -258,16 +259,16 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
 }
 
 int
-removeClusterOnCondition(PointCloud<PointXYZRGB>::Ptr cloud, PointIndices::Ptr cluster){
+removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster){
 
     if (cluster->indices.size() == 0)
         return false;
 
-    ExtractIndices<PointXYZRGB> filtrerG (true);
-    filtrerG.setInputCloud (cloud);
-    PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
-    filtrerG.setIndices(cluster);
-    filtrerG.filter(*clusterCloud);
+//    ExtractIndices<PointXYZRGB> filtrerG (true);
+//    filtrerG.setInputCloud (input_cloud);
+//    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+//    filtrerG.setIndices(cluster);
+//    filtrerG.filter(*cloud);
 
 
     ///////////////////////////////////////////
@@ -275,11 +276,13 @@ removeClusterOnCondition(PointCloud<PointXYZRGB>::Ptr cloud, PointIndices::Ptr c
     ///////////////////////////////////////////
     /// Fitting a plae and taking the a,b,c values as normal to the plane
     /// should probaby fix with a pca. but later
+    ///
     //////////////////////////////////////////
 
     ModelCoefficients::Ptr coefficients(new ModelCoefficients);
     SACSegmentation<PointXYZRGB> segmentation;
-    segmentation.setInputCloud(clusterCloud);
+    segmentation.setInputCloud(input_cloud);
+    segmentation.setIndices(cluster);
     segmentation.setModelType(SACMODEL_PLANE);
     segmentation.setMethodType(SAC_RANSAC);
     segmentation.setDistanceThreshold(0.01);
@@ -290,21 +293,31 @@ removeClusterOnCondition(PointCloud<PointXYZRGB>::Ptr cloud, PointIndices::Ptr c
     //Model Coeff and vert axis creating angle from vertical
 
     Eigen::Vector3f plane_normal(coefficients->values[0],coefficients->values[1],coefficients->values[2]);
-//    cout<<coefficients->values[0]<<coefficients->values[1]<<coefficients->values[2]<<endl;
     Eigen::Vector3f vert_axis(0.0,0.0,1.0);
 
-    float ang = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
-    cout<<ang<<endl;
-    bool TF;
-    if (ang <= 45.0){
-            TF == 1;
+    float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
+
+    if (angleFromVert <= 45.0){
+            return 1;
     }
     else{
-        TF = 2;
+        return 0;
     }
 
-    return TF;
+}
 
+
+int
+removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster){
+
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (input_cloud);
+    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+    filtrerG.setIndices(cluster);
+    filtrerG.filter(*cloud);
+
+
+    return 0;
 }
 
 
@@ -345,16 +358,19 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
 
 
-
     std::vector <PointIndices::Ptr> my_clusters;
     my_clusters.resize(clusters.size());
     for (int i=0; i < clusters.size(); i++)
     {
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
-        if (removeClusterOnCondition(cloud,tmp_clusterR) == 1){
+        if (removeClusterOnVerticality(cloud,tmp_clusterR) == 1){
             my_clusters[i] = tmp_clusterR;
-            cout<<"added cluster..."<<endl;
+            cout<<"added cluster after VERT check..."<<endl;
         }
+//        if (removeClusterOnSize(cloud,tmp_clusterR) == 1){
+//            my_clusters[i] = tmp_clusterR;
+//            cout<<"added cluster after SIZE check..."<<endl;
+//        }
         else{
             my_clusters[i] = 0;
         }
@@ -376,7 +392,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
         inter = clusterCloud;
 
-//        cout<<"here"<<endl;
         *result = *inter2 + *inter;
 
 

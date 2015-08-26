@@ -353,11 +353,9 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/common/impl/common.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/eigen.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/io.hpp
- /usr/local/include/pcl-1.7/pcl/common/impl/pca.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/projection_matrix.hpp
  /usr/local/include/pcl-1.7/pcl/common/impl/transforms.hpp
  /usr/local/include/pcl-1.7/pcl/common/io.h
- /usr/local/include/pcl-1.7/pcl/common/pca.h
  /usr/local/include/pcl-1.7/pcl/common/point_tests.h
  /usr/local/include/pcl-1.7/pcl/common/projection_matrix.h
  /usr/local/include/pcl-1.7/pcl/common/time.h
@@ -368,8 +366,10 @@ CMakeFiles/main.dir/main.cpp.o
  /usr/local/include/pcl-1.7/pcl/exceptions.h
  /usr/local/include/pcl-1.7/pcl/features/feature.h
  /usr/local/include/pcl-1.7/pcl/features/impl/feature.hpp
+ /usr/local/include/pcl-1.7/pcl/features/impl/moment_of_inertia_estimation.hpp
  /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
  /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d_omp.hpp
+ /usr/local/include/pcl-1.7/pcl/features/moment_of_inertia_estimation.h
  /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
  /usr/local/include/pcl-1.7/pcl/features/normal_3d_omp.h
  /usr/local/include/pcl-1.7/pcl/filters/boost.h

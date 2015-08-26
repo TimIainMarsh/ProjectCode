@@ -83,7 +83,7 @@ pcl/io/vtk_io.h
 -
 pcl/filters/voxel_grid.h
 -
-pcl/common/pca.h
+pcl/features/moment_of_inertia_estimation.h
 -
 
 /usr/include/eigen3/Eigen/Cholesky
@@ -1972,18 +1972,6 @@ pcl/common/concatenate.h
 pcl/point_types.h
 -
 
-/usr/local/include/pcl-1.7/pcl/common/impl/pca.hpp
-pcl/point_types.h
--
-pcl/common/centroid.h
--
-pcl/common/eigen.h
--
-pcl/common/transforms.h
--
-pcl/exceptions.h
--
-
 /usr/local/include/pcl-1.7/pcl/common/impl/projection_matrix.hpp
 pcl/cloud_iterator.h
 -
@@ -2002,14 +1990,6 @@ pcl/conversions.h
 locale
 -
 pcl/common/impl/io.hpp
--
-
-/usr/local/include/pcl-1.7/pcl/common/pca.h
-pcl/pcl_base.h
--
-pcl/pcl_macros.h
--
-pcl/common/impl/pca.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/common/point_tests.h
@@ -2112,12 +2092,28 @@ pcl/features/impl/feature.hpp
 pcl/search/pcl_search.h
 -
 
+/usr/local/include/pcl-1.7/pcl/features/impl/moment_of_inertia_estimation.hpp
+pcl/features/moment_of_inertia_estimation.h
+-
+
 /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d.hpp
 pcl/features/normal_3d.h
 -
 
 /usr/local/include/pcl-1.7/pcl/features/impl/normal_3d_omp.hpp
 pcl/features/normal_3d_omp.h
+-
+
+/usr/local/include/pcl-1.7/pcl/features/moment_of_inertia_estimation.h
+vector
+-
+math.h
+-
+pcl/features/feature.h
+-
+pcl/PointIndices.h
+-
+pcl/features/impl/moment_of_inertia_estimation.hpp
 -
 
 /usr/local/include/pcl-1.7/pcl/features/normal_3d.h
