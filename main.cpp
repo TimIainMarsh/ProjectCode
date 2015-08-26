@@ -44,6 +44,7 @@
 #include <pcl/filters/voxel_grid.h>
 //OBB
 #include <pcl/features/moment_of_inertia_estimation.h>
+#include <pcl/common/pca.h>
 
 
 
@@ -240,6 +241,8 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
     gp3.setSearchMethod (tree2);
     gp3.reconstruct (triangles);
 
+//    string s = to_string(i);
+
     std::string s = std::to_string(i);
 
     if (TC.PLY_OBJ == "PLY"){
@@ -259,20 +262,9 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
 }
 
 int
-removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster){
+removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+{
 
-    if (cluster->indices.size() == 0)
-        return false;
-
-//    ExtractIndices<PointXYZRGB> filtrerG (true);
-//    filtrerG.setInputCloud (input_cloud);
-//    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
-//    filtrerG.setIndices(cluster);
-//    filtrerG.filter(*cloud);
-
-
-    ///////////////////////////////////////////
-    /// CLLUSTER CLOUD READY FOR CHECKING
     ///////////////////////////////////////////
     /// Fitting a plae and taking the a,b,c values as normal to the plane
     /// should probaby fix with a pca. but later
@@ -297,7 +289,7 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
 
     float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
 
-    if (angleFromVert <= 45.0){
+    if (angleFromVert >= 45.0){
             return 1;
     }
     else{
@@ -308,7 +300,15 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
 
 
 int
-removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster){
+removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+{
+    ///////////////////////////////////////////
+    ///
+    /// detemining the heght of the segment
+    /// if it is bigger than 40cm reject them
+    ///
+    //////////////////////////////////////////
+
 
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (input_cloud);
@@ -316,15 +316,40 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
     filtrerG.setIndices(cluster);
     filtrerG.filter(*cloud);
 
+    float max_Z = cloud->points[0].z;
+    float min_Z = cloud->points[0].z;
 
-    return 0;
+    for(int i = 0; i < cloud->points.size(); i++ ){
+        if(cloud->points[i].z >= max_Z){
+            max_Z = cloud->points[i].z;
+        }
+    }
+
+    for(int j = 0; j < cloud->points.size(); j++ ){
+        if(cloud->points[j].z <= min_Z){
+            min_Z = cloud->points[j].z;
+        }
+    }
+
+    float gap = max_Z - min_Z;
+
+    gap = sqrt(gap*gap);
+
+    cout<<min_Z<<" - "<<max_Z<<" - "<<gap<<endl;
+
+    if(gap > 0.40){
+        return 1;
+    }
+    else{
+        return 0;
+    }
 }
 
 
 PointCloud <PointXYZRGB>::Ptr
 segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     ///////////////////////////////////////////////
-    //http://pointclouds.org/documentation/tutorials/region_growing_segmentation.php
+    ///http://pointclouds.org/documentation/tutorials/region_growing_segmentation.php
     ///////////////////////////////////////////////
     RegionGrowingConst RGC;
 
@@ -362,15 +387,24 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     my_clusters.resize(clusters.size());
     for (int i=0; i < clusters.size(); i++)
     {
+        cout<<"----------------------Start Cluster"<<endl;
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
+        cout<<"-checking SIZE"<<endl;
         if (removeClusterOnVerticality(cloud,tmp_clusterR) == 1){
+
             my_clusters[i] = tmp_clusterR;
             cout<<"added cluster after VERT check..."<<endl;
+            continue;
+
         }
-//        if (removeClusterOnSize(cloud,tmp_clusterR) == 1){
-//            my_clusters[i] = tmp_clusterR;
-//            cout<<"added cluster after SIZE check..."<<endl;
-//        }
+        cout<<"-checking SIZE"<<endl;
+        if (removeClusterOnSize(cloud,tmp_clusterR) == 1){
+
+            my_clusters[i] = tmp_clusterR;
+            cout<<"added cluster after SIZE check..."<<endl;
+            continue;
+
+        }
         else{
             my_clusters[i] = 0;
         }
