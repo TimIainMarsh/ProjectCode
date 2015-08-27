@@ -53,25 +53,6 @@ using namespace pcl;
 using namespace std;
 
 
-PointCloud<Normal>::Ptr
-normalCalc(PointCloud<PointXYZRGB>::Ptr cloud){
-    /*http://pointclouds.org/documentation/tutorials/normal_estimation.php*/
-
-    NormalEstConst NE;
-
-
-    NormalEstimationOMP<PointXYZRGB, Normal> n;
-    PointCloud<Normal>::Ptr normals (new PointCloud<Normal>);
-    search::KdTree<PointXYZRGB>::Ptr tree (new search::KdTree<PointXYZRGB>);
-    tree->setInputCloud (cloud);
-    n.setInputCloud (cloud);
-    n.setSearchMethod (tree);
-    n.setKSearch (NE.KSearch);
-    n.compute (*normals);
-
-    return normals;
-}
-
 ModelCoefficients::Ptr
 planeFitting(PointCloud <PointXYZRGB>::Ptr cloud){
 
@@ -171,32 +152,6 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
     }
 }
 
-PointCloud <PointNormal>::Ptr
-XYZRGBtoPointNormal(PointCloud <PointXYZRGB>::Ptr cloud,PointCloud<Normal>::Ptr normals){
-
-    PointCloud<PointNormal>::Ptr cloud_with_Normals (new PointCloud<PointNormal>);
-
-    // Fill in the cloud data
-    cloud_with_Normals->width    = cloud->points.size();
-    cloud_with_Normals->height   = 1;
-    cloud_with_Normals->is_dense = false;
-    cloud_with_Normals->points.resize (cloud_with_Normals->width * cloud_with_Normals->height);
-
-    for (size_t i = 0; i < cloud_with_Normals->points.size (); ++i)
-    {
-      cloud_with_Normals->points[i].x = float(cloud->points[i].x);
-      cloud_with_Normals->points[i].y = float(cloud->points[i].y);
-      cloud_with_Normals->points[i].z = float(cloud->points[i].z);
-
-      cloud_with_Normals->points[i].normal[0] = float(normals->points[i].normal[0]);
-      cloud_with_Normals->points[i].normal[1] = float(normals->points[i].normal[1]);
-      cloud_with_Normals->points[i].normal[2] = float(normals->points[i].normal[2]);
-    }
-
-    return cloud_with_Normals;
-}
-
-
 void
 saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <PointXYZRGB>::Ptr hull,int i){
 
@@ -213,10 +168,9 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
 
     *cloud = *hull;
 
-//    CloudOperations CO;
-//    CO.Viewer(cloud);
-
     normals = normalCalc(cloud);
+
+//    CloudOperations CO;
 
     PointCloud<PointNormal>::Ptr cloud_with_Normals = XYZRGBtoPointNormal(cloud,normals);
 
@@ -243,7 +197,7 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
 
 //    string s = to_string(i);
 
-    string s = to_string(i);
+    string s = boost::to_string(i);
 
     if (TC.PLY_OBJ == "PLY"){
         string name = "../mesh/PLY/mesh" + s + ".ply";
@@ -357,12 +311,65 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
     }
 }
 
+int
+addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+{
+    pcl::MomentOfInertiaEstimation <pcl::PointXYZRGB> feature_extractor;
+    feature_extractor.setInputCloud (input_cloud);
+    feature_extractor.setIndices(cluster);
+    feature_extractor.compute ();
+
+    pcl::PointXYZRGB min_point_OBB;
+    pcl::PointXYZRGB max_point_OBB;
+    pcl::PointXYZRGB position_OBB;
+    Eigen::Matrix3f rotational_matrix_OBB;
+    Eigen::Vector3f major_vector, middle_vector, minor_vector;
+    Eigen::Vector3f mass_center;
+
+    feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+    feature_extractor.getEigenVectors (major_vector, middle_vector, minor_vector);
+    feature_extractor.getMassCenter (mass_center);
+
+    cout<<minor_vector[0]<<minor_vector[1]<<minor_vector[2]<<endl;
+
+
+
+
+//    //finding cloud vertical extent
+//    float cloud_max_Z = input_cloud->points[0].z;
+//    float cloud_min_Z = input_cloud->points[0].z;
+
+//    for(int i = 0; i < input_cloud->points.size(); i++ ){
+//        if(input_cloud->points[i].z >= cloud_max_Z){
+//            cloud_max_Z = input_cloud->points[i].z;
+//        }
+//    }
+
+//    for(int j = 0; j < input_cloud->points.size(); j++ ){
+//        if(input_cloud->points[j].z <= cloud_min_Z){
+//            cloud_min_Z = input_cloud->points[j].z;
+//        }
+//    }
+
+//    ExtractIndices<PointXYZRGB> filtrerG (true);
+//    filtrerG.setInputCloud (input_cloud);
+//    PointCloud <PointXYZRGB>::Ptr cluster_cloud(new PointCloud <PointXYZRGB>);
+//    filtrerG.setIndices(cluster);
+//    filtrerG.filter(*cluster_cloud);
+
+
+    return 1;
+}
+
 
 PointCloud <PointXYZRGB>::Ptr
 segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
-    ///////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////
+    ///
+    /// most of the region growing section coppied from here:
     ///http://pointclouds.org/documentation/tutorials/region_growing_segmentation.php
-    ///////////////////////////////////////////////
+    ///
+    //////////////////////////////////////////////////////////////////////////////////
     RegionGrowingConst RGC;
 
     search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
@@ -391,11 +398,11 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     reg.extract (clusters);
     cout<<"Cluster Extracton Sucessfull..."<< endl;
 
-    cloud = reg.getColoredCloud();
+    cloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
 
 
     //////////////////////////////////////////////////////////////////////////
-    /// Cluster sejecting section
+    /// Cluster rejecting section
     ///
     /// checks for size then for verticality.
     /// the size and verticality return a 1 if the cluster succeeds
@@ -412,20 +419,25 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         cout<<"----------------------Start Cluster"<<endl;
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
         cout<<"-checking SIZE"<<endl;
-        if (removeClusterOnSize(cloud,tmp_clusterR) != 1){
+        if (addExtentHorCluster(cloud,tmp_clusterR) != 1){
             my_HOR_clusters.push_back(tmp_clusterR);
-            cout<<"Removed cluster after SIZE check..."<<endl;
+//            cout<<"Removed cluster after SIZE check..."<<endl;
+            continue;
+        }
+        cout<<"-checking SIZE"<<endl;
+        if (removeClusterOnSize(cloud,tmp_clusterR) != 1){
+//            my_HOR_clusters.push_back(tmp_clusterR);
+//            cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
         }
         cout<<"-checking VERT"<<endl;
         if (removeClusterOnVerticality(cloud,tmp_clusterR) != 1){
-            my_HOR_clusters.push_back(tmp_clusterR);
-            cout<<"Removed cluster after VERT check..."<<endl;
+//            my_HOR_clusters.push_back(tmp_clusterR);
+//            cout<<"Removed cluster after VERT check..."<<endl;
             continue;
         }
         else{
             my_VERT_clusters.push_back(tmp_clusterR);
-//            my_VERT_clusters[i] = tmp_clusterR;
         }
     }
 
@@ -454,11 +466,29 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
         *result = *inter2 + *inter;
 
-        if (RGC.Triangulation_Y_N){
-            saveTriangles(clusterCloud,inter,i);
-        }
-
+//        if (RGC.Triangulation_Y_N){
+//            saveTriangles(clusterCloud,inter,i);
+//        }
     }
+
+
+    for (int i=0; i < my_HOR_clusters.size(); i++){
+        if (my_HOR_clusters[i] == 0){
+            continue;
+        }
+        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
+        inter2 = result;
+        filtrerG.setIndices(my_HOR_clusters[i]);
+        filtrerG.filter(*clusterCloud);
+
+        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
+        inter = clusterCloud;
+
+        *result = *inter2 + *inter;
+    }
+
+
     return  result;
 }
 
@@ -474,7 +504,7 @@ main()
     CloudOperations CO;
     displayPTcloud DPT;
 
-    string filename = "../ptClouds/DeepSpace-Full";
+    string filename = "../ptClouds/DeepSpace-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
 
@@ -499,10 +529,7 @@ main()
 
 
 
-
     cout<<"End"<< endl;
-
-
     return 0;
 }
 

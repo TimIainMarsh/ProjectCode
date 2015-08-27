@@ -103,10 +103,34 @@ CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::Poin
     }
 }
 
+PointCloud <PointNormal>::Ptr
+XYZRGBtoPointNormal(PointCloud <PointXYZRGB>::Ptr cloud,PointCloud<Normal>::Ptr normals){
+
+    PointCloud<PointNormal>::Ptr cloud_with_Normals (new PointCloud<PointNormal>);
+
+    // Fill in the cloud data
+    cloud_with_Normals->width    = cloud->points.size();
+    cloud_with_Normals->height   = 1;
+    cloud_with_Normals->is_dense = false;
+    cloud_with_Normals->points.resize (cloud_with_Normals->width * cloud_with_Normals->height);
+
+    for (size_t i = 0; i < cloud_with_Normals->points.size (); ++i)
+    {
+      cloud_with_Normals->points[i].x = float(cloud->points[i].x);
+      cloud_with_Normals->points[i].y = float(cloud->points[i].y);
+      cloud_with_Normals->points[i].z = float(cloud->points[i].z);
+
+      cloud_with_Normals->points[i].normal[0] = float(normals->points[i].normal[0]);
+      cloud_with_Normals->points[i].normal[1] = float(normals->points[i].normal[1]);
+      cloud_with_Normals->points[i].normal[2] = float(normals->points[i].normal[2]);
+    }
+
+    return cloud_with_Normals;
+}
 
 
 PointCloud<Normal>::Ptr
-normalCalc2(PointCloud<PointXYZRGB>::Ptr cloud){
+normalCalc(PointCloud<PointXYZRGB>::Ptr cloud){
     /*http://pointclouds.org/documentation/tutorials/normal_estimation.php*/
 
     NormalEstConst NE;

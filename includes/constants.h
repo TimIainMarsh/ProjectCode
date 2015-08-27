@@ -24,7 +24,7 @@ public:
 
 class NormalEstConst{
 public:
-    int KSearch = 20;
+    int KSearch = 40;
 };
 
 class TriangulationConst{
