@@ -334,7 +334,6 @@ addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
 
 
-
 //    //finding cloud vertical extent
 //    float cloud_max_Z = input_cloud->points[0].z;
 //    float cloud_min_Z = input_cloud->points[0].z;
