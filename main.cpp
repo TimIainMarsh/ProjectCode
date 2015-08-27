@@ -76,11 +76,11 @@ ModelCoefficients::Ptr
 planeFitting(PointCloud <PointXYZRGB>::Ptr cloud){
 
     //not being used
-    std::cout<<"not used"<<std::endl;
+    cout<<"not used"<<endl;
 
     /*http://pointclouds.org/documentation/tutorials/planar_segmentation.php*/
 
-//    std::cout<<cloud->size()<<std::endl;
+//    cout<<cloud->size()<<endl;
 
     ModelCoefficients::Ptr coefficients (new ModelCoefficients);
     PointIndices::Ptr inliers (new PointIndices);
@@ -243,16 +243,16 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
 
 //    string s = to_string(i);
 
-    std::string s = std::to_string(i);
+    string s = to_string(i);
 
     if (TC.PLY_OBJ == "PLY"){
-        std::string name = "../mesh/PLY/mesh" + s + ".ply";
-//        std::cout<<"Writing .. " + name<< std::endl;
+        string name = "../mesh/PLY/mesh" + s + ".ply";
+//        cout<<"Writing .. " + name<< endl;
         io::savePLYFile (name, triangles);
     }
     else if (TC.PLY_OBJ == "OBJ"){
-        std::string name = "../mesh/OBJ/mesh" + s + ".obj";
-//        std::cout<<"Writing .. " + name<< std::endl;
+        string name = "../mesh/OBJ/mesh" + s + ".obj";
+//        cout<<"Writing .. " + name<< endl;
         io::saveOBJFile (name, triangles);
     }
     else{
@@ -349,7 +349,7 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
 //    cout<<min_Z<<" - "<<max_Z<<" - "<<gap<<endl;
 
-    if(gap > 0.600){
+    if(gap > 0.75){
         return 1;
     }
     else{
@@ -367,7 +367,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
     search::Search <PointXYZRGB>::Ptr tree = boost::shared_ptr<search::Search<PointXYZRGB> > (new search::KdTree<PointXYZRGB>);
 
-    IndicesPtr indices (new std::vector <int>);
+    IndicesPtr indices (new vector <int>);
     PassThrough<PointXYZRGB> pass;
     pass.setInputCloud (cloud);
 
@@ -386,10 +386,10 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         reg.setSmoothnessThreshold (RGC.SmoothnessThreshold);
         reg.setCurvatureThreshold (RGC.CurvatureThreshold);
     }
-    std::vector <PointIndices> clusters;
-    std::cout<<"Cluster Extracton Starting..."<< std::endl;
+    vector <PointIndices> clusters;
+    cout<<"Cluster Extracton Starting..."<< endl;
     reg.extract (clusters);
-    std::cout<<"Cluster Extracton Sucessfull..."<< std::endl;
+    cout<<"Cluster Extracton Sucessfull..."<< endl;
 
     cloud = reg.getColoredCloud();
 
@@ -402,48 +402,51 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     /// if it fails it sets the cluster to 0 and removes the cluster later
     ///
     /////////////////////////////////////////////////////////////////////////
-
-
-    std::vector <PointIndices::Ptr> my_clusters;
-    my_clusters.resize(clusters.size());
+    cout<<" "<<endl;
+    cout<<" Staring Cluster Removal .. "<<endl;
+    vector <PointIndices::Ptr> my_VERT_clusters;
+    vector <PointIndices::Ptr> my_HOR_clusters;
+//    my_VERT_clusters.resize(clusters.size());
     for (int i=0; i < clusters.size(); i++)
     {
         cout<<"----------------------Start Cluster"<<endl;
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
         cout<<"-checking SIZE"<<endl;
         if (removeClusterOnSize(cloud,tmp_clusterR) != 1){
-            my_clusters[i] = 0;
+            my_HOR_clusters.push_back(tmp_clusterR);
             cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
         }
         cout<<"-checking VERT"<<endl;
         if (removeClusterOnVerticality(cloud,tmp_clusterR) != 1){
-            my_clusters[i] = 0;
+            my_HOR_clusters.push_back(tmp_clusterR);
             cout<<"Removed cluster after VERT check..."<<endl;
             continue;
         }
         else{
-            my_clusters[i] = tmp_clusterR;
+            my_VERT_clusters.push_back(tmp_clusterR);
+//            my_VERT_clusters[i] = tmp_clusterR;
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
     ///
     /// Concatinating the clusters into the full cloud
+    /// making sure to remove clusters that have been removed and made = to 0
     ///
     ///////////////////////////////////////////////////////////////////////////
 
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (cloud);
-    for (int i=0; i < my_clusters.size(); i++){
-        if (my_clusters[i] == 0){
+    for (int i=0; i < my_VERT_clusters.size(); i++){
+        if (my_VERT_clusters[i] == 0){
             continue;
         }
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
         inter2 = result;
-        filtrerG.setIndices(my_clusters[i]);
+        filtrerG.setIndices(my_VERT_clusters[i]);
         filtrerG.filter(*clusterCloud);
 
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
@@ -451,52 +454,53 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
         *result = *inter2 + *inter;
 
-//        if (RGC.Triangulation_Y_N){
-//            saveTriangles(clusterCloud,inter,i);
-//        }
+        if (RGC.Triangulation_Y_N){
+            saveTriangles(clusterCloud,inter,i);
+        }
 
     }
     return  result;
 }
 
 int
-main(int argc, char** argv)
+main()
 {
 
 
     timeDate tmd;
     tmd.print(1);
-    std::cout<<"Start"<< std::endl;
+    cout<<"Start"<< endl;
 
     CloudOperations CO;
     displayPTcloud DPT;
 
-    std::string filename = "../ptClouds/Staff";
+    string filename = "../ptClouds/DeepSpace-Full";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
-    std::cout<<"Calculating Normals..."<< std::endl;
+
+    cout<<"Calculating Normals..."<< endl;
 
     PointCloud<Normal>::Ptr normals = normalCalc(cloud);
 
-    std::cout<<"Normals Calculated..."<< std::endl;
+    cout<<"Normals Calculated..."<< endl;
 
 
-    std::cout<<"Segmentation Starting..."<< std::endl;
+    cout<<"Segmentation Starting..."<< endl;
 
     cloud = segmentor(cloud, normals);
 
-    std::cout<<"Writing Cloud to File..."<<std::endl;
-    std::string outputFileName = filename + "-Segmented";
+    cout<<"Writing Cloud to File..."<<endl;
+    string outputFileName = filename + "-Segmented";
     DPT.write(cloud,outputFileName + ".pcd");
 
     tmd.print(1);
-    std::cout<<"Displaying Cloud..."<< std::endl;
+    cout<<"Displaying Cloud..."<< endl;
     CO.Viewer(cloud);
 
 
 
 
-    std::cout<<"End"<< std::endl;
+    cout<<"End"<< endl;
 
 
     return 0;

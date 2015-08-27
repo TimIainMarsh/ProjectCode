@@ -1,13 +1,16 @@
 f2 = open("fixed/objtest.obj","w")
-for files in range(10):
+for files in range(100):
 	lines = []
-	f = open('mesh'+str(files)+'.ply','r')
-	for line in f:
-		x = line.split(' ')
-		if len(x) == 4:
-			continue
-		else:
-			lines.append(line)
+	try:
+		f = open('mesh'+str(files)+'.ply','r')
+		for line in f:
+			x = line.split(' ')
+			if len(x) == 4:
+				continue
+			else:
+				lines.append(line)
+	except FileNotFoundError:
+		continue
 
 
 	lines = lines[10:]
@@ -19,7 +22,7 @@ for files in range(10):
 	for l in lines:
 		f2.write("v " + l)
 
-	face = "f"
+	face = "l"
 	for i in range(1,len(lines)):
 		face = face + " " + str(i)
 
