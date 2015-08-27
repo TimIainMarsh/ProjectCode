@@ -314,50 +314,55 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 int
 addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 {
-    pcl::MomentOfInertiaEstimation <pcl::PointXYZRGB> feature_extractor;
-    feature_extractor.setInputCloud (input_cloud);
-    feature_extractor.setIndices(cluster);
-    feature_extractor.compute ();
-
-    pcl::PointXYZRGB min_point_OBB;
-    pcl::PointXYZRGB max_point_OBB;
-    pcl::PointXYZRGB position_OBB;
-    Eigen::Matrix3f rotational_matrix_OBB;
-    Eigen::Vector3f major_vector, middle_vector, minor_vector;
-    Eigen::Vector3f mass_center;
-
-    feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
-    feature_extractor.getEigenVectors (major_vector, middle_vector, minor_vector);
-    feature_extractor.getMassCenter (mass_center);
-
-    cout<<minor_vector[0]<<minor_vector[1]<<minor_vector[2]<<endl;
 
 
+    //finding cloud vertical extent
+    float cloud_max_Z = input_cloud->points[0].z;
+    float cloud_min_Z = input_cloud->points[0].z;
 
-//    //finding cloud vertical extent
-//    float cloud_max_Z = input_cloud->points[0].z;
-//    float cloud_min_Z = input_cloud->points[0].z;
+    for(int i = 0; i < input_cloud->points.size(); i++ ){
+        if(input_cloud->points[i].z >= cloud_max_Z){
+            cloud_max_Z = input_cloud->points[i].z;
+        }
+    }
 
-//    for(int i = 0; i < input_cloud->points.size(); i++ ){
-//        if(input_cloud->points[i].z >= cloud_max_Z){
-//            cloud_max_Z = input_cloud->points[i].z;
-//        }
-//    }
+    for(int j = 0; j < input_cloud->points.size(); j++ ){
+        if(input_cloud->points[j].z <= cloud_min_Z){
+            cloud_min_Z = input_cloud->points[j].z;
+        }
+    }
 
-//    for(int j = 0; j < input_cloud->points.size(); j++ ){
-//        if(input_cloud->points[j].z <= cloud_min_Z){
-//            cloud_min_Z = input_cloud->points[j].z;
-//        }
-//    }
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (input_cloud);
+    PointCloud <PointXYZRGB>::Ptr cluster_cloud(new PointCloud <PointXYZRGB>);
+    filtrerG.setIndices(cluster);
+    filtrerG.filter(*cluster_cloud);
 
-//    ExtractIndices<PointXYZRGB> filtrerG (true);
-//    filtrerG.setInputCloud (input_cloud);
-//    PointCloud <PointXYZRGB>::Ptr cluster_cloud(new PointCloud <PointXYZRGB>);
-//    filtrerG.setIndices(cluster);
-//    filtrerG.filter(*cluster_cloud);
+    //finding vertical limits of cluster
+    float cluster_max_Z = cluster_cloud->points[0].z;
+    float cluster_min_Z = cluster_cloud->points[0].z;
 
+    for(int i = 0; i < cluster_cloud->points.size(); i++ ){
+        if(cluster_cloud->points[i].z >= cloud_max_Z){
+            cluster_max_Z = cluster_cloud->points[i].z;
+        }
+    }
 
-    return 1;
+    for(int j = 0; j < cluster_cloud->points.size(); j++ ){
+        if(input_cloud->points[j].z <= cloud_min_Z){
+            cluster_min_Z = cluster_cloud->points[j].z;
+        }
+    }
+
+    if (cluster_max_Z == cloud_max_Z){
+        return 0;
+    }
+    else if (cluster_min_Z == cloud_min_Z){
+        return 0;
+    }
+    else{
+        return 1;
+    }
 }
 
 
