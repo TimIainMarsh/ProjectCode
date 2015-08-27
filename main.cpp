@@ -314,6 +314,18 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 int
 addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 {
+    ////////////////////////////////////////////////////////////////////////////////
+    ///
+    ///use removeClusterOnVerticality to determin if the cluster is horisontal
+    /// if it is vertical removeClusterOnVerticality returns 1
+    /// if horizontal it returns 0. look for a 0
+    ///
+    /// ////////////////////////////////////////////////////////////////////////////
+
+    if (removeClusterOnVerticality(input_cloud,cluster) == 1){
+        cout<<"check failed"<<endl;
+        return 0;
+    }
 
 
     //finding cloud vertical extent
@@ -343,25 +355,29 @@ addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
     float cluster_min_Z = cluster_cloud->points[0].z;
 
     for(int i = 0; i < cluster_cloud->points.size(); i++ ){
-        if(cluster_cloud->points[i].z >= cloud_max_Z){
+        if(cluster_cloud->points[i].z >= cluster_max_Z){
             cluster_max_Z = cluster_cloud->points[i].z;
         }
     }
 
     for(int j = 0; j < cluster_cloud->points.size(); j++ ){
-        if(input_cloud->points[j].z <= cloud_min_Z){
+        if(input_cloud->points[j].z <= cluster_min_Z){
             cluster_min_Z = cluster_cloud->points[j].z;
         }
     }
+    cout<<"MAX: "<<cluster_max_Z<<"  "<<cloud_max_Z<<endl;
+    cout<<"MIN: "<<cluster_min_Z<<"  "<<cloud_min_Z<<endl;
+
+
 
     if (cluster_max_Z == cloud_max_Z){
-        return 0;
+        return 1;
     }
     else if (cluster_min_Z == cloud_min_Z){
-        return 0;
+        return 1;
     }
     else{
-        return 1;
+        return 0;
     }
 }
 
@@ -423,7 +439,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         cout<<"----------------------Start Cluster"<<endl;
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
         cout<<"-checking SIZE"<<endl;
-        if (addExtentHorCluster(cloud,tmp_clusterR) != 1){
+        if (addExtentHorCluster(cloud,tmp_clusterR) == 1){
             my_HOR_clusters.push_back(tmp_clusterR);
 //            cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
