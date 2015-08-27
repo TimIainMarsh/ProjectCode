@@ -265,6 +265,9 @@ int
 removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 {
 
+    if (cluster->indices.size() == 0)
+        return 0;
+
     ///////////////////////////////////////////
     /// Fitting a plae and taking the a,b,c values as normal to the plane
     /// should probaby fix with a pca. but later
@@ -302,6 +305,10 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
 int
 removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 {
+
+    if (cluster->indices.size() == 0)
+        return 0;
+    cout<< cluster->indices.size() <<endl;
     ///////////////////////////////////////////
     ///
     /// detemining the heght of the segment
@@ -337,7 +344,7 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
     cout<<min_Z<<" - "<<max_Z<<" - "<<gap<<endl;
 
-    if(gap > 0.40){
+    if(gap > 0.75){
         return 1;
     }
     else{
@@ -390,23 +397,23 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         cout<<"----------------------Start Cluster"<<endl;
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
         cout<<"-checking SIZE"<<endl;
-        if (removeClusterOnVerticality(cloud,tmp_clusterR) == 1){
+        if (removeClusterOnSize(cloud,tmp_clusterR) != 1){
 
-            my_clusters[i] = tmp_clusterR;
-            cout<<"added cluster after VERT check..."<<endl;
+            my_clusters[i] = 0;
+            cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
 
         }
-        cout<<"-checking SIZE"<<endl;
-        if (removeClusterOnSize(cloud,tmp_clusterR) == 1){
+        cout<<"-checking VERT"<<endl;
+        if (removeClusterOnVerticality(cloud,tmp_clusterR) != 1){
 
-            my_clusters[i] = tmp_clusterR;
-            cout<<"added cluster after SIZE check..."<<endl;
+            my_clusters[i] = 0;
+            cout<<"Removed cluster after VERT check..."<<endl;
             continue;
 
         }
         else{
-            my_clusters[i] = 0;
+            my_clusters[i] = tmp_clusterR;
         }
     }
 
@@ -451,7 +458,7 @@ main(int argc, char** argv)
     CloudOperations CO;
     displayPTcloud DPT;
 
-    std::string filename = "../ptClouds/DeepSpace-CutDown";
+    std::string filename = "../ptClouds/DeepSpace-Full";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
     std::cout<<"Calculating Normals..."<< std::endl;
