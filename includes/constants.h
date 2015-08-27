@@ -9,7 +9,6 @@ class RegionGrowingConst{
 private:
     int SmoothTresh = 3.0; //Degrees
 
-
 public:
     bool fast = false;  //faster Calculation of segments. faster = not as good
 
@@ -25,7 +24,7 @@ public:
 
 class NormalEstConst{
 public:
-    int KSearch = 40;
+    int KSearch = 20;
 };
 
 class TriangulationConst{
@@ -42,7 +41,6 @@ public:
     float MinimumAngle = (MinAngle * M_PI / 180);
     float MaximumAngle = (MaxAngle * M_PI / 180);
     bool NormalConsistency = true;
-
 
     std::string PLY_OBJ = "PLY";
 };
@@ -63,13 +61,10 @@ public:
     int setDimConvex = 2;
 };
 
-
 class SACSegConst{
     public:
         float DistanceThreshold = 0.01;
         bool OptimizeCoefficients = true;
-
-
 };
 
 #endif // CONSTANTS_H

@@ -270,7 +270,9 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
 
     ///////////////////////////////////////////
     /// Fitting a plae and taking the a,b,c values as normal to the plane
-    /// should probaby fix with a pca. but later
+    /// should probaby be done with PCA for speed but for now it works
+    ///
+    /// if angle from vert greater than set value segment rejected
     ///
     //////////////////////////////////////////
 
@@ -308,13 +310,16 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
     if (cluster->indices.size() == 0)
         return 0;
-    cout<< cluster->indices.size() <<endl;
-    ///////////////////////////////////////////
+//    cout<< cluster->indices.size() <<endl;
+    /////////////////////////////////////////////////////////////
     ///
     /// detemining the heght of the segment
-    /// if it is bigger than 40cm reject them
+    /// if it is bigger than set height then
+    /// reject them if the are too big.
     ///
-    //////////////////////////////////////////
+    /// done by finiding max Z and min Z then differencing
+    ///
+    /////////////////////////////////////////////////////////////
 
 
     ExtractIndices<PointXYZRGB> filtrerG (true);
@@ -342,9 +347,9 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
     gap = sqrt(gap*gap);
 
-    cout<<min_Z<<" - "<<max_Z<<" - "<<gap<<endl;
+//    cout<<min_Z<<" - "<<max_Z<<" - "<<gap<<endl;
 
-    if(gap > 0.75){
+    if(gap > 0.600){
         return 1;
     }
     else{
@@ -389,6 +394,15 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     cloud = reg.getColoredCloud();
 
 
+    //////////////////////////////////////////////////////////////////////////
+    /// Cluster sejecting section
+    ///
+    /// checks for size then for verticality.
+    /// the size and verticality return a 1 if the cluster succeeds
+    /// if it fails it sets the cluster to 0 and removes the cluster later
+    ///
+    /////////////////////////////////////////////////////////////////////////
+
 
     std::vector <PointIndices::Ptr> my_clusters;
     my_clusters.resize(clusters.size());
@@ -398,24 +412,26 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
         PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
         cout<<"-checking SIZE"<<endl;
         if (removeClusterOnSize(cloud,tmp_clusterR) != 1){
-
             my_clusters[i] = 0;
             cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
-
         }
         cout<<"-checking VERT"<<endl;
         if (removeClusterOnVerticality(cloud,tmp_clusterR) != 1){
-
             my_clusters[i] = 0;
             cout<<"Removed cluster after VERT check..."<<endl;
             continue;
-
         }
         else{
             my_clusters[i] = tmp_clusterR;
         }
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///
+    /// Concatinating the clusters into the full cloud
+    ///
+    ///////////////////////////////////////////////////////////////////////////
 
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
@@ -435,12 +451,9 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
         *result = *inter2 + *inter;
 
-
-        //   1 --> Concave hull  2 --> Convex hull
-        //        inter = BoundryDetection(clusterCloud,RGC.Concave_or_Convex);
-        //        if (RGC.Triangulation_Y_N){
-        //            saveTriangles(clusterCloud,inter,i);
-        //        }
+//        if (RGC.Triangulation_Y_N){
+//            saveTriangles(clusterCloud,inter,i);
+//        }
 
     }
     return  result;
@@ -458,7 +471,7 @@ main(int argc, char** argv)
     CloudOperations CO;
     displayPTcloud DPT;
 
-    std::string filename = "../ptClouds/DeepSpace-Full";
+    std::string filename = "../ptClouds/Staff";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
     std::cout<<"Calculating Normals..."<< std::endl;
