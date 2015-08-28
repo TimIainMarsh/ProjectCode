@@ -16,8 +16,6 @@
 #include <boost/thread/thread.hpp>
 //visulisation
 #include <pcl/visualization/cloud_viewer.h>
-//normals
-#include <pcl/features/normal_3d_omp.h>
 
 //my includes
 #include <timedate.h>
@@ -222,13 +220,13 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
     if (cluster->indices.size() == 0)
         return 0;
 
-    ///////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
     /// Fitting a plae and taking the a,b,c values as normal to the plane
     /// should probaby be done with PCA for speed but for now it works
     ///
     /// if angle from vert greater than set value segment rejected
     ///
-    //////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
     ModelCoefficients::Ptr coefficients(new ModelCoefficients);
     SACSegmentation<PointXYZRGB> segmentation;
@@ -264,8 +262,8 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
     if (cluster->indices.size() == 0)
         return 0;
-//    cout<< cluster->indices.size() <<endl;
-    /////////////////////////////////////////////////////////////
+
+    ///////////////////////////////////////////////////////////////////////////
     ///
     /// detemining the heght of the segment
     /// if it is bigger than set height then
@@ -273,7 +271,7 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
     ///
     /// done by finiding max Z and min Z then differencing
     ///
-    /////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
 
     ExtractIndices<PointXYZRGB> filtrerG (true);
@@ -314,6 +312,7 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 int
 addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 {
+
     ////////////////////////////////////////////////////////////////////////////////
     ///
     ///use removeClusterOnVerticality to determin if the cluster is horisontal
@@ -322,10 +321,14 @@ addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
     ///
     /// ////////////////////////////////////////////////////////////////////////////
 
+
     if (removeClusterOnVerticality(input_cloud,cluster) == 1){
         cout<<"check failed"<<endl;
         return 0;
     }
+
+//    CloudOperations CO;
+//    CO.Viewer(input_cloud);
 
 
     //finding cloud vertical extent
@@ -383,7 +386,7 @@ addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
 
 PointCloud <PointXYZRGB>::Ptr
-segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
+segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr normals){
     //////////////////////////////////////////////////////////////////////////////////
     ///
     /// most of the region growing section coppied from here:
@@ -396,7 +399,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
 
     IndicesPtr indices (new vector <int>);
     PassThrough<PointXYZRGB> pass;
-    pass.setInputCloud (cloud);
+    pass.setInputCloud (input_cloud);
 
     pass.filter (*indices);
 
@@ -405,7 +408,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     reg.setMinClusterSize (RGC.MinClusterSize);
     reg.setSearchMethod (tree);
     reg.setNumberOfNeighbours (RGC.NumberOfNeighbours);
-    reg.setInputCloud (cloud);
+    reg.setInputCloud (input_cloud);
     reg.setIndices (indices);
     reg.setInputNormals (normals);
 
@@ -418,7 +421,29 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     reg.extract (clusters);
     cout<<"Cluster Extracton Sucessfull..."<< endl;
 
-    cloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
+    vector <PointIndices::Ptr> my_clusters;
+
+    for (int i=0; i < clusters.size(); i++)
+    {
+        PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
+        my_clusters.push_back(tmp_clusterR);
+    }
+
+    PointCloud <PointXYZRGB>::Ptr segCloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
+
+    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+    ExtractIndices<PointXYZRGB> filtrerG_1 (true);
+    filtrerG_1.setInputCloud (segCloud);
+    for (int i=0; i < my_clusters.size(); i++)
+    {
+        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
+        *inter = *cloud;
+        filtrerG_1.setIndices(my_clusters[i]);
+        filtrerG_1.filter(*clusterCloud);
+
+        *cloud = *inter + *clusterCloud;
+    }
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -429,11 +454,13 @@ segmentor(PointCloud<PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals){
     /// if it fails it sets the cluster to 0 and removes the cluster later
     ///
     /////////////////////////////////////////////////////////////////////////
+
     cout<<" "<<endl;
     cout<<" Staring Cluster Removal .. "<<endl;
+
     vector <PointIndices::Ptr> my_VERT_clusters;
     vector <PointIndices::Ptr> my_HOR_clusters;
-//    my_VERT_clusters.resize(clusters.size());
+
     for (int i=0; i < clusters.size(); i++)
     {
         cout<<"----------------------Start Cluster"<<endl;
