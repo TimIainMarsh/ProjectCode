@@ -40,8 +40,7 @@
 #include <pcl/features/normal_3d.h>
 #include <pcl/io/vtk_io.h>
 #include <pcl/filters/voxel_grid.h>
-//OBB
-#include <pcl/features/moment_of_inertia_estimation.h>
+//PCA
 #include <pcl/common/pca.h>
 
 
@@ -211,8 +210,8 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
     Eigen::Vector3f vert_axis(0.0,0.0,1.0);
 
     float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
-
-    if (angleFromVert >= 45.0){
+    cout<<angleFromVert<<endl;
+    if (angleFromVert >= 30.0){
             return 1;
     }
     else{
@@ -288,10 +287,10 @@ addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
     /// ////////////////////////////////////////////////////////////////////////////
 
 
-    if (removeClusterOnVerticality(input_cloud,cluster) == 1){
-        cout<<"check failed"<<endl;
-        return 0;
-    }
+//    if (removeClusterOnVerticality(input_cloud,cluster) == 1){
+//        cout<<"check failed"<<endl;
+//        return 0;
+//    }
 
 //    CloudOperations CO;
 //    CO.Viewer(input_cloud);
@@ -398,21 +397,28 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     PointCloud <PointXYZRGB>::Ptr segCloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
 
     PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+
+
     ExtractIndices<PointXYZRGB> filtrerG_1 (true);
     filtrerG_1.setInputCloud (segCloud);
-    for (int i=0; i < my_clusters.size(); i++)
-    {
-        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+    for(int count = 0; count < clusters.size();count ++){
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-        *inter = *cloud;
-        filtrerG_1.setIndices(my_clusters[i]);
-        filtrerG_1.filter(*clusterCloud);
 
-        *cloud = *inter + *clusterCloud;
+        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
+
+        inter2 = cloud;
+
+        filtrerG_1.setIndices(my_clusters[count]);
+        filtrerG_1.filter(*inter);
+
+        *cloud = *inter2 + *inter;
+
+
     }
-
-
+    CloudOperations CO;
+    CO.Viewer(cloud);
     //////////////////////////////////////////////////////////////////////////
+    ///
     /// Cluster rejecting section
     ///
     /// checks for size then for verticality.
@@ -425,34 +431,34 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     cout<<" Staring Cluster Removal .. "<<endl;
 
     vector <PointIndices::Ptr> my_VERT_clusters;
-    vector <PointIndices::Ptr> my_HOR_clusters;
+//    vector <PointIndices::Ptr> my_HOR_clusters;
 
-    for (int i=0; i < clusters.size(); i++)
-    {
-        cout<<"----------------------Start Cluster"<<endl;
-        PointIndices::Ptr tmp_clusterR(new PointIndices(clusters[i]));
-        cout<<"-checking SIZE"<<endl;
-        if (addExtentHorCluster(cloud,tmp_clusterR) == 1){
-            my_HOR_clusters.push_back(tmp_clusterR);
-//            cout<<"Removed cluster after SIZE check..."<<endl;
-            continue;
-        }
-        cout<<"-checking SIZE"<<endl;
-        if (removeClusterOnSize(cloud,tmp_clusterR) != 1){
-//            my_HOR_clusters.push_back(tmp_clusterR);
-//            cout<<"Removed cluster after SIZE check..."<<endl;
-            continue;
-        }
-        cout<<"-checking VERT"<<endl;
-        if (removeClusterOnVerticality(cloud,tmp_clusterR) != 1){
-//            my_HOR_clusters.push_back(tmp_clusterR);
-//            cout<<"Removed cluster after VERT check..."<<endl;
-            continue;
-        }
-        else{
-            my_VERT_clusters.push_back(tmp_clusterR);
-        }
-    }
+//    for (int i=0; i < my_clusters.size(); i++)
+//    {
+//        cout<<"----------------------Start Cluster"<<endl;
+////        PointIndices::Ptr tmp_clusterR(new PointIndices(my_clusters[i]));
+//        cout<<"-checking HOR"<<endl;
+////        if (addExtentHorCluster(cloud,tmp_clusterR) == 1){
+////            my_HOR_clusters.push_back(tmp_clusterR);
+//////            cout<<"Removed cluster after SIZE check..."<<endl;
+////            continue;
+////        }
+//        cout<<"-checking SIZE"<<endl;
+//        if (removeClusterOnSize(cloud,my_clusters[i]) != 1){
+////            my_HOR_clusters.push_back(tmp_clusterR);
+////            cout<<"Removed cluster after SIZE check..."<<endl;
+//            continue;
+//        }
+//        cout<<"-checking VERT"<<endl;
+//        if (removeClusterOnVerticality(cloud,my_clusters[i]) != 1){
+////            my_HOR_clusters.push_back(tmp_clusterR);
+////            cout<<"Removed cluster after VERT check..."<<endl;
+//            continue;
+//        }
+//        else{
+//            my_VERT_clusters.push_back(my_clusters[i]);
+//        }
+//    }
 
     ///////////////////////////////////////////////////////////////////////////
     ///
@@ -464,8 +470,8 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (cloud);
-    for (int i=0; i < my_VERT_clusters.size(); i++){
-        if (my_VERT_clusters[i] == 0){
+    for (int i=0; i < my_clusters.size(); i++){
+        if (my_clusters[i] == 0){
             continue;
         }
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
@@ -479,28 +485,28 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
         *result = *inter2 + *inter;
 
-//        if (RGC.Triangulation_Y_N){
-//            saveTriangles(clusterCloud,inter,i);
+
+    }
+
+
+//    for (int i=0; i < my_HOR_clusters.size(); i++){
+//        if (my_HOR_clusters[i] == 0){
+//            continue;
 //        }
-    }
+//        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+//        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
+//        inter2 = result;
+//        filtrerG.setIndices(my_HOR_clusters[i]);
+//        filtrerG.filter(*clusterCloud);
 
+//        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
+//        inter = clusterCloud;
 
-    for (int i=0; i < my_HOR_clusters.size(); i++){
-        if (my_HOR_clusters[i] == 0){
-            continue;
-        }
-        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
-        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
-        inter2 = result;
-        filtrerG.setIndices(my_HOR_clusters[i]);
-        filtrerG.filter(*clusterCloud);
-
-        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-        inter = clusterCloud;
-
-        *result = *inter2 + *inter;
-    }
-
+//        *result = *inter2 + *inter;
+////            if (RGC.Triangulation_Y_N){
+////                saveTriangles(clusterCloud,inter,i);
+////            }
+//}
 
     return  result;
 }
