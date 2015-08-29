@@ -19,7 +19,7 @@ public:
     float SmoothnessThreshold = (SmoothTresh * M_PI / 180);
     float CurvatureThreshold = 1.0;
 
-    int Concave_or_Convex = 1; // 1 == Concave 2 == Convex
+//    int Concave_or_Convex = 1; // 1 == Concave 2 == Convex
 };
 
 class NormalEstConst{

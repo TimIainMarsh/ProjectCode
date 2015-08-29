@@ -12,6 +12,8 @@
 
 #include <pcl/filters/passthrough.h>
 #include <pcl/segmentation/region_growing_rgb.h>
+#include <pcl/segmentation/sac_segmentation.h>
+
 
 #include <cloudoperations.h>
 #include <constants.h>
@@ -146,4 +148,38 @@ normalCalc(PointCloud<PointXYZRGB>::Ptr cloud){
     n.compute (*normals);
 
     return normals;
+}
+
+ModelCoefficients::Ptr
+planeFitting(PointCloud <PointXYZRGB>::Ptr cloud){
+
+    //not being used
+    cout<<"not used"<<endl;
+
+    /*http://pointclouds.org/documentation/tutorials/planar_segmentation.php*/
+
+//    cout<<cloud->size()<<endl;
+
+    ModelCoefficients::Ptr coefficients (new ModelCoefficients);
+    PointIndices::Ptr inliers (new PointIndices);
+    // Create the segmentation object
+    SACSegmentation<PointXYZRGB> seg;
+    // Optional
+    seg.setOptimizeCoefficients (true);
+    // Mandatory
+    seg.setInputCloud (cloud);
+    seg.setModelType (SACMODEL_PLANE);
+    seg.setMethodType (SAC_RANSAC);
+    seg.setDistanceThreshold (0.01);
+
+
+    seg.segment (*inliers, *coefficients);
+
+    if (inliers->indices.size () == 0)
+    {
+      PCL_ERROR ("Could not estimate a planar model for the given dataset.");
+      exit(-1);
+    }
+    return coefficients;
+
 }
