@@ -50,40 +50,6 @@ using namespace pcl;
 using namespace std;
 
 
-ModelCoefficients::Ptr
-planeFitting(PointCloud <PointXYZRGB>::Ptr cloud){
-
-    //not being used
-    cout<<"not used"<<endl;
-
-    /*http://pointclouds.org/documentation/tutorials/planar_segmentation.php*/
-
-//    cout<<cloud->size()<<endl;
-
-    ModelCoefficients::Ptr coefficients (new ModelCoefficients);
-    PointIndices::Ptr inliers (new PointIndices);
-    // Create the segmentation object
-    SACSegmentation<PointXYZRGB> seg;
-    // Optional
-    seg.setOptimizeCoefficients (true);
-    // Mandatory
-    seg.setInputCloud (cloud);
-    seg.setModelType (SACMODEL_PLANE);
-    seg.setMethodType (SAC_RANSAC);
-    seg.setDistanceThreshold (0.01);
-
-
-    seg.segment (*inliers, *coefficients);
-
-    if (inliers->indices.size () == 0)
-    {
-      PCL_ERROR ("Could not estimate a planar model for the given dataset.");
-      exit(-1);
-    }
-    return coefficients;
-
-}
-
 PointCloud<PointXYZRGB>::Ptr
 BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
 
@@ -107,7 +73,7 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
 
 
 
-    if (decide == 1){   
+    if (decide == 1){
         //CONCAVE HULL
         // Copy the points of the plane to a new cloud.
         ExtractIndices<PointXYZRGB> extract;

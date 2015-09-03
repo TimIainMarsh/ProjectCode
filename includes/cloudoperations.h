@@ -19,4 +19,6 @@ pcl::PointCloud<pcl::Normal>::Ptr normalCalc(pcl::PointCloud<pcl::PointXYZRGB>::
 
 pcl::PointCloud <pcl::PointNormal>::Ptr XYZRGBtoPointNormal(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud,pcl::PointCloud<pcl::Normal>::Ptr normals);
 
+pcl::ModelCoefficients::Ptr planeFitting(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud);
+
 #endif // CLOUDOPERATIONS_H
