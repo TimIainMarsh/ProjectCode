@@ -428,27 +428,9 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         my_clusters.push_back(tmp_clusterR);
     }
 
-    PointCloud <PointXYZRGB>::Ptr segCloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
-
-    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+    PointCloud <PointXYZRGB>::Ptr cloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
 
 
-    ExtractIndices<PointXYZRGB> filtrerG_1 (true);
-    filtrerG_1.setInputCloud (segCloud);
-    for(int count = 0; count < clusters.size();count ++){
-        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-
-        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
-
-        inter2 = cloud;
-
-        filtrerG_1.setIndices(my_clusters[count]);
-        filtrerG_1.filter(*inter);
-
-        *cloud = *inter2 + *inter;
-
-
-    }
     CloudOperations CO;
     CO.Viewer(cloud);
     //////////////////////////////////////////////////////////////////////////
@@ -467,32 +449,25 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     vector <PointIndices::Ptr> my_VERT_clusters;
 //    vector <PointIndices::Ptr> my_HOR_clusters;
 
-//    for (int i=0; i < my_clusters.size(); i++)
-//    {
-//        cout<<"----------------------Start Cluster"<<endl;
-////        PointIndices::Ptr tmp_clusterR(new PointIndices(my_clusters[i]));
-//        cout<<"-checking HOR"<<endl;
-////        if (addExtentHorCluster(cloud,tmp_clusterR) == 1){
-////            my_HOR_clusters.push_back(tmp_clusterR);
-//////            cout<<"Removed cluster after SIZE check..."<<endl;
-////            continue;
-////        }
-//        cout<<"-checking SIZE"<<endl;
-//        if (removeClusterOnSize(cloud,my_clusters[i]) != 1){
-////            my_HOR_clusters.push_back(tmp_clusterR);
-////            cout<<"Removed cluster after SIZE check..."<<endl;
-//            continue;
-//        }
-//        cout<<"-checking VERT"<<endl;
-//        if (removeClusterOnVerticality(cloud,my_clusters[i]) != 1){
-////            my_HOR_clusters.push_back(tmp_clusterR);
-////            cout<<"Removed cluster after VERT check..."<<endl;
-//            continue;
-//        }
-//        else{
-//            my_VERT_clusters.push_back(my_clusters[i]);
-//        }
-//    }
+    for (int i=0; i < clusters.size(); i++)
+    {
+        cout<<"----------------------Start Cluster"<<endl;
+        cout<<"-checking HOR"<<endl;
+
+        cout<<"-checking SIZE"<<endl;
+        if (removeClusterOnSize(cloud,my_clusters[i]) != 1){
+//            cout<<"Removed cluster after SIZE check..."<<endl;
+            continue;
+        }
+        cout<<"-checking VERT"<<endl;
+        if (removeClusterOnVerticality(cloud,my_clusters[i]) != 1){
+//            cout<<"Removed cluster after VERT check..."<<endl;
+            continue;
+        }
+        else{
+            my_VERT_clusters.push_back(my_clusters[i]);
+        }
+    }
 
     ///////////////////////////////////////////////////////////////////////////
     ///
@@ -504,10 +479,8 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (cloud);
-    for (int i=0; i < my_clusters.size(); i++){
-        if (my_clusters[i] == 0){
-            continue;
-        }
+    for (int i=0; i < my_VERT_clusters.size(); i++){
+
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
         inter2 = result;
@@ -522,25 +495,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
     }
 
-
-//    for (int i=0; i < my_HOR_clusters.size(); i++){
-//        if (my_HOR_clusters[i] == 0){
-//            continue;
-//        }
-//        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
-//        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
-//        inter2 = result;
-//        filtrerG.setIndices(my_HOR_clusters[i]);
-//        filtrerG.filter(*clusterCloud);
-
-//        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-//        inter = clusterCloud;
-
-//        *result = *inter2 + *inter;
-////            if (RGC.Triangulation_Y_N){
-////                saveTriangles(clusterCloud,inter,i);
-////            }
-//}
 
     return  result;
 }
@@ -557,7 +511,7 @@ main()
     CloudOperations CO;
     displayPTcloud DPT;
 
-    string filename = "../ptClouds/DeepSpace-CutDown";
+    string filename = "../ptClouds/Ivan-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
 
