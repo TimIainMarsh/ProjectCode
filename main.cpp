@@ -274,79 +274,102 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
     }
 }
 
+
 int
-addExtentHorCluster(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
-{
+GetHORclusters(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster){
 
-    ////////////////////////////////////////////////////////////////////////////////
+    if (cluster->indices.size() == 0)
+        return 0;
+
+    //////////////////////////////////////////////////////////////////////////
+    /// Fitting a plae and taking the a,b,c values as normal to the plane
+    /// should probaby be done with PCA for speed but for now it works
     ///
-    ///use removeClusterOnVerticality to determin if the cluster is horisontal
-    /// if it is vertical removeClusterOnVerticality returns 1
-    /// if horizontal it returns 0. look for a 0
+    /// if angle from vert greater than set value segment rejected
     ///
-    /// ////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
+    ModelCoefficients::Ptr coefficients(new ModelCoefficients);
+    SACSegmentation<PointXYZRGB> segmentation;
+    segmentation.setInputCloud(input_cloud);
+    segmentation.setIndices(cluster);
+    segmentation.setModelType(SACMODEL_PLANE);
+    segmentation.setMethodType(SAC_RANSAC);
+    segmentation.setDistanceThreshold(0.01);
+    segmentation.setOptimizeCoefficients(true);
+    PointIndices::Ptr inlierIndices(new PointIndices);
+    segmentation.segment(*inlierIndices, *coefficients);
 
-//    if (removeClusterOnVerticality(input_cloud,cluster) == 1){
-//        cout<<"check failed"<<endl;
-//        return 0;
-//    }
+    //Model Coeff and vert axis creating angle from vertical
 
-//    CloudOperations CO;
-//    CO.Viewer(input_cloud);
+    Eigen::Vector3f plane_normal(coefficients->values[0],coefficients->values[1],coefficients->values[2]);
+    Eigen::Vector3f vert_axis(0.0,0.0,1.0);
 
-
-    //finding cloud vertical extent
-    float cloud_max_Z = input_cloud->points[0].z;
-    float cloud_min_Z = input_cloud->points[0].z;
-
-    for(int i = 0; i < input_cloud->points.size(); i++ ){
-        if(input_cloud->points[i].z >= cloud_max_Z){
-            cloud_max_Z = input_cloud->points[i].z;
-        }
-    }
-
-    for(int j = 0; j < input_cloud->points.size(); j++ ){
-        if(input_cloud->points[j].z <= cloud_min_Z){
-            cloud_min_Z = input_cloud->points[j].z;
-        }
-    }
-
-    ExtractIndices<PointXYZRGB> filtrerG (true);
-    filtrerG.setInputCloud (input_cloud);
-    PointCloud <PointXYZRGB>::Ptr cluster_cloud(new PointCloud <PointXYZRGB>);
-    filtrerG.setIndices(cluster);
-    filtrerG.filter(*cluster_cloud);
-
-    //finding vertical limits of cluster
-    float cluster_max_Z = cluster_cloud->points[0].z;
-    float cluster_min_Z = cluster_cloud->points[0].z;
-
-    for(int i = 0; i < cluster_cloud->points.size(); i++ ){
-        if(cluster_cloud->points[i].z >= cluster_max_Z){
-            cluster_max_Z = cluster_cloud->points[i].z;
-        }
-    }
-
-    for(int j = 0; j < cluster_cloud->points.size(); j++ ){
-        if(input_cloud->points[j].z <= cluster_min_Z){
-            cluster_min_Z = cluster_cloud->points[j].z;
-        }
-    }
-    cout<<"MAX: "<<cluster_max_Z<<"  "<<cloud_max_Z<<endl;
-    cout<<"MIN: "<<cluster_min_Z<<"  "<<cloud_min_Z<<endl;
-
-
-
-    if (cluster_max_Z == cloud_max_Z){
-        return 1;
-    }
-    else if (cluster_min_Z == cloud_min_Z){
-        return 1;
+    float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
+    cout<<angleFromVert<<endl;
+    if (angleFromVert <= 60.0){
+            return 1;
     }
     else{
         return 0;
     }
+
+}
+
+float
+GetMaxOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+{
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///
+    /// getting max value in cluster
+    ///
+    //////////////////////////////////////////////////////////////////////////
+
+
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (input_cloud);
+    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+    filtrerG.setIndices(cluster);
+    filtrerG.filter(*cloud);
+
+    float max_Z = cloud->points[0].z;
+
+    for(int i = 0; i < cloud->points.size(); i++ ){
+        if(cloud->points[i].z >= max_Z){
+            max_Z = cloud->points[i].z;
+        }
+    }
+    return max_Z;
+}
+
+float
+GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+{
+
+
+    ///////////////////////////////////////////////////////////////////////////
+    ///
+    /// getting max value in cluster
+    ///
+    //////////////////////////////////////////////////////////////////////////
+
+
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (input_cloud);
+    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
+    filtrerG.setIndices(cluster);
+    filtrerG.filter(*cloud);
+
+    float min_Z = cloud->points[0].z;
+
+    for(int i = 0; i < cloud->points.size(); i++ ){
+        if(cloud->points[i].z <= min_Z){
+            min_Z = cloud->points[i].z;
+        }
+    }
+    return min_Z;
 }
 
 
@@ -401,7 +424,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     CO.Viewer(cloud);
     //////////////////////////////////////////////////////////////////////////
     ///
-    /// Cluster rejecting section
+    /// Cluster rejecting section for VERTICAL
     ///
     /// checks for size then for verticality.
     /// the size and verticality return a 1 if the cluster succeeds
@@ -435,6 +458,39 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////
+    ///
+    /// Cluster rejecting section for HORIZONTAL
+    ///
+    ///////////////////////////////////////////////////////////////////////////
+
+
+    vector <PointIndices::Ptr> my_HOR_clusters;
+
+    for (int i=0; i < clusters.size(); i++)
+    {
+        if (GetHORclusters(cloud,my_clusters[i]) == 1){
+            my_HOR_clusters.push_back(my_clusters[i]);
+            continue;
+        }
+    }
+    int maxSeg = -1;
+    float maxSegHeight = -100.0;
+    int minSeg = -1;
+    float minSegHeight = -100.0;
+    for (int i=0; i < my_HOR_clusters.size(); i++)
+    {
+        if (GetMaxOfSeg(cloud,my_HOR_clusters[i]) > maxSegHeight){
+            maxSeg = i;
+        }
+        if (GetMaxOfSeg(cloud,my_HOR_clusters[i]) < minSegHeight){
+            minSeg = i;
+        }
+    }
+
+
+
+
     ///////////////////////////////////////////////////////////////////////////
     ///
     /// Concatinating the clusters into the full cloud
@@ -461,6 +517,24 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
     }
 
+    PointCloud <PointXYZRGB>::Ptr _1(new PointCloud <PointXYZRGB>);
+    PointCloud <PointXYZRGB>::Ptr _inter_1(new PointCloud <PointXYZRGB>);
+    _inter_1 = result;
+    filtrerG.setIndices(my_HOR_clusters[maxSeg]);
+    filtrerG.filter(*_1);
+    PointCloud <PointXYZRGB>::Ptr inter_1(new PointCloud <PointXYZRGB>);
+    inter_1 = _1;
+    *result = *_inter_1 + *inter_1;
+
+    PointCloud <PointXYZRGB>::Ptr _2(new PointCloud <PointXYZRGB>);
+    PointCloud <PointXYZRGB>::Ptr _inter_2(new PointCloud <PointXYZRGB>);
+    _inter_2 = result;
+    filtrerG.setIndices(my_HOR_clusters[minSeg]);
+    filtrerG.filter(*_2);
+    PointCloud <PointXYZRGB>::Ptr inter_2(new PointCloud <PointXYZRGB>);
+    inter_2 = _2;
+    *result = *_inter_2 + *inter_2;
+
 
     return  result;
 }
@@ -477,7 +551,7 @@ main()
     CloudOperations CO;
     displayPTcloud DPT;
 
-    string filename = "../ptClouds/Ivan-CutDown";
+    string filename = "../ptClouds/GTL-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
 
