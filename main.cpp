@@ -420,8 +420,8 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     PointCloud <PointXYZRGB>::Ptr cloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
 
 
-    CloudOperations CO;
-    CO.Viewer(cloud);
+//    CloudOperations CO;
+//    CO.Viewer(cloud);
     //////////////////////////////////////////////////////////////////////////
     ///
     /// Cluster rejecting section for VERTICAL
@@ -475,21 +475,25 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         }
     }
     int maxSeg = -1;
-    float maxSegHeight = -100.0;
+    float maxSegHeight = -0;
     int minSeg = -1;
-    float minSegHeight = -100.0;
+    float minSegHeight = 0;
     for (int i=0; i < my_HOR_clusters.size(); i++)
     {
-        if (GetMaxOfSeg(cloud,my_HOR_clusters[i]) > maxSegHeight){
+        float HighsegHeight = GetMaxOfSeg(cloud,my_HOR_clusters[i]);
+        if (HighsegHeight > maxSegHeight){
+            maxSegHeight = HighsegHeight;
             maxSeg = i;
         }
-        if (GetMaxOfSeg(cloud,my_HOR_clusters[i]) < minSegHeight){
+        float LowsegHeight = GetMaxOfSeg(cloud,my_HOR_clusters[i]);
+        if (LowsegHeight < minSegHeight){
+            minSegHeight = LowsegHeight;
             minSeg = i;
         }
     }
 
-
-
+    cout<<"Max: "<<maxSeg<<"-"<<maxSegHeight<<endl;
+    cout<<"Min: "<<minSeg<<"-"<<minSegHeight<<endl;
 
     ///////////////////////////////////////////////////////////////////////////
     ///
@@ -516,6 +520,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
 
     }
+    cout<<"1"<<endl;
 
     PointCloud <PointXYZRGB>::Ptr _1(new PointCloud <PointXYZRGB>);
     PointCloud <PointXYZRGB>::Ptr _inter_1(new PointCloud <PointXYZRGB>);
@@ -525,6 +530,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     PointCloud <PointXYZRGB>::Ptr inter_1(new PointCloud <PointXYZRGB>);
     inter_1 = _1;
     *result = *_inter_1 + *inter_1;
+    cout<<"2"<<endl;
 
     PointCloud <PointXYZRGB>::Ptr _2(new PointCloud <PointXYZRGB>);
     PointCloud <PointXYZRGB>::Ptr _inter_2(new PointCloud <PointXYZRGB>);
@@ -535,6 +541,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     inter_2 = _2;
     *result = *_inter_2 + *inter_2;
 
+    cout<<"3"<<endl;
 
     return  result;
 }
@@ -542,8 +549,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 int
 main()
 {
-
-
     timeDate tmd;
     tmd.print(1);
     cout<<"Start"<< endl;
@@ -551,7 +556,7 @@ main()
     CloudOperations CO;
     displayPTcloud DPT;
 
-    string filename = "../ptClouds/GTL-CutDown";
+    string filename = "../ptClouds/DeepSpace-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
 
