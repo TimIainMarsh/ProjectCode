@@ -1,0 +1,75 @@
+
+
+
+
+
+
+
+
+
+
+PointCloud<PointXYZRGB>::Ptr
+BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
+
+    /*http://pointclouds.org/documentation/tutorials/hull_2d.php*/
+
+    HullConst HC;
+
+    PointCloud<PointXYZRGB>::Ptr plane(new PointCloud<PointXYZRGB>);
+    PointCloud<PointXYZRGB>::Ptr cloudHull(new PointCloud<PointXYZRGB>);
+
+    // Get the plane model, if present.
+    ModelCoefficients::Ptr coefficients(new ModelCoefficients);
+    SACSegmentation<PointXYZRGB> segmentation;
+    segmentation.setInputCloud(cloud);
+    segmentation.setModelType(SACMODEL_PLANE);
+    segmentation.setMethodType(SAC_RANSAC);
+    segmentation.setDistanceThreshold(0.01);
+    segmentation.setOptimizeCoefficients(true);
+    PointIndices::Ptr inlierIndices(new PointIndices);
+    segmentation.segment(*inlierIndices, *coefficients);
+
+
+
+    if (decide == 1){
+        //CONCAVE HULL
+        // Copy the points of the plane to a new cloud.
+        ExtractIndices<PointXYZRGB> extract;
+        extract.setInputCloud(cloud);
+        extract.setIndices(inlierIndices);
+        extract.filter(*plane);
+
+        // Object for retrieving the concave hull.
+        ConcaveHull<PointXYZRGB> hull;
+        hull.setInputCloud(plane);
+        hull.setKeepInformation(HC.KeepInfo);
+        // Set alpha, which is the maximum length from a vertex to the center of the voronoi cell
+        // (the smaller, the greater the resolution of the hull).
+        hull.setDimension(HC.setDimConcave);
+
+        hull.setAlpha(HC.Alpha);   //--->0.1
+        hull.reconstruct(*cloudHull);
+
+        return cloudHull;
+    }
+
+    if(decide == 2){
+
+        //CONVEX HULL
+
+
+        ExtractIndices<PointXYZRGB> extract;
+        extract.setInputCloud(cloud);
+        extract.setIndices(inlierIndices);
+        extract.filter(*plane);
+
+
+        ConvexHull<PointXYZRGB> hull;
+        hull.setInputCloud(plane);
+        hull.setDimension(HC.setDimConvex);
+        hull.reconstruct(*cloudHull);
+        return cloudHull;
+
+    }
+}
+
