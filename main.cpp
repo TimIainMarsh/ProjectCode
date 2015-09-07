@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <tuple>
 
 //generic
 #include <pcl/common/io.h>
@@ -24,6 +25,8 @@
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/sample_consensus/model_types.h>
 
+#include <pcl/features/moment_of_inertia_estimation.h>
+#include <pcl/visualization/cloud_viewer.h>
 
 
 
@@ -159,7 +162,7 @@ GetHORclusters(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr clust
     Eigen::Vector3f vert_axis(0.0,0.0,1.0);
 
     float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
-    cout<<angleFromVert<<endl;
+//    cout<<angleFromVert<<endl;
     if (angleFromVert <= 60.0){
             return 1;
     }
@@ -226,7 +229,7 @@ GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 }
 
 
-vector <PointIndices::Ptr>
+tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
 segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr normals){
     //////////////////////////////////////////////////////////////////////////////////
     ///
@@ -399,32 +402,45 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     inter_2 = _2;
     *result = *_inter_2 + *inter_2;
 
-//    return  result;
+    cout<<my_VERT_clusters.size()<<endl;
 
     vector <PointIndices::Ptr> extent_clusters;
+
+    cout<<extent_clusters.size()<<endl;
+
     extent_clusters = my_VERT_clusters;
+
+    cout<<extent_clusters.size()<<endl;
+
     extent_clusters.push_back(my_HOR_clusters[maxSeg]);
     extent_clusters.push_back(my_HOR_clusters[minSeg]);
 
 
 
+    cout<<extent_clusters.size()<<endl;
 
-    return extent_clusters;
+    return make_tuple(extent_clusters, result);
+
+//    return extent_clusters;
 }
 
 PointCloud<PointXYZRGB>::Ptr
-vectorToCloud(vector <PointIndices::Ptr> indices){
+vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud){
+    cout<<"In function"<<endl;
+    cout<<&indices<<endl;
 
-    PointCloud <PointXYZRGB>::Ptr cloud(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (cloud);
-    for (int i=0; i < indices.size(); i++){
+    for (int i=0; i <= indices.size(); i++){
 
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
         inter2 = cloud;
         filtrerG.setIndices(indices[i]);
         filtrerG.filter(*clusterCloud);
+
+        CloudOperations CO;
+        CO.Viewer(clusterCloud);
 
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
         inter = clusterCloud;
@@ -439,49 +455,47 @@ int
 main()
 {
     timeDate tmd;
-    tmd.print(1);
-    cout<<"Start"<< endl;
-
     CloudOperations CO;
     displayPTcloud DPT;
-
-    string filename = "../ptClouds/DeepSpace-Full";
+    tmd.print(1);
+    cout<<"Start"<< endl;
+    string filename = "../ptClouds/DeepSpace-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
-
     cout<<"Calculating Normals..."<< endl;
-
     PointCloud<Normal>::Ptr normals = normalCalc(cloud);
-
     cout<<"Normals Calculated..."<< endl;
-
 
     cout<<"Segmentation Starting..."<< endl;
 
-    vector <PointIndices::Ptr> vector_of_segments = segmentor(cloud, normals);
+    vector <PointIndices::Ptr> vector_of_segments;
+
+    std::tie(vector_of_segments, cloud) = segmentor(cloud, normals);
+
+    cout<<vector_of_segments.size()<<endl;
+
+
+    tmd.print(1);
+    cloud = vectorToCloud(vector_of_segments, cloud);
     tmd.print(1);
 
 
 
 
-    cloud = vectorToCloud(vector_of_segments);
+
 
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
     DPT.write(cloud,outputFileName + ".pcd");
-
-
     tmd.print(1);
+
     cout<<"Displaying Cloud..."<< endl;
     CO.Viewer(cloud);
 
-
-
-
     cout<<"End"<< endl;
     return 0;
-}
+    }
 
 
 
