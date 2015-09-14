@@ -30,8 +30,8 @@
 
 #include <pcl/features/moment_of_inertia_estimation.h>
 
-
-
+#include <pcl/ModelCoefficients.h>
+#include <pcl/filters/project_inliers.h>
 
 using namespace pcl;
 using namespace std;
@@ -231,6 +231,78 @@ GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
     return min_Z;
 }
 
+tuple<  pcl::PointXYZRGB , pcl::PointXYZRGB  >
+getBounding(PointCloud <PointXYZRGB>::Ptr cloud)
+{
+    pcl::MomentOfInertiaEstimation <pcl::PointXYZRGB> feature_extractor;
+    feature_extractor.setInputCloud (cloud);
+    feature_extractor.compute ();
+
+    pcl::PointXYZRGB min_point_OBB;
+    pcl::PointXYZRGB max_point_OBB;
+    pcl::PointXYZRGB position_OBB;
+    Eigen::Matrix3f rotational_matrix_OBB;
+
+    feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+
+    return make_tuple(min_point_OBB, max_point_OBB);
+}
+float
+RandomFloat(float min, float max)
+{
+    float r = (float)rand() / (float)RAND_MAX;
+    return min + r * (max - min);
+}
+
+ModelCoefficients::Ptr
+getModelCoeff(PointCloud<PointXYZRGB>::Ptr input_cloud)
+{
+
+
+    ModelCoefficients::Ptr coefficients(new ModelCoefficients);
+    SACSegmentation<PointXYZRGB> segmentation;
+    segmentation.setInputCloud(input_cloud);
+    segmentation.setModelType(SACMODEL_PLANE);
+    segmentation.setMethodType(SAC_RANSAC);
+    segmentation.setDistanceThreshold(0.01);
+    segmentation.setOptimizeCoefficients(true);
+    PointIndices::Ptr inlierIndices(new PointIndices);
+    segmentation.segment(*inlierIndices, *coefficients);
+
+
+    return coefficients;
+
+}
+
+PointCloud<PointXYZRGB>::Ptr
+ExpandCloud(PointCloud <PointXYZRGB>::Ptr result,PointCloud <PointXYZRGB>::Ptr cloud){
+
+    pcl::PointXYZRGB min_point_OBB;
+    pcl::PointXYZRGB max_point_OBB;
+
+    tie(min_point_OBB, max_point_OBB) = getBounding(result);
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr test (new pcl::PointCloud<pcl::PointXYZRGB>);
+    for (size_t i = 0; i < cloud->points.size(); ++i)
+    {
+      cout<<RandomFloat(max_point_OBB.x,min_point_OBB.x)<<endl;
+      cout<<RandomFloat(max_point_OBB.y,min_point_OBB.y)<<endl;
+      cout<<RandomFloat(max_point_OBB.z,min_point_OBB.z)<<endl;
+    }
+//    *cloud = *cloud + *test;
+
+//    pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
+//    coefficients = getModelCoeff(cloud);
+
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_projected (new pcl::PointCloud<pcl::PointXYZRGB>);
+//    pcl::ProjectInliers<pcl::PointXYZRGB> proj;
+//    proj.setModelType (pcl::SACMODEL_PLANE);
+//    proj.setInputCloud (cloud);
+//    proj.setModelCoefficients (coefficients);
+//    proj.filter (*cloud_projected);
+
+    return cloud;
+}
+
 
 tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
 segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr normals){
@@ -351,8 +423,8 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         }
     }
 
-    cout<<"Max: "<<maxSeg<<"-"<<maxSegHeight<<endl;
-    cout<<"Min: "<<minSeg<<"-"<<minSegHeight<<endl;
+//    cout<<"Max: "<<maxSeg<<"-"<<maxSegHeight<<endl;
+//    cout<<"Min: "<<minSeg<<"-"<<minSegHeight<<endl;
 
     ///////////////////////////////////////////////////////////////////////////
     ///
@@ -405,102 +477,30 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     *result = *_inter_2 + *inter_2;
 
 
-
-    /////////////////////////////////////////////////////////////////////////////
-    ///
-    ///
-    /////////////////////////////////////////////////////////////////////////////
-
-
-    cout<<my_VERT_clusters.size()<<endl;
-
     vector <PointIndices::Ptr> extent_clusters;
-
-    extent_clusters = my_VERT_clusters;
 
     extent_clusters.push_back(my_HOR_clusters[maxSeg]);
     extent_clusters.push_back(my_HOR_clusters[minSeg]);
 
-    return make_tuple(extent_clusters, result);
 
-//    return extent_clusters;
-}
-
-PointCloud<PointXYZRGB>::Ptr
-vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud){
-
-
-    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
-    ExtractIndices<PointXYZRGB> filtrerG (true);
-    filtrerG.setInputCloud (cloud);
-    for (int i=0; i < indices.size(); i++){
+    PointCloud <PointXYZRGB>::Ptr newCloud (new PointCloud <PointXYZRGB>);
+    filtrerG.setInputCloud (result);
+    for (int i=0; i < extent_clusters.size(); i++){
 
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
-        inter2 = result;
-        filtrerG.setIndices(indices[i]);
+        inter2 = newCloud;
+        filtrerG.setIndices(extent_clusters[i]);
         filtrerG.filter(*clusterCloud);
 
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-        inter = clusterCloud;
-
-        *result = *inter2 + *inter;
-
-
+        inter = ExpandCloud(result,clusterCloud);
+        CloudOperations CO;
+        CO.Viewer(newCloud);
+        *newCloud = *inter2 + *inter;
     }
-    return result;
-}
-
-
-void
-showBoundingBox(PointCloud <PointXYZRGB>::Ptr cloud)
-{
-  pcl::MomentOfInertiaEstimation <pcl::PointXYZRGB> feature_extractor;
-  feature_extractor.setInputCloud (cloud);
-  feature_extractor.compute ();
-
-  std::vector <float> moment_of_inertia;
-  std::vector <float> eccentricity;
-  pcl::PointXYZRGB min_point_AABB;
-  pcl::PointXYZRGB max_point_AABB;
-  pcl::PointXYZRGB min_point_OBB;
-  pcl::PointXYZRGB max_point_OBB;
-  pcl::PointXYZRGB position_OBB;
-  Eigen::Matrix3f rotational_matrix_OBB;
-  float major_value, middle_value, minor_value;
-  Eigen::Vector3f major_vector, middle_vector, minor_vector;
-  Eigen::Vector3f mass_center;
-
-  feature_extractor.getMomentOfInertia (moment_of_inertia);
-  feature_extractor.getEccentricity (eccentricity);
-  feature_extractor.getAABB (min_point_AABB, max_point_AABB);
-  feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
-  feature_extractor.getEigenValues (major_value, middle_value, minor_value);
-  feature_extractor.getEigenVectors (major_vector, middle_vector, minor_vector);
-  feature_extractor.getMassCenter (mass_center);
-
-  boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-  viewer->addCoordinateSystem (1.0);
-  viewer->initCameraParameters ();
-  viewer->addPointCloud<pcl::PointXYZRGB> (cloud);
-  viewer->addCube (min_point_AABB.x, max_point_AABB.x, min_point_AABB.y, max_point_AABB.y, min_point_AABB.z, max_point_AABB.z, 1.0, 1.0, 0.0, "AABB");
-
-  Eigen::Vector3f position (position_OBB.x, position_OBB.y, position_OBB.z);
-  Eigen::Quaternionf quat (rotational_matrix_OBB);
-  viewer->addCube (position, quat, max_point_OBB.x - min_point_OBB.x, max_point_OBB.y - min_point_OBB.y, max_point_OBB.z - min_point_OBB.z, "OBB");
-
-  pcl::PointXYZRGB center (mass_center (0), mass_center (1), mass_center (2));
-  pcl::PointXYZRGB x_axis (major_vector (0) + mass_center (0), major_vector (1) + mass_center (1), major_vector (2) + mass_center (2));
-  pcl::PointXYZRGB y_axis (middle_vector (0) + mass_center (0), middle_vector (1) + mass_center (1), middle_vector (2) + mass_center (2));
-  pcl::PointXYZRGB z_axis (minor_vector (0) + mass_center (0), minor_vector (1) + mass_center (1), minor_vector (2) + mass_center (2));
-  viewer->addLine (center, x_axis, 1.0f, 0.0f, 0.0f, "major eigen vector");
-  viewer->addLine (center, y_axis, 0.0f, 1.0f, 0.0f, "middle eigen vector");
-  viewer->addLine (center, z_axis, 0.0f, 0.0f, 1.0f, "minor eigen vector");
-
-  while(!viewer->wasStopped())
-  {
-    viewer->spinOnce();
-  }
+cout<<"HERE"<<endl;
+    return make_tuple(my_clusters, newCloud);
 }
 
 int
@@ -511,7 +511,7 @@ main()
     displayPTcloud DPT;
     tmd.print(1);
     cout<<"Start"<< endl;
-    string filename = "../ptClouds/DeepSpace-Full";
+    string filename = "../ptClouds/DeepSpace-CutDown";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
     cout<<"Calculating Normals..."<< endl;
@@ -524,10 +524,6 @@ main()
 
     std::tie(vector_of_segments, cloud) = segmentor(cloud, normals);
 
-    cout<<vector_of_segments.size()<<endl;
-
-    tmd.print(1);
-    showBoundingBox(cloud);
     tmd.print(1);
 
     cout<<"Writing Cloud to File..."<<endl;
@@ -540,7 +536,7 @@ main()
 
     cout<<"End"<< endl;
     return 0;
-    }
+}
 
 
 
