@@ -28,6 +28,9 @@
 #include <pcl/features/moment_of_inertia_estimation.h>
 #include <pcl/visualization/cloud_viewer.h>
 
+#include <pcl/features/moment_of_inertia_estimation.h>
+
+
 
 
 using namespace pcl;
@@ -207,7 +210,7 @@ GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 
     ///////////////////////////////////////////////////////////////////////////
     ///
-    /// getting max value in cluster
+    /// getting min value in cluster
     ///
     //////////////////////////////////////////////////////////////////////////
 
@@ -354,7 +357,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     ///////////////////////////////////////////////////////////////////////////
     ///
     /// Concatinating the clusters into the full cloud
-    /// making sure to remove clusters that have been removed and made = to 0
     ///
     ///////////////////////////////////////////////////////////////////////////
 
@@ -402,22 +404,22 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     inter_2 = _2;
     *result = *_inter_2 + *inter_2;
 
+
+
+    /////////////////////////////////////////////////////////////////////////////
+    ///
+    ///
+    /////////////////////////////////////////////////////////////////////////////
+
+
     cout<<my_VERT_clusters.size()<<endl;
 
     vector <PointIndices::Ptr> extent_clusters;
 
-    cout<<extent_clusters.size()<<endl;
-
     extent_clusters = my_VERT_clusters;
-
-    cout<<extent_clusters.size()<<endl;
 
     extent_clusters.push_back(my_HOR_clusters[maxSeg]);
     extent_clusters.push_back(my_HOR_clusters[minSeg]);
-
-
-
-    cout<<extent_clusters.size()<<endl;
 
     return make_tuple(extent_clusters, result);
 
@@ -426,30 +428,80 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
 PointCloud<PointXYZRGB>::Ptr
 vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud){
-    cout<<"In function"<<endl;
-    cout<<&indices<<endl;
 
+
+    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (cloud);
-    for (int i=0; i <= indices.size(); i++){
+    for (int i=0; i < indices.size(); i++){
 
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
-        inter2 = cloud;
+        inter2 = result;
         filtrerG.setIndices(indices[i]);
         filtrerG.filter(*clusterCloud);
-
-        CloudOperations CO;
-        CO.Viewer(clusterCloud);
 
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
         inter = clusterCloud;
 
-        *cloud = *inter2 + *inter;
+        *result = *inter2 + *inter;
+
+
     }
-    return cloud;
+    return result;
 }
 
+
+void
+showBoundingBox(PointCloud <PointXYZRGB>::Ptr cloud)
+{
+  pcl::MomentOfInertiaEstimation <pcl::PointXYZRGB> feature_extractor;
+  feature_extractor.setInputCloud (cloud);
+  feature_extractor.compute ();
+
+  std::vector <float> moment_of_inertia;
+  std::vector <float> eccentricity;
+  pcl::PointXYZRGB min_point_AABB;
+  pcl::PointXYZRGB max_point_AABB;
+  pcl::PointXYZRGB min_point_OBB;
+  pcl::PointXYZRGB max_point_OBB;
+  pcl::PointXYZRGB position_OBB;
+  Eigen::Matrix3f rotational_matrix_OBB;
+  float major_value, middle_value, minor_value;
+  Eigen::Vector3f major_vector, middle_vector, minor_vector;
+  Eigen::Vector3f mass_center;
+
+  feature_extractor.getMomentOfInertia (moment_of_inertia);
+  feature_extractor.getEccentricity (eccentricity);
+  feature_extractor.getAABB (min_point_AABB, max_point_AABB);
+  feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+  feature_extractor.getEigenValues (major_value, middle_value, minor_value);
+  feature_extractor.getEigenVectors (major_vector, middle_vector, minor_vector);
+  feature_extractor.getMassCenter (mass_center);
+
+  boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
+  viewer->addCoordinateSystem (1.0);
+  viewer->initCameraParameters ();
+  viewer->addPointCloud<pcl::PointXYZRGB> (cloud);
+  viewer->addCube (min_point_AABB.x, max_point_AABB.x, min_point_AABB.y, max_point_AABB.y, min_point_AABB.z, max_point_AABB.z, 1.0, 1.0, 0.0, "AABB");
+
+  Eigen::Vector3f position (position_OBB.x, position_OBB.y, position_OBB.z);
+  Eigen::Quaternionf quat (rotational_matrix_OBB);
+  viewer->addCube (position, quat, max_point_OBB.x - min_point_OBB.x, max_point_OBB.y - min_point_OBB.y, max_point_OBB.z - min_point_OBB.z, "OBB");
+
+  pcl::PointXYZRGB center (mass_center (0), mass_center (1), mass_center (2));
+  pcl::PointXYZRGB x_axis (major_vector (0) + mass_center (0), major_vector (1) + mass_center (1), major_vector (2) + mass_center (2));
+  pcl::PointXYZRGB y_axis (middle_vector (0) + mass_center (0), middle_vector (1) + mass_center (1), middle_vector (2) + mass_center (2));
+  pcl::PointXYZRGB z_axis (minor_vector (0) + mass_center (0), minor_vector (1) + mass_center (1), minor_vector (2) + mass_center (2));
+  viewer->addLine (center, x_axis, 1.0f, 0.0f, 0.0f, "major eigen vector");
+  viewer->addLine (center, y_axis, 0.0f, 1.0f, 0.0f, "middle eigen vector");
+  viewer->addLine (center, z_axis, 0.0f, 0.0f, 1.0f, "minor eigen vector");
+
+  while(!viewer->wasStopped())
+  {
+    viewer->spinOnce();
+  }
+}
 
 int
 main()
@@ -459,7 +511,7 @@ main()
     displayPTcloud DPT;
     tmd.print(1);
     cout<<"Start"<< endl;
-    string filename = "../ptClouds/DeepSpace-CutDown";
+    string filename = "../ptClouds/DeepSpace-Full";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
     cout<<"Calculating Normals..."<< endl;
@@ -474,16 +526,9 @@ main()
 
     cout<<vector_of_segments.size()<<endl;
 
-
     tmd.print(1);
-    cloud = vectorToCloud(vector_of_segments, cloud);
+    showBoundingBox(cloud);
     tmd.print(1);
-
-
-
-
-
-
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
