@@ -350,7 +350,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
     PointCloud <PointXYZRGB>::Ptr cloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
 
-
 //    CloudOperations CO;
 //    CO.Viewer(cloud);
     //////////////////////////////////////////////////////////////////////////
@@ -406,25 +405,25 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         }
     }
     int maxSeg = -1;
-    float maxSegHeight = -0;
+    float maxSegHeight = -100;
     int minSeg = -1;
-    float minSegHeight = 0;
+    float minSegHeight = 100;
     for (int i=0; i < my_HOR_clusters.size(); i++)
     {
         float HighsegHeight = GetMaxOfSeg(cloud,my_HOR_clusters[i]);
-        if (HighsegHeight > maxSegHeight){
+        if (HighsegHeight >= maxSegHeight){
             maxSegHeight = HighsegHeight;
             maxSeg = i;
         }
-        float LowsegHeight = GetMaxOfSeg(cloud,my_HOR_clusters[i]);
-        if (LowsegHeight < minSegHeight){
+        float LowsegHeight = GetMinOfSeg(cloud,my_HOR_clusters[i]);
+        if (LowsegHeight <= minSegHeight){
             minSegHeight = LowsegHeight;
             minSeg = i;
         }
     }
 
-//    cout<<"Max: "<<maxSeg<<"-"<<maxSegHeight<<endl;
-//    cout<<"Min: "<<minSeg<<"-"<<minSegHeight<<endl;
+    cout<<"Max: "<<maxSeg<<" -   "<<maxSegHeight<<endl;
+    cout<<"Min: "<<minSeg<<" -   "<<minSegHeight<<endl;
 
     ///////////////////////////////////////////////////////////////////////////
     ///
@@ -447,9 +446,9 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         inter = clusterCloud;
 
         *result = *inter2 + *inter;
-
-
     }
+
+
     //////////////////////////////////////////////////////////////////////////////
     ///
     /// after all the vertical clusters added the two extent horizontal
@@ -477,30 +476,40 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     *result = *_inter_2 + *inter_2;
 
 
+
     vector <PointIndices::Ptr> extent_clusters;
+
+    extent_clusters = my_VERT_clusters;
 
     extent_clusters.push_back(my_HOR_clusters[maxSeg]);
     extent_clusters.push_back(my_HOR_clusters[minSeg]);
 
 
-    PointCloud <PointXYZRGB>::Ptr newCloud (new PointCloud <PointXYZRGB>);
-    filtrerG.setInputCloud (result);
-    for (int i=0; i < extent_clusters.size(); i++){
+
+    return make_tuple(extent_clusters, cloud);
+}
+
+PointCloud<PointXYZRGB>::Ptr
+vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud){
+    cout<<"In function"<<endl;
+
+    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (cloud);
+    for (int i=0; i < indices.size(); i++){
 
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
-        inter2 = newCloud;
-        filtrerG.setIndices(extent_clusters[i]);
+        inter2 = result;
+        filtrerG.setIndices(indices[i]);
         filtrerG.filter(*clusterCloud);
 
         PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-        inter = ExpandCloud(result,clusterCloud);
-        CloudOperations CO;
-        CO.Viewer(newCloud);
-        *newCloud = *inter2 + *inter;
+        inter = clusterCloud;
+
+        *result = *inter2 + *inter;
     }
-cout<<"HERE"<<endl;
-    return make_tuple(my_clusters, newCloud);
+    return result;
 }
 
 int
@@ -511,7 +520,7 @@ main()
     displayPTcloud DPT;
     tmd.print(1);
     cout<<"Start"<< endl;
-    string filename = "../ptClouds/DeepSpace-CutDown";
+    string filename = "../ptClouds/box";
     PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
 
     cout<<"Calculating Normals..."<< endl;
@@ -524,7 +533,14 @@ main()
 
     std::tie(vector_of_segments, cloud) = segmentor(cloud, normals);
 
+
     tmd.print(1);
+
+    cloud = vectorToCloud(vector_of_segments, cloud);
+    tmd.print(1);
+
+
+    CO.Viewer(cloud);
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
