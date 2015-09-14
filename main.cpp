@@ -274,35 +274,6 @@ getModelCoeff(PointCloud<PointXYZRGB>::Ptr input_cloud)
 
 }
 
-PointCloud<PointXYZRGB>::Ptr
-ExpandCloud(PointCloud <PointXYZRGB>::Ptr result,PointCloud <PointXYZRGB>::Ptr cloud){
-
-    pcl::PointXYZRGB min_point_OBB;
-    pcl::PointXYZRGB max_point_OBB;
-
-    tie(min_point_OBB, max_point_OBB) = getBounding(result);
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr test (new pcl::PointCloud<pcl::PointXYZRGB>);
-    for (size_t i = 0; i < cloud->points.size(); ++i)
-    {
-      cout<<RandomFloat(max_point_OBB.x,min_point_OBB.x)<<endl;
-      cout<<RandomFloat(max_point_OBB.y,min_point_OBB.y)<<endl;
-      cout<<RandomFloat(max_point_OBB.z,min_point_OBB.z)<<endl;
-    }
-//    *cloud = *cloud + *test;
-
-//    pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients ());
-//    coefficients = getModelCoeff(cloud);
-
-//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_projected (new pcl::PointCloud<pcl::PointXYZRGB>);
-//    pcl::ProjectInliers<pcl::PointXYZRGB> proj;
-//    proj.setModelType (pcl::SACMODEL_PLANE);
-//    proj.setInputCloud (cloud);
-//    proj.setModelCoefficients (coefficients);
-//    proj.filter (*cloud_projected);
-
-    return cloud;
-}
-
 
 tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
 segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr normals){
@@ -512,6 +483,29 @@ vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr 
     return result;
 }
 
+void
+newFunction(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud)
+{
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (cloud);
+    for (int i=0; i < indices.size(); i++){
+        PointIndices::Ptr segment = indices[i];
+        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+        filtrerG.setIndices(segment);
+        filtrerG.filter(*clusterCloud);
+        pcl::PointXYZRGB min_point_OBB;
+        pcl::PointXYZRGB max_point_OBB;
+
+        tie(min_point_OBB ,max_point_OBB) = getBounding(clusterCloud);
+//        cout<<min_point_OBB<<"   "<< max_point_OBB<<endl;
+
+        ModelCoefficients::Ptr modelCoeff;
+        modelCoeff = getModelCoeff(clusterCloud);
+        cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
+
+    }
+}
+
 int
 main()
 {
@@ -533,14 +527,13 @@ main()
 
     std::tie(vector_of_segments, cloud) = segmentor(cloud, normals);
 
+    newFunction(vector_of_segments,cloud);
 
     tmd.print(1);
 
     cloud = vectorToCloud(vector_of_segments, cloud);
     tmd.print(1);
 
-
-    CO.Viewer(cloud);
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
