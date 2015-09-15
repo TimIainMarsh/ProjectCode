@@ -33,6 +33,8 @@
 #include <pcl/ModelCoefficients.h>
 #include <pcl/filters/project_inliers.h>
 
+#include <pcl/common/intersections.h>
+
 using namespace pcl;
 using namespace std;
 
@@ -69,7 +71,7 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
     Eigen::Vector3f vert_axis(0.0,0.0,1.0);
 
     float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
-    cout<<angleFromVert<<endl;
+//    cout<<angleFromVert<<endl;
     if (angleFromVert >= 30.0){
             return 1;
     }
@@ -258,7 +260,6 @@ ModelCoefficients::Ptr
 getModelCoeff(PointCloud<PointXYZRGB>::Ptr input_cloud)
 {
 
-
     ModelCoefficients::Ptr coefficients(new ModelCoefficients);
     SACSegmentation<PointXYZRGB> segmentation;
     segmentation.setInputCloud(input_cloud);
@@ -319,7 +320,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         my_clusters.push_back(tmp_clusterR);
     }
 
-    PointCloud <PointXYZRGB>::Ptr cloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
+    PointCloud <PointXYZRGB>::Ptr segCloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
 
 //    CloudOperations CO;
 //    CO.Viewer(cloud);
@@ -342,16 +343,14 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     for (int i=0; i < clusters.size(); i++)
     {
         cout<<"----------------------Start Cluster"<<endl;
-        cout<<"-checking HOR"<<endl;
-
-        cout<<"-checking SIZE"<<endl;
-        if (removeClusterOnSize(cloud,my_clusters[i]) != 1){
-//            cout<<"Removed cluster after SIZE check..."<<endl;
+        cout<<"-checking VERT"<<endl;
+        if (removeClusterOnVerticality(segCloud,my_clusters[i]) != 1){
+            cout<<"Removed cluster after VERT check..."<<endl;
             continue;
         }
-        cout<<"-checking VERT"<<endl;
-        if (removeClusterOnVerticality(cloud,my_clusters[i]) != 1){
-//            cout<<"Removed cluster after VERT check..."<<endl;
+        cout<<"-checking SIZE"<<endl;
+        if (removeClusterOnSize(segCloud,my_clusters[i]) != 1){
+            cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
         }
         else{
@@ -370,7 +369,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
     for (int i=0; i < clusters.size(); i++)
     {
-        if (GetHORclusters(cloud,my_clusters[i]) == 1){
+        if (GetHORclusters(segCloud,my_clusters[i]) == 1){
             my_HOR_clusters.push_back(my_clusters[i]);
             continue;
         }
@@ -381,20 +380,20 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     float minSegHeight = 100;
     for (int i=0; i < my_HOR_clusters.size(); i++)
     {
-        float HighsegHeight = GetMaxOfSeg(cloud,my_HOR_clusters[i]);
+        float HighsegHeight = GetMaxOfSeg(segCloud,my_HOR_clusters[i]);
         if (HighsegHeight >= maxSegHeight){
             maxSegHeight = HighsegHeight;
             maxSeg = i;
         }
-        float LowsegHeight = GetMinOfSeg(cloud,my_HOR_clusters[i]);
+        float LowsegHeight = GetMinOfSeg(segCloud,my_HOR_clusters[i]);
         if (LowsegHeight <= minSegHeight){
             minSegHeight = LowsegHeight;
             minSeg = i;
         }
     }
 
-    cout<<"Max: "<<maxSeg<<" -   "<<maxSegHeight<<endl;
-    cout<<"Min: "<<minSeg<<" -   "<<minSegHeight<<endl;
+//    cout<<"Max: "<<maxSeg<<" -   "<<maxSegHeight<<endl;
+//    cout<<"Min: "<<minSeg<<" -   "<<minSegHeight<<endl;
 
     ///////////////////////////////////////////////////////////////////////////
     ///
@@ -404,7 +403,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
 
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
-    filtrerG.setInputCloud (cloud);
+    filtrerG.setInputCloud (segCloud);
     for (int i=0; i < my_VERT_clusters.size(); i++){
 
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
@@ -455,14 +454,13 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     extent_clusters.push_back(my_HOR_clusters[maxSeg]);
     extent_clusters.push_back(my_HOR_clusters[minSeg]);
 
-
-
-    return make_tuple(extent_clusters, cloud);
+    cout<<"-----------------------------------------------"<<endl;
+    cout<<"Returning Segments..."<<endl;
+    return make_tuple(extent_clusters, segCloud);
 }
 
 PointCloud<PointXYZRGB>::Ptr
 vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud){
-    cout<<"In function"<<endl;
 
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
@@ -484,26 +482,78 @@ vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr 
 }
 
 void
-newFunction(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud)
+ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud)
 {
+    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (cloud);
+
+    PointIndices::Ptr segment = indices[0];
+    PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+    filtrerG.setIndices(segment);
+    filtrerG.filter(*clusterCloud);
+
+    ModelCoefficients::Ptr modelCoeff_Floor;
+    modelCoeff_Floor = getModelCoeff(clusterCloud);
+
+    pcl::visualization::PCLVisualizer viewer;
+    viewer.addPointCloud(cloud);
+//    viewer.addCoordinateSystem (1.0);
+
+
     for (int i=0; i < indices.size(); i++){
         PointIndices::Ptr segment = indices[i];
         PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
         filtrerG.setIndices(segment);
         filtrerG.filter(*clusterCloud);
-        pcl::PointXYZRGB min_point_OBB;
-        pcl::PointXYZRGB max_point_OBB;
+//        pcl::PointXYZRGB min_point_OBB;
+//        pcl::PointXYZRGB max_point_OBB;
 
-        tie(min_point_OBB ,max_point_OBB) = getBounding(clusterCloud);
-//        cout<<min_point_OBB<<"   "<< max_point_OBB<<endl;
+//        tie(min_point_OBB ,max_point_OBB) = getBounding(cloud);
 
         ModelCoefficients::Ptr modelCoeff;
         modelCoeff = getModelCoeff(clusterCloud);
         cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
 
+
+        double angular_tolerance=0.0;
+        Eigen::Vector4f plane_a;
+        plane_a.x()=modelCoeff->values[0];
+        plane_a.y()=modelCoeff->values[1];
+        plane_a.z()=modelCoeff->values[2];
+        plane_a.w()=modelCoeff->values[3];
+        Eigen::Vector4f plane_b;
+        plane_b.x()=modelCoeff_Floor->values[0];
+        plane_b.y()=modelCoeff_Floor->values[1];
+        plane_b.z()=modelCoeff_Floor->values[2];
+        plane_b.w()=modelCoeff_Floor->values[3];
+
+        Eigen::VectorXf line;
+        pcl::planeWithPlaneIntersection(plane_a,plane_b,line,angular_tolerance);
+        pcl::ModelCoefficients::Ptr l(new pcl::ModelCoefficients ());
+        l->values.resize(6);
+        for (int i=1;i<6;i++)
+        {
+            l->values[i]=line[i];
+        }
+
+        string R;
+        ostringstream convert;
+        convert << i;
+        R = convert.str();
+
+        viewer.addPlane(*modelCoeff,R);
+
+
+        *result += *clusterCloud;
     }
+
+
+    while (!viewer.wasStopped ())
+    {
+      viewer.spinOnce ();
+    }
+
 }
 
 int
@@ -514,26 +564,26 @@ main()
     displayPTcloud DPT;
     tmd.print(1);
     cout<<"Start"<< endl;
-    string filename = "../ptClouds/box";
-    PointCloud<PointXYZRGB>::Ptr cloud =  CO.openCloud(filename + ".pcd");
+    string filename = "../ptClouds/DeepSpace-CutDown";
+    PointCloud<PointXYZRGB>::Ptr origCloud =  CO.openCloud(filename + ".pcd");
 
     cout<<"Calculating Normals..."<< endl;
-    PointCloud<Normal>::Ptr normals = normalCalc(cloud);
+    PointCloud<Normal>::Ptr normals = normalCalc(origCloud);
     cout<<"Normals Calculated..."<< endl;
 
     cout<<"Segmentation Starting..."<< endl;
 
     vector <PointIndices::Ptr> vector_of_segments;
 
-    std::tie(vector_of_segments, cloud) = segmentor(cloud, normals);
+    PointCloud <PointXYZRGB>::Ptr segCloud(new PointCloud <PointXYZRGB>);
 
-    newFunction(vector_of_segments,cloud);
+    std::tie(vector_of_segments, segCloud) = segmentor(origCloud, normals);
 
     tmd.print(1);
-
-    cloud = vectorToCloud(vector_of_segments, cloud);
+    PointCloud <PointXYZRGB>::Ptr cloud = vectorToCloud(vector_of_segments, segCloud);
     tmd.print(1);
 
+    ExpandSegmentsToExtents(vector_of_segments,segCloud);
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
