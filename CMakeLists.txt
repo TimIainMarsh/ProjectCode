@@ -17,16 +17,18 @@ INCLUDE_DIRECTORIES(source)
 SET(SOURCE
     main.cpp
     src/timedate.cpp
-    src/displayptcloud.cpp
+    src/Functions.cpp
     src/cloudoperations.cpp
+    src/segmentor.cpp
 )
 
 SET(HEADERS
 
     includes/timedate.h
-    includes/displayptcloud.h
+    includes/Functions.h
     includes/cloudoperations.h
     includes/constants.h
+    includes/segmentor.h
 )
 
 

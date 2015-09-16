@@ -1,12 +1,8 @@
 #ifndef TIMEDATE_H
 #define TIMEDATE_H
 
-class timeDate
-{
-public:
-    timeDate();
 
-    void print(int number);
-};
+void displayTime();
+
 
 #endif // TIMEDATE_H

@@ -46,14 +46,9 @@
 using namespace pcl;
 using namespace std;
 
-CloudOperations::CloudOperations()
-{
-    //nothing
-}
-
 
 pcl::PointCloud <pcl::PointXYZRGB>::Ptr
-CloudOperations::openCloud(std::string filename){
+openCloud(std::string filename){
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::PCLPointCloud2 cloud_blob;
@@ -97,7 +92,7 @@ CloudOperations::openCloud(std::string filename){
 //}
 
 void
-CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
+Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
 
     pcl::visualization::PCLVisualizer viewer("Cloud");
 
@@ -113,7 +108,7 @@ CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
 }
 
 void
-CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals){
+Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals){
 
     pcl::visualization::PCLVisualizer viewer("Cloud and Normals");
 
@@ -269,6 +264,28 @@ saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <Point
         PCL_ERROR ("Please select a valid file format of either VTK, PLY of OBJ");
     }
 
+}
+
+PointCloud<PointXYZRGB>::Ptr
+vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud){
+
+    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (cloud);
+    for (int i=0; i < indices.size(); i++){
+
+        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
+        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
+        inter2 = result;
+        filtrerG.setIndices(indices[i]);
+        filtrerG.filter(*clusterCloud);
+
+        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
+        inter = clusterCloud;
+
+        *result = *inter2 + *inter;
+    }
+    return result;
 }
 
 

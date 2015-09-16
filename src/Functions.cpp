@@ -1,16 +1,10 @@
 #include <pcl/point_types.h>
 #include <pcl/io/pcd_io.h>
 #include <iostream>
-#include "displayptcloud.h"
-
-displayPTcloud::displayPTcloud()
-{
-    //nothing
-}
-
+#include "Functions.h"
 
 void
-displayPTcloud::Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
+Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
 
     std::set<int> rgbVals;
 
@@ -20,12 +14,10 @@ displayPTcloud::Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
         rgbVals.insert (cloud->points[i].rgb);
 
    std::cout<< rgbVals.size() << std::endl;
-
-
 }
 
 void
-displayPTcloud::write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename){
+write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename){
 
     pcl::io::savePCDFileASCII(filename, *cloud);
     std::cout << "Saved " << cloud->points.size () << " data points to "<< filename << std::endl;

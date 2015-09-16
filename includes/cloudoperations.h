@@ -1,28 +1,30 @@
 #ifndef CLOUDOPERATIONS_H
 #define CLOUDOPERATIONS_H
 
-class CloudOperations
-{
-public:
-    CloudOperations();
+#include <tuple>
+#include <vector>
+#include <pcl/common/io.h>
+#include <pcl/point_types.h>
 
-    pcl::PointCloud <pcl::PointXYZRGB>::Ptr openCloud(std::string filename);
+using namespace pcl;
+using namespace std;
 
-    void Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Normal>::Ptr normals);
+PointCloud <PointXYZRGB>::Ptr openCloud(string filename);
 
-    void Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud);
+void Viewer(PointCloud <PointXYZRGB>::Ptr cloud, PointCloud<Normal>::Ptr normals);
 
-//    void Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, std::vector <pcl::ModelCoefficients::Ptr> coeff);
-};
+void Viewer(PointCloud <PointXYZRGB>::Ptr cloud);
 
-pcl::PointCloud<pcl::Normal>::Ptr normalCalc(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
+//    void Viewer(PointCloud <PointXYZRGB>::Ptr cloud, vector <ModelCoefficients::Ptr> coeff);
 
-pcl::PointCloud <pcl::PointNormal>::Ptr XYZRGBtoPointNormal(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud,pcl::PointCloud<pcl::Normal>::Ptr normals);
+PointCloud<Normal>::Ptr normalCalc(PointCloud<PointXYZRGB>::Ptr cloud);
 
-//pcl::ModelCoefficients::Ptr planeFitting(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud);
+PointCloud <PointNormal>::Ptr XYZRGBtoPointNormal(PointCloud <PointXYZRGB>::Ptr cloud,PointCloud<Normal>::Ptr normals);
 
-void saveTriangles(pcl::PointCloud <pcl::PointXYZRGB>::Ptr pre_Filtered_cloud,pcl::PointCloud <pcl::PointXYZRGB>::Ptr hull,int i);
+//ModelCoefficients::Ptr planeFitting(PointCloud <PointXYZRGB>::Ptr cloud);
 
+void saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <PointXYZRGB>::Ptr hull,int i);
 
+PointCloud<PointXYZRGB>::Ptr vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud);
 
 #endif // CLOUDOPERATIONS_H

@@ -2,12 +2,8 @@
 #include <ctime>
 #include <timedate.h>
 using namespace std;
-timeDate::timeDate()
-{
-    //things
-}
 
-void timeDate::print(int number){
+void displayTime(){
     // current date/time based on current system
     time_t now = time(0);
 
