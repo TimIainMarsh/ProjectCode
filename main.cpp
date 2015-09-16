@@ -44,10 +44,6 @@ using namespace pcl;
 using namespace std;
 
 
-
-
-
-
 ModelCoefficients::Ptr
 FitPlane(PointCloud<PointXYZRGB>::Ptr input_cloud)
 {
@@ -105,7 +101,7 @@ ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZ
 
 
             ModelCoefficients::Ptr modelCoeff;
-            modelCoeff = getModelCoeff(innerCloud);
+            modelCoeff = FitPlane(innerCloud);
             cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
 
 
@@ -144,7 +140,7 @@ ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZ
 
         viewer.addLine(lines_ModCoeff[i],R);
     }
-//    viewer.addPointCloud(result);
+    viewer.addPointCloud(result);
 
     while (!viewer.wasStopped ())
     {
@@ -188,7 +184,7 @@ main()
     displayTime();
 
     cout<<"Displaying Cloud..."<< endl;
-Viewer(cloud);
+    Viewer(cloud);
 
     cout<<"End"<< endl;
     return 0;
