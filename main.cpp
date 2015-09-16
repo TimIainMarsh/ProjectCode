@@ -46,15 +46,10 @@ using namespace std;
 
 
 
-float
-RandomFloat(float min, float max)
-{
-    float r = (float)rand() / (float)RAND_MAX;
-    return min + r * (max - min);
-}
+
 
 ModelCoefficients::Ptr
-getModelCoeff(PointCloud<PointXYZRGB>::Ptr input_cloud)
+FitPlane(PointCloud<PointXYZRGB>::Ptr input_cloud)
 {
 
     ModelCoefficients::Ptr coefficients(new ModelCoefficients);
@@ -93,7 +88,7 @@ ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZ
         filtrerG.filter(*outerCloud);
 
         ModelCoefficients::Ptr modelCoeff_outer;
-        modelCoeff_outer = getModelCoeff(outerCloud);
+        modelCoeff_outer = FitPlane(outerCloud);
 
 
 
@@ -193,7 +188,7 @@ main()
     displayTime();
 
     cout<<"Displaying Cloud..."<< endl;
-//    CO.Viewer(cloud);
+Viewer(cloud);
 
     cout<<"End"<< endl;
     return 0;

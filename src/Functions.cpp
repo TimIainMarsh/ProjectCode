@@ -23,3 +23,10 @@ write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename){
     std::cout << "Saved " << cloud->points.size () << " data points to "<< filename << std::endl;
 
 }
+
+float
+RandomFloat(float min, float max)
+{
+    float r = (float)rand() / (float)RAND_MAX;
+    return min + r * (max - min);
+}

@@ -10,5 +10,6 @@ void Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
 
 void write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename);
 
+float RandomFloat(float min, float max);
 
 #endif // Functions_H

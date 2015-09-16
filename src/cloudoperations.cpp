@@ -60,7 +60,7 @@ openCloud(std::string filename){
 
 
 //void
-//CloudOperations::Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, std::vector <pcl::ModelCoefficients::Ptr> coeff){
+//Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, std::vector <pcl::ModelCoefficients::Ptr> coeff){
 
 //    pcl::visualization::PCLVisualizer viewer("Cloud and Normals");
 
@@ -169,38 +169,6 @@ normalCalc(PointCloud<PointXYZRGB>::Ptr cloud){
     return normals;
 }
 
-//ModelCoefficients::Ptr
-//planeFitting(PointCloud <PointXYZRGB>::Ptr cloud){
-
-//    //not being used
-//    cout<<"not used"<<endl;
-
-//    /*http://pointclouds.org/documentation/tutorials/planar_segmentation.php*/
-
-////    cout<<cloud->size()<<endl;
-
-//    ModelCoefficients::Ptr coefficients (new ModelCoefficients);
-//    PointIndices::Ptr inliers (new PointIndices);
-//    // Create the segmentation object
-//    SACSegmentation<PointXYZRGB> seg;
-//    // Optional
-//    seg.setOptimizeCoefficients (true);
-//    // Mandatory
-//    seg.setInputCloud (cloud);
-//    seg.setModelType (SACMODEL_PLANE);
-//    seg.setMethodType (SAC_RANSAC);
-//    seg.setDistanceThreshold (0.01);
-
-
-//    seg.segment (*inliers, *coefficients);
-
-//    if (inliers->indices.size () == 0)
-//    {
-//      PCL_ERROR ("Could not estimate a planar model for the given dataset.");
-//      exit(-1);
-//    }
-//    return coefficients;
-//}
 
 void
 saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <PointXYZRGB>::Ptr hull,int i){
