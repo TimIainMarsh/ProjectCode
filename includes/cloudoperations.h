@@ -23,4 +23,6 @@ pcl::PointCloud <pcl::PointNormal>::Ptr XYZRGBtoPointNormal(pcl::PointCloud <pcl
 
 void saveTriangles(pcl::PointCloud <pcl::PointXYZRGB>::Ptr pre_Filtered_cloud,pcl::PointCloud <pcl::PointXYZRGB>::Ptr hull,int i);
 
+
+
 #endif // CLOUDOPERATIONS_H

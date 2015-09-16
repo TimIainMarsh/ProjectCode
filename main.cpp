@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <tuple>
+#include <typeinfo>
 
 //generic
 #include <pcl/common/io.h>
@@ -34,6 +35,9 @@
 #include <pcl/filters/project_inliers.h>
 
 #include <pcl/common/intersections.h>
+
+#include <pcl/sample_consensus/ransac.h>
+#include <pcl/sample_consensus/sac_model_line.h>
 
 using namespace pcl;
 using namespace std;
@@ -233,22 +237,6 @@ GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
     return min_Z;
 }
 
-tuple<  pcl::PointXYZRGB , pcl::PointXYZRGB  >
-getBounding(PointCloud <PointXYZRGB>::Ptr cloud)
-{
-    pcl::MomentOfInertiaEstimation <pcl::PointXYZRGB> feature_extractor;
-    feature_extractor.setInputCloud (cloud);
-    feature_extractor.compute ();
-
-    pcl::PointXYZRGB min_point_OBB;
-    pcl::PointXYZRGB max_point_OBB;
-    pcl::PointXYZRGB position_OBB;
-    Eigen::Matrix3f rotational_matrix_OBB;
-
-    feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
-
-    return make_tuple(min_point_OBB, max_point_OBB);
-}
 float
 RandomFloat(float min, float max)
 {
@@ -276,7 +264,7 @@ getModelCoeff(PointCloud<PointXYZRGB>::Ptr input_cloud)
 }
 
 
-tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
+std::tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
 segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr normals){
     //////////////////////////////////////////////////////////////////////////////////
     ///
@@ -459,6 +447,91 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     return make_tuple(extent_clusters, segCloud);
 }
 
+void
+ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud)
+{
+
+    pcl::visualization::PCLVisualizer viewer;
+    viewer.setBackgroundColor(0,0,0);
+
+//    viewer.addCoordinateSystem (1.0);
+    vector<ModelCoefficients> lines_ModCoeff;
+    vector<Eigen::VectorXf> lines_Eigen;
+    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
+    ExtractIndices<PointXYZRGB> filtrerG (true);
+    filtrerG.setInputCloud (cloud);
+    for (int out=0; out < indices.size(); out++){
+        PointIndices::Ptr outerSegment = indices[out];
+        PointCloud <PointXYZRGB>::Ptr outerCloud(new PointCloud <PointXYZRGB>);
+        filtrerG.setIndices(outerSegment);
+        filtrerG.filter(*outerCloud);
+
+        ModelCoefficients::Ptr modelCoeff_outer;
+        modelCoeff_outer = getModelCoeff(outerCloud);
+
+
+
+
+        for (int in=0; in < indices.size(); in++){
+            if(in == out){
+                continue;
+                cout<<"skipped"<<endl;
+            }
+            PointIndices::Ptr innerSegment = indices[in];
+            PointCloud <PointXYZRGB>::Ptr innerCloud(new PointCloud <PointXYZRGB>);
+            filtrerG.setIndices(innerSegment);
+            filtrerG.filter(*innerCloud);
+
+
+            ModelCoefficients::Ptr modelCoeff;
+            modelCoeff = getModelCoeff(innerCloud);
+            cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
+
+
+            double angular_tolerance=0.0;
+            Eigen::Vector4f plane_a;
+            plane_a.x()=modelCoeff->values[0];
+            plane_a.y()=modelCoeff->values[1];
+            plane_a.z()=modelCoeff->values[2];
+            plane_a.w()=modelCoeff->values[3];
+            Eigen::Vector4f plane_b;
+            plane_b.x()=modelCoeff_outer->values[0];
+            plane_b.y()=modelCoeff_outer->values[1];
+            plane_b.z()=modelCoeff_outer->values[2];
+            plane_b.w()=modelCoeff_outer->values[3];
+
+            Eigen::VectorXf line;
+            pcl::planeWithPlaneIntersection(plane_a,plane_b,line,angular_tolerance);
+            pcl::ModelCoefficients::Ptr l(new pcl::ModelCoefficients ());
+            l->values.resize(6);
+            for (int i=1;i<6;i++)
+            {
+                l->values[i]=line[i];
+            }
+            lines_Eigen.push_back(line);
+            lines_ModCoeff.push_back(*l);
+        }
+        *result += *outerCloud;
+    }
+
+    for (int i=0; i < lines_ModCoeff.size(); i++){
+        string R;
+        ostringstream convert;
+        convert << i;
+        R = convert.str();
+
+
+        viewer.addLine(lines_ModCoeff[i],R);
+    }
+//    viewer.addPointCloud(result);
+
+    while (!viewer.wasStopped ())
+    {
+      viewer.spinOnce ();
+    }
+
+}
+
 PointCloud<PointXYZRGB>::Ptr
 vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud){
 
@@ -479,81 +552,6 @@ vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr 
         *result = *inter2 + *inter;
     }
     return result;
-}
-
-void
-ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud)
-{
-    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
-    ExtractIndices<PointXYZRGB> filtrerG (true);
-    filtrerG.setInputCloud (cloud);
-
-    PointIndices::Ptr segment = indices[0];
-    PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
-    filtrerG.setIndices(segment);
-    filtrerG.filter(*clusterCloud);
-
-    ModelCoefficients::Ptr modelCoeff_Floor;
-    modelCoeff_Floor = getModelCoeff(clusterCloud);
-
-    pcl::visualization::PCLVisualizer viewer;
-    viewer.addPointCloud(cloud);
-//    viewer.addCoordinateSystem (1.0);
-
-
-    for (int i=0; i < indices.size(); i++){
-        PointIndices::Ptr segment = indices[i];
-        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
-        filtrerG.setIndices(segment);
-        filtrerG.filter(*clusterCloud);
-//        pcl::PointXYZRGB min_point_OBB;
-//        pcl::PointXYZRGB max_point_OBB;
-
-//        tie(min_point_OBB ,max_point_OBB) = getBounding(cloud);
-
-        ModelCoefficients::Ptr modelCoeff;
-        modelCoeff = getModelCoeff(clusterCloud);
-        cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
-
-
-        double angular_tolerance=0.0;
-        Eigen::Vector4f plane_a;
-        plane_a.x()=modelCoeff->values[0];
-        plane_a.y()=modelCoeff->values[1];
-        plane_a.z()=modelCoeff->values[2];
-        plane_a.w()=modelCoeff->values[3];
-        Eigen::Vector4f plane_b;
-        plane_b.x()=modelCoeff_Floor->values[0];
-        plane_b.y()=modelCoeff_Floor->values[1];
-        plane_b.z()=modelCoeff_Floor->values[2];
-        plane_b.w()=modelCoeff_Floor->values[3];
-
-        Eigen::VectorXf line;
-        pcl::planeWithPlaneIntersection(plane_a,plane_b,line,angular_tolerance);
-        pcl::ModelCoefficients::Ptr l(new pcl::ModelCoefficients ());
-        l->values.resize(6);
-        for (int i=1;i<6;i++)
-        {
-            l->values[i]=line[i];
-        }
-
-        string R;
-        ostringstream convert;
-        convert << i;
-        R = convert.str();
-
-        viewer.addPlane(*modelCoeff,R);
-
-
-        *result += *clusterCloud;
-    }
-
-
-    while (!viewer.wasStopped ())
-    {
-      viewer.spinOnce ();
-    }
-
 }
 
 int
@@ -591,7 +589,7 @@ main()
     tmd.print(1);
 
     cout<<"Displaying Cloud..."<< endl;
-    CO.Viewer(cloud);
+//    CO.Viewer(cloud);
 
     cout<<"End"<< endl;
     return 0;
