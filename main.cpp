@@ -71,9 +71,9 @@ ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZ
     pcl::visualization::PCLVisualizer viewer;
     viewer.setBackgroundColor(0,0,0);
 
-//    viewer.addCoordinateSystem (1.0);
-//    vector<ModelCoefficients> lines_ModCoeff;
-//    vector<Eigen::VectorXf> lines_Eigen;
+    viewer.addCoordinateSystem (1.0);
+    vector<ModelCoefficients> lines_ModCoeff;
+    vector<Eigen::VectorXf> lines_Eigen;
     PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filtrerG (true);
     filtrerG.setInputCloud (cloud);
@@ -86,45 +86,45 @@ ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZ
         ModelCoefficients::Ptr modelCoeff_outer;
         modelCoeff_outer = FitPlane(outerCloud);
 
-//        for (int in=0; in < indices.size(); in++){
-//            if(in == out){
-//                continue;
-//                cout<<"skipped"<<endl;
-//            }
-//            PointIndices::Ptr innerSegment = indices[in];
-//            PointCloud <PointXYZRGB>::Ptr innerCloud(new PointCloud <PointXYZRGB>);
-//            filtrerG.setIndices(innerSegment);
-//            filtrerG.filter(*innerCloud);
+        for (int in=0; in < indices.size(); in++){
+            if(in == out){
+                continue;
+                cout<<"skipped"<<endl;
+            }
+            PointIndices::Ptr innerSegment = indices[in];
+            PointCloud <PointXYZRGB>::Ptr innerCloud(new PointCloud <PointXYZRGB>);
+            filtrerG.setIndices(innerSegment);
+            filtrerG.filter(*innerCloud);
 
 
-//            ModelCoefficients::Ptr modelCoeff;
-//            modelCoeff = FitPlane(innerCloud);
-//            cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
+            ModelCoefficients::Ptr modelCoeff;
+            modelCoeff = FitPlane(innerCloud);
+            cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
 
 
-//            double angular_tolerance=0.0;
-//            Eigen::Vector4f plane_a;
-//            plane_a.x()=modelCoeff->values[0];
-//            plane_a.y()=modelCoeff->values[1];
-//            plane_a.z()=modelCoeff->values[2];
-//            plane_a.w()=modelCoeff->values[3];
-//            Eigen::Vector4f plane_b;
-//            plane_b.x()=modelCoeff_outer->values[0];
-//            plane_b.y()=modelCoeff_outer->values[1];
-//            plane_b.z()=modelCoeff_outer->values[2];
-//            plane_b.w()=modelCoeff_outer->values[3];
+            double angular_tolerance=0.0;
+            Eigen::Vector4f plane_a;
+            plane_a.x()=modelCoeff->values[0];
+            plane_a.y()=modelCoeff->values[1];
+            plane_a.z()=modelCoeff->values[2];
+            plane_a.w()=modelCoeff->values[3];
+            Eigen::Vector4f plane_b;
+            plane_b.x()=modelCoeff_outer->values[0];
+            plane_b.y()=modelCoeff_outer->values[1];
+            plane_b.z()=modelCoeff_outer->values[2];
+            plane_b.w()=modelCoeff_outer->values[3];
 
-//            Eigen::VectorXf line;
-//            pcl::planeWithPlaneIntersection(plane_a,plane_b,line,angular_tolerance);
-//            pcl::ModelCoefficients::Ptr l(new pcl::ModelCoefficients ());
-//            l->values.resize(6);
-//            for (int i=1;i<6;i++)
-//            {
-//                l->values[i]=line[i];
-//            }
-//            lines_Eigen.push_back(line);
-//            lines_ModCoeff.push_back(*l);
-//        }
+            Eigen::VectorXf line;
+            pcl::planeWithPlaneIntersection(plane_a,plane_b,line,angular_tolerance);
+            pcl::ModelCoefficients::Ptr l(new pcl::ModelCoefficients ());
+            l->values.resize(6);
+            for (int i=1;i<6;i++)
+            {
+                l->values[i]=line[i];
+            }
+            lines_Eigen.push_back(line);
+            lines_ModCoeff.push_back(*l);
+        }
         string R;
         ostringstream convert;
         convert << out;
@@ -135,14 +135,14 @@ ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZ
 
     }
 
-//    for (int i=0; i < lines_ModCoeff.size(); i++){
-//        string R;
-//        ostringstream convert;
-//        convert << out;
-//        R = convert.str();
+    for (int i=0; i < lines_ModCoeff.size(); i++){
+        string R;
+        ostringstream convert;
+        convert << i;
+        R = convert.str();
 
-//        viewer.addLine(lines_ModCoeff[i],R);
-//    }
+        viewer.addLine(lines_ModCoeff[i],R);
+    }
     viewer.addPointCloud(result);
 
     while (!viewer.wasStopped ())
@@ -212,7 +212,7 @@ main()
 
     displayTime();
     cout<<"Start"<< endl;
-    string filename = "../ptClouds/GTL-CutDown";
+    string filename = "../ptClouds/GTL-Full";
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
     cout<<"Calculating Normals..."<< endl;
@@ -233,7 +233,7 @@ main()
 
     ExpandSegmentsToExtents(vector_of_segments,segCloud);
 
-    boundingBox(segCloud);
+    boundingBox(cloud);
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
