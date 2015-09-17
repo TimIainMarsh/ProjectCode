@@ -234,7 +234,7 @@ main()
 
 //    ExpandSegmentsToExtents(vector_of_segments,segCloud);
 
-    boundingBox(cloud);
+//    boundingBox(cloud);
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
