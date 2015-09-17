@@ -130,19 +130,20 @@ ExpandSegmentsToExtents(vector <PointIndices::Ptr> indices, PointCloud <PointXYZ
         convert << out;
         R = convert.str();
         *result += *outerCloud;
-        viewer.addPlane(*modelCoeff_outer,0.0,0.0,0.0,R);
+        viewer.addPlane(*modelCoeff_outer,0.0,0.0,0.0,R+"P");
         cout<<"YES"<<endl;
 
     }
 
-    for (int i=0; i < lines_ModCoeff.size(); i++){
-        string R;
-        ostringstream convert;
-        convert << i;
-        R = convert.str();
+//    for (int i=0; i < lines_ModCoeff.size(); i++){
+//        string R;
+//        ostringstream convert;
+//        convert << i;
+//        R = convert.str();
 
-        viewer.addLine(lines_ModCoeff[i],R);
-    }
+
+//        viewer.addLine(lines_ModCoeff[i],R+"l");
+//    }
     viewer.addPointCloud(result);
 
     while (!viewer.wasStopped ())
@@ -212,7 +213,7 @@ main()
 
     displayTime();
     cout<<"Start"<< endl;
-    string filename = "../ptClouds/GTL-Full";
+    string filename = "../ptClouds/DeepSpace-Full";
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
     cout<<"Calculating Normals..."<< endl;
@@ -231,7 +232,7 @@ main()
     PointCloud <PointXYZRGB>::Ptr cloud = vectorToCloud(vector_of_segments, segCloud);
     displayTime();
 
-    ExpandSegmentsToExtents(vector_of_segments,segCloud);
+//    ExpandSegmentsToExtents(vector_of_segments,segCloud);
 
     boundingBox(cloud);
 
