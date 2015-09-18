@@ -208,22 +208,34 @@ ExtractPlaneIntersections(vector <PointIndices::Ptr> indices, PointCloud <PointX
 
 void
 ExtractPointsOnLines(vector<ModelCoefficients> lines, PointCloud <PointXYZRGB>::Ptr segCloud){
+    for(int i = 0; i < lines.size(); ++i){
+        ModelCoefficients l = lines[i];
+        double threshold = 0.01;
 
+        double sqr_threshold = threshold * threshold;
 
-//    double sqr_distance = threshold * threshold;
-//    Eigen::Vector3f line_point(l(0), l(1), l(2));
-//    Eigen::Vector3f line_direction(l(3), l(4), l(5));
+        Eigen::Vector3f line_point(l.values[1], l.values[2], l.values[3]);
+        Eigen::Vector3f line_direction(l.values[4], l.values[5], l.values[6]);
 
-//    for(int i = 0; i < num_points; ++i)
-//    {
+        PointCloud <PointXYZRGB>::Ptr cornerCloud;
+        cornerCloud->points.resize(1);
+        PointCloud <PointXYZRGB>::Ptr inter;
+        for(int i = 0; i < segCloud->points.size(); ++i)
+        {
+            *inter = *cornerCloud;
+            cornerCloud.reset();
+            cornerCloud->points.resize(i);
 
-//            double sqr_distance = (line_point - cloud->points[i].getVector3fMap ()).cross3 (line_direction).squaredNorm ();
+                    double sqr_distance = (line_point - segCloud->points[i].getVector3fMap()).cross(line_direction).squaredNorm();
 
-//            if (sqr_distance < sqr_threshold)
-//            {
-//                    //save point at index i, cloud->points[i],  as inlier
-//            }
-//    }
+                    if (sqr_distance < sqr_threshold)
+                    {
+                            cornerCloud->points[i].x = segCloud->points[i].x;\
+                            cornerCloud->points[i].y = segCloud->points[i].y;
+                            cornerCloud->points[i].z = segCloud->points[i].z;
+                    }
+            }
+        }
 }
 
 int
