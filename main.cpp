@@ -3,6 +3,7 @@
 #include <string>
 #include <tuple>
 #include <typeinfo>
+#include <math.h>
 
 //generic
 #include <pcl/common/io.h>
@@ -40,60 +41,98 @@
 #include <pcl/sample_consensus/ransac.h>
 #include <pcl/sample_consensus/sac_model_line.h>
 
+#include <pcl/common/distances.h>
+
 using namespace pcl;
 using namespace std;
 
-void
+vector <Eigen::Vector3f>
 boundingBox(PointCloud <PointXYZRGB>::Ptr cloud){
-      pcl::MomentOfInertiaEstimation <PointXYZRGB> feature_extractor;
-      feature_extractor.setInputCloud (cloud);
-      feature_extractor.compute ();
+    pcl::MomentOfInertiaEstimation <PointXYZRGB> feature_extractor;
+    feature_extractor.setInputCloud (cloud);
+    feature_extractor.compute ();
 
-      std::vector <float> moment_of_inertia;
-      std::vector <float> eccentricity;
-      PointXYZRGB min_point_AABB;
-      PointXYZRGB max_point_AABB;
-      PointXYZRGB min_point_OBB;
-      PointXYZRGB max_point_OBB;
-      PointXYZRGB position_OBB;
-      Eigen::Matrix3f rotational_matrix_OBB;
-      float major_value, middle_value, minor_value;
-      Eigen::Vector3f major_vector, middle_vector, minor_vector;
-      Eigen::Vector3f mass_center;
+    PointXYZRGB min_point_OBB;
+    PointXYZRGB max_point_OBB;
+    PointXYZRGB position_OBB;
+    Eigen::Matrix3f rotational_matrix_OBB;
 
-      feature_extractor.getMomentOfInertia (moment_of_inertia);
-      feature_extractor.getEccentricity (eccentricity);
-      feature_extractor.getAABB (min_point_AABB, max_point_AABB);
-      feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
-      feature_extractor.getEigenValues (major_value, middle_value, minor_value);
-      feature_extractor.getEigenVectors (major_vector, middle_vector, minor_vector);
-      feature_extractor.getMassCenter (mass_center);
-
-      boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-      viewer->setBackgroundColor (0, 0, 0);
-      viewer->addCoordinateSystem (1.0);
-      viewer->initCameraParameters ();
-      viewer->addPointCloud<PointXYZRGB> (cloud, "sample cloud");
-      viewer->addCube (min_point_AABB.x, max_point_AABB.x, min_point_AABB.y, max_point_AABB.y, min_point_AABB.z, max_point_AABB.z, 1.0, 1.0, 0.0, "AABB");
-
-      Eigen::Vector3f position (position_OBB.x, position_OBB.y, position_OBB.z);
-      Eigen::Quaternionf quat (rotational_matrix_OBB);
-      viewer->addCube (position, quat, max_point_OBB.x - min_point_OBB.x, max_point_OBB.y - min_point_OBB.y, max_point_OBB.z - min_point_OBB.z, "OBB");
-
-      PointXYZRGB center (mass_center (0), mass_center (1), mass_center (2));
-      PointXYZRGB x_axis (major_vector (0) + mass_center (0), major_vector (1) + mass_center (1), major_vector (2) + mass_center (2));
-      PointXYZRGB y_axis (middle_vector (0) + mass_center (0), middle_vector (1) + mass_center (1), middle_vector (2) + mass_center (2));
-      PointXYZRGB z_axis (minor_vector (0) + mass_center (0), minor_vector (1) + mass_center (1), minor_vector (2) + mass_center (2));
-      viewer->addLine (center, x_axis, 1.0f, 0.0f, 0.0f, "major eigen vector");
-      viewer->addLine (center, y_axis, 0.0f, 1.0f, 0.0f, "middle eigen vector");
-      viewer->addLine (center, z_axis, 0.0f, 0.0f, 1.0f, "minor eigen vector");
+    pcl::PointXYZRGB min_point_AABB;
+    pcl::PointXYZRGB max_point_AABB;
+    feature_extractor.getAABB (min_point_AABB, max_point_AABB);
 
 
-      while(!viewer->wasStopped())
-      {
-        viewer->spinOnce (100);
-        boost::this_thread::sleep (boost::posix_time::microseconds (100000));
-      }
+    feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+
+
+    Eigen::Vector3f position (position_OBB.x, position_OBB.y, position_OBB.z);
+//    Eigen::Quaternionf quat (rotational_matrix_OBB);
+    Eigen::Vector3f p1 (min_point_OBB.x, min_point_OBB.y, min_point_OBB.z);
+    Eigen::Vector3f p2 (min_point_OBB.x, min_point_OBB.y, max_point_OBB.z);
+    Eigen::Vector3f p3 (max_point_OBB.x, min_point_OBB.y, max_point_OBB.z);
+    Eigen::Vector3f p4 (max_point_OBB.x, min_point_OBB.y, min_point_OBB.z);
+    Eigen::Vector3f p5 (min_point_OBB.x, max_point_OBB.y, min_point_OBB.z);
+    Eigen::Vector3f p6 (min_point_OBB.x, max_point_OBB.y, max_point_OBB.z);
+    Eigen::Vector3f p7 (max_point_OBB.x, max_point_OBB.y, max_point_OBB.z);
+    Eigen::Vector3f p8 (max_point_OBB.x, max_point_OBB.y, min_point_OBB.z);
+
+//    p1 = rotational_matrix_OBB * p1 + position;
+//    p2 = rotational_matrix_OBB * p2 + position;
+//    p3 = rotational_matrix_OBB * p3 + position;
+//    p4 = rotational_matrix_OBB * p4 + position;
+//    p5 = rotational_matrix_OBB * p5 + position;
+//    p6 = rotational_matrix_OBB * p6 + position;
+//    p7 = rotational_matrix_OBB * p7 + position;
+//    p8 = rotational_matrix_OBB * p8 + position;
+
+//    pcl::PointXYZRGB pt1 (p1 (0), p1 (1), p1 (2));
+//    pcl::PointXYZRGB pt2 (p2 (0), p2 (1), p2 (2));
+//    pcl::PointXYZRGB pt3 (p3 (0), p3 (1), p3 (2));
+//    pcl::PointXYZRGB pt4 (p4 (0), p4 (1), p4 (2));
+//    pcl::PointXYZRGB pt5 (p5 (0), p5 (1), p5 (2));
+//    pcl::PointXYZRGB pt6 (p6 (0), p6 (1), p6 (2));
+//    pcl::PointXYZRGB pt7 (p7 (0), p7 (1), p7 (2));
+//    pcl::PointXYZRGB pt8 (p8 (0), p8 (1), p8 (2));
+
+    vector <Eigen::Vector3f> points;
+
+
+    points.push_back(p1);
+    points.push_back(p2);
+    points.push_back(p3);
+    points.push_back(p4);
+    points.push_back(p5);
+    points.push_back(p6);
+    points.push_back(p7);
+    points.push_back(p8);
+
+//    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
+//    viewer->addPointCloud(cloud);
+//    viewer->setBackgroundColor(0,0,0);
+//    viewer->addCube (min_point_AABB.x, max_point_AABB.x, min_point_AABB.y, max_point_AABB.y, min_point_AABB.z, max_point_AABB.z, 1.0, 1.0, 0.0, "AABB");
+//    viewer->addCube (position, quat, max_point_OBB.x - min_point_OBB.x, max_point_OBB.y - min_point_OBB.y, max_point_OBB.z - min_point_OBB.z, "OBB");
+
+//    viewer->addLine (pt1, pt2, 1.0, 0.0, 0.0, "1 edge");
+//    viewer->addLine (pt1, pt4, 1.0, 0.0, 0.0, "2 edge");
+//    viewer->addLine (pt1, pt5, 1.0, 0.0, 0.0, "3 edge");
+//    viewer->addLine (pt5, pt6, 1.0, 0.0, 0.0, "4 edge");
+//    viewer->addLine (pt5, pt8, 1.0, 0.0, 0.0, "5 edge");
+//    viewer->addLine (pt2, pt6, 1.0, 0.0, 0.0, "6 edge");
+//    viewer->addLine (pt6, pt7, 1.0, 0.0, 0.0, "7 edge");
+//    viewer->addLine (pt7, pt8, 1.0, 0.0, 0.0, "8 edge");
+//    viewer->addLine (pt2, pt3, 1.0, 0.0, 0.0, "9 edge");
+//    viewer->addLine (pt4, pt8, 1.0, 0.0, 0.0, "10 edge");
+//    viewer->addLine (pt3, pt4, 1.0, 0.0, 0.0, "11 edge");
+//    viewer->addLine (pt3, pt7, 1.0, 0.0, 0.0, "12 edge");
+
+//    while(!viewer->wasStopped())
+//    {
+//      viewer->spinOnce (100);
+//      boost::this_thread::sleep (boost::posix_time::microseconds (100000));
+//    }
+
+    return points;
+
 }
 
 
@@ -116,55 +155,154 @@ FitPlane(PointCloud<PointXYZRGB>::Ptr input_cloud)
 
 }
 
+Eigen::Vector3f
+projectOntoLine(Eigen::VectorXf line, Eigen::Vector3f currP){
+    Eigen::Vector3f line_pt;
+    line_pt.x() = line[0];
+    line_pt.y() = line[1];
+    line_pt.z() = line[2];
+
+    Eigen::Vector3f line_dir;
+    line_dir.x() = line[3];
+    line_dir.y() = line[4];
+    line_dir.z() = line[5];
+
+    float A = (line_pt - currP).dot(line_pt - line_dir);
+    float B = (line_pt - line_dir).dot(line_pt - line_dir);
+
+    Eigen::Vector3f newP = line_pt + (A/B)*(line_pt-line_dir);
+
+//    cout<<"----------------------------------"<<endl;
+//    cout<<currP.x()<<" "<<currP.y()<<" "<<currP.z()<<endl;
+//    cout<<newP.x()<<" "<<newP.y()<<" "<<newP.z()<<endl;
+
+    return newP;
+}
+
+tuple<vector <Eigen::Vector3f> ,vector <Eigen::Vector3f> >
+getPointsOnLine(vector <Eigen::Vector3f> OBBOuterPoints, vector <Eigen::Vector3f> OBBInnerPoints, Eigen::VectorXf line){
+
+    int closestPointOuter = 0;\
+    int secondClosestOuter = 0;
+    float dist = INT8_MAX;
+    float prevD = INT8_MAX;
+
+    for (int i=0; i < OBBOuterPoints.size(); i++)
+    {
+        Eigen::Vector3f pt = OBBOuterPoints[i];
+//        cout<<pt.x()<<" "<<pt.y()<<" "<<pt.z()<<" "<<endl;
+        Eigen::Vector3f line_pt;
+        line_pt.x() = line[0];
+        line_pt.y() = line[1];
+        line_pt.z() = line[2];
+
+        Eigen::Vector3f line_dir;
+        line_dir.x() = line[3];
+        line_dir.y() = line[4];
+        line_dir.z() = line[5];
+        double d = (line_dir.cross(line_pt - pt)).squaredNorm () / line_dir.squaredNorm ();
+//       cout<<d<<endl;
+        if (d <= prevD ){
+            prevD = dist;
+            secondClosestOuter = i;
+        }
+
+        if (d < dist){
+            prevD = dist;
+            dist = d;
+            closestPointOuter = i;
+        }
+    }
+
+    int closestPointInner = 0;\
+    int secondClosestInner = 0;
+    dist = INT8_MAX;
+    prevD = INT8_MAX;
+
+    for (int i=0; i < OBBInnerPoints.size(); i++)
+    {
+        Eigen::Vector3f pt = OBBInnerPoints[i];
+//        cout<<pt.x()<<" "<<pt.y()<<" "<<pt.z()<<" "<<endl;
+        Eigen::Vector3f line_pt;
+        line_pt.x() = line[0];
+        line_pt.y() = line[1];
+        line_pt.z() = line[2];
+
+        Eigen::Vector3f line_dir;
+        line_dir.x() = line[3];
+        line_dir.y() = line[4];
+        line_dir.z() = line[5];
+        double d = (line_dir.cross(line_pt - pt)).squaredNorm () / line_dir.squaredNorm ();
+
+        if (d <= prevD ){
+            prevD = dist;
+            secondClosestInner = i;
+        }
+
+        if (d < dist){
+            prevD = dist;
+            dist = d;
+            closestPointInner = i;
+        }
+    }
+
+
+
+    OBBOuterPoints[closestPointOuter] = projectOntoLine(line,OBBOuterPoints[closestPointOuter]);
+    OBBOuterPoints[secondClosestOuter] = projectOntoLine(line,OBBOuterPoints[secondClosestOuter]);
+    OBBInnerPoints[closestPointInner] = projectOntoLine(line,OBBInnerPoints[closestPointInner]);
+    OBBInnerPoints[secondClosestInner] = projectOntoLine(line,OBBInnerPoints[secondClosestInner]);
+
+    return make_tuple(OBBOuterPoints,OBBInnerPoints);
+}
+
+
+
 vector<ModelCoefficients>
 ExtractPlaneIntersections(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud)
 {
 
-//    pcl::visualization::PCLVisualizer viewer;
-//    viewer.setBackgroundColor(0,0,0);
-
-//    viewer.addCoordinateSystem (1.0);
     vector<ModelCoefficients> lines_ModCoeff;
-    vector<Eigen::VectorXf> lines_Eigen;
-//    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
-    ExtractIndices<PointXYZRGB> filtrerG (true);
-    filtrerG.setInputCloud (cloud);
+
     for (int out=0; out < indices.size(); out++){
         PointIndices::Ptr outerSegment = indices[out];
         PointCloud <PointXYZRGB>::Ptr outerCloud(new PointCloud <PointXYZRGB>);
-        filtrerG.setIndices(outerSegment);
-        filtrerG.filter(*outerCloud);
-
-        ModelCoefficients::Ptr modelCoeff_outer;
-        modelCoeff_outer = FitPlane(outerCloud);
+        ExtractIndices<PointXYZRGB> filtrerOuter (true);
+        filtrerOuter.setInputCloud (cloud);
+        filtrerOuter.setIndices(outerSegment);
+        filtrerOuter.filter(*outerCloud);
+//        Viewer(outerCloud);
+        ModelCoefficients::Ptr OuterCoeff = FitPlane(outerCloud);
+        vector <Eigen::Vector3f> OBBOuterPoints = boundingBox(outerCloud);
 
         for (int in=0; in < indices.size(); in++){
             if(in == out){
-                continue;
                 cout<<"skipped"<<endl;
+                continue;                
             }
             PointIndices::Ptr innerSegment = indices[in];
             PointCloud <PointXYZRGB>::Ptr innerCloud(new PointCloud <PointXYZRGB>);
-            filtrerG.setIndices(innerSegment);
-            filtrerG.filter(*innerCloud);
+            ExtractIndices<PointXYZRGB> filtrerInner (true);
+            filtrerInner.setInputCloud (cloud);
+            filtrerInner.setIndices(innerSegment);
+            filtrerInner.filter(*innerCloud);
+//            Viewer(innerCloud);
 
 
-            ModelCoefficients::Ptr modelCoeff;
-            modelCoeff = FitPlane(innerCloud);
-//            cout<<modelCoeff->values[0]<<"  "<<modelCoeff->values[1]<<"  "<<modelCoeff->values[2]<<"  "<<modelCoeff->values[3]<<endl;
-
+            ModelCoefficients::Ptr InnerCoeff = FitPlane(innerCloud);
+            vector <Eigen::Vector3f> OBBInnerPoints = boundingBox(innerCloud);
 
             double angular_tolerance=0.0;
             Eigen::Vector4f plane_a;
-            plane_a.x()=modelCoeff->values[0];
-            plane_a.y()=modelCoeff->values[1];
-            plane_a.z()=modelCoeff->values[2];
-            plane_a.w()=modelCoeff->values[3];
+            plane_a.x()=InnerCoeff->values[0];
+            plane_a.y()=InnerCoeff->values[1];
+            plane_a.z()=InnerCoeff->values[2];
+            plane_a.w()=InnerCoeff->values[3];
             Eigen::Vector4f plane_b;
-            plane_b.x()=modelCoeff_outer->values[0];
-            plane_b.y()=modelCoeff_outer->values[1];
-            plane_b.z()=modelCoeff_outer->values[2];
-            plane_b.w()=modelCoeff_outer->values[3];
+            plane_b.x()=OuterCoeff->values[0];
+            plane_b.y()=OuterCoeff->values[1];
+            plane_b.z()=OuterCoeff->values[2];
+            plane_b.w()=OuterCoeff->values[3];
 
             Eigen::VectorXf line;
             pcl::planeWithPlaneIntersection(plane_a,plane_b,line,angular_tolerance);
@@ -174,90 +312,34 @@ ExtractPlaneIntersections(vector <PointIndices::Ptr> indices, PointCloud <PointX
             {
                 l->values[i]=line[i];
             }
-            lines_Eigen.push_back(line);
+
             lines_ModCoeff.push_back(*l);
-        }
-//        string R;
-//        ostringstream convert;
-//        convert << out;
-//        R = convert.str();
-//        *result += *outerCloud;
-//        viewer.addPlane(*modelCoeff_outer,0.0,0.0,0.0,R+"P");
-//        cout<<"YES"<<endl;
 
-    }
-
-//    for (int i=0; i < lines_ModCoeff.size(); i++){
-//        string R;
-//        ostringstream convert;
-//        convert << i;
-//        R = convert.str();
+            //find which two points from each vector of OBB are closest to line
+            //and project them on the line
 
 
-//        viewer.addLine(lines_ModCoeff[i],R+"l");
-//    }
-//    viewer.addPointCloud(result);
 
-//    while (!viewer.wasStopped ())
-//    {
-//      viewer.spinOnce ();
-//    }
+            tie(OBBOuterPoints,OBBInnerPoints) = getPointsOnLine(OBBOuterPoints,OBBInnerPoints, line);
+
+
+
+        }//end inner loop
+
+
+
+
+
+    }//end outer loop
+
+
+
     return lines_ModCoeff;
 
 }
 
-void
-ExtractPointsOnLines(vector<ModelCoefficients> lines, PointCloud <PointXYZRGB>::Ptr segCloud)
-{
-    pcl::visualization::PCLVisualizer viewer;
-    viewer.setBackgroundColor(0,0,0);
 
 
-    PointCloud <PointXYZRGB>::Ptr outer(new PointCloud <PointXYZRGB>);
-
-    for(int i = 0; i < lines.size(); ++i){
-        ModelCoefficients l = lines[i];
-        double threshold = 0.01;
-
-        double sqr_threshold = threshold * threshold;
-
-        Eigen::Vector3f line_point(l.values[1], l.values[2], l.values[3]);
-        Eigen::Vector3f line_direction(l.values[4], l.values[5], l.values[6]);
-
-
-
-        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-        for(int j = 0; j < segCloud->points.size(); ++j)
-        {
-
-            PointCloud <PointXYZRGB>::Ptr cornerCloud(new PointCloud <PointXYZRGB>);
-            cornerCloud->points.resize(1);
-
-            double sqr_distance = (line_point - segCloud->points[j].getVector3fMap()).cross(line_direction).squaredNorm();
-            cout<<sqr_distance<<" "<<sqr_threshold<<endl;
-            if (sqr_distance > sqr_threshold)
-            {
-//                    cout<<"HERE"<<endl;
-                    cornerCloud->points[0].x = segCloud->points[j].x;
-                    cornerCloud->points[0].y = segCloud->points[j].y;
-                    cornerCloud->points[0].z = segCloud->points[j].z;
-
-                    *inter += *cornerCloud;
-            }
-
-        }
-    *outer = *inter;
-    }
-
-    cout<<"HERE   "<< outer->points.size()<< endl;
-    viewer.addPointCloud(outer);
-
-    while (!viewer.wasStopped ())
-    {
-      viewer.spinOnce ();
-    }
-
-}
 
 int
 main()
@@ -280,23 +362,18 @@ main()
     std::tie(vector_of_segments, segCloud) = segmentor(origCloud, normals);
 
     displayTime();
+
     PointCloud <PointXYZRGB>::Ptr cloud = vectorToCloud(vector_of_segments, segCloud);
 
-
     vector<ModelCoefficients> lines = ExtractPlaneIntersections(vector_of_segments,segCloud);
-    displayTime();
-    ExtractPointsOnLines(lines, segCloud);
 
+//    cout<<"Writing Cloud to File..."<<endl;
+//    string outputFileName = filename + "-Segmented";
+//    write(cloud,outputFileName + ".pcd");
+//    displayTime();
 
-//    boundingBox(cloud);
-
-    cout<<"Writing Cloud to File..."<<endl;
-    string outputFileName = filename + "-Segmented";
-    write(cloud,outputFileName + ".pcd");
-    displayTime();
-
-    cout<<"Displaying Cloud..."<< endl;
-    Viewer(cloud);
+//    cout<<"Displaying Cloud..."<< endl;
+//    Viewer(cloud);
 
     cout<<"End"<< endl;
     return 0;
