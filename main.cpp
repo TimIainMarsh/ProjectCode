@@ -336,7 +336,7 @@ ExtractPlaneIntersections(vector <PointIndices::Ptr> indices, PointCloud <PointX
 
 }
 
-void
+PointCloud <PointXYZRGB>::Ptr
 cornersOfSegment(PointIndices::Ptr indices, PointCloud <PointXYZRGB>::Ptr cloud){
     PointCloud <PointXYZRGB>::Ptr segment(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filter (true);
@@ -346,8 +346,7 @@ cornersOfSegment(PointIndices::Ptr indices, PointCloud <PointXYZRGB>::Ptr cloud)
 
     PointCloud <PointXYZRGB>::Ptr segmentEDGE = boundingBox(segment);
 
-    Viewer(segmentEDGE);
-
+    return segmentEDGE;
 }
 
 PointCloud <PointXYZRGB>::Ptr
@@ -355,18 +354,14 @@ ExtractCornerPoints(vector<ModelCoefficients> lines, vector <PointIndices::Ptr> 
     PointCloud <PointXYZRGB>::Ptr mainCornerPoints;
 
     for(int i = 0; i < vector_of_segments.size();++i){
-        vector<int> corners;
-        cornersOfSegment(vector_of_segments[i], cloud);
-
+        PointCloud <PointXYZRGB>::Ptr corners;
+        corners = cornersOfSegment(vector_of_segments[i], cloud);
+//        for i in corners:
+//            for j in lines:
+//                find closest line.
+//                project i onto line j.
 
     }
-
-
-    //        pcl::ProjectInliers<pcl::PointXYZ> proj;
-    //        proj.setModelType (pcl::SACMODEL_PLANE);
-    //        proj.setInputCloud (cloud);
-    //        proj.setModelCoefficients (lines[i]);
-    //        proj.filter (*cloud_projected);
 
 
     return mainCornerPoints;
