@@ -348,61 +348,6 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         }
     }
 
-//    cout<<"Max: "<<maxSeg<<" -   "<<maxSegHeight<<endl;
-//    cout<<"Min: "<<minSeg<<" -   "<<minSegHeight<<endl;
-
-    ///////////////////////////////////////////////////////////////////////////
-    ///
-    /// Concatinating the clusters into the full cloud
-    ///
-    ///////////////////////////////////////////////////////////////////////////
-
-//    PointCloud <PointXYZRGB>::Ptr result(new PointCloud <PointXYZRGB>);
-//    ExtractIndices<PointXYZRGB> filtrerG (true);
-//    filtrerG.setInputCloud (segCloud);
-//    for (int i=0; i < my_VERT_clusters.size(); i++){
-
-//        PointCloud <PointXYZRGB>::Ptr clusterCloud(new PointCloud <PointXYZRGB>);
-//        PointCloud <PointXYZRGB>::Ptr inter2(new PointCloud <PointXYZRGB>);
-//        inter2 = result;
-//        filtrerG.setIndices(my_VERT_clusters[i]);
-//        filtrerG.filter(*clusterCloud);
-
-//        PointCloud <PointXYZRGB>::Ptr inter(new PointCloud <PointXYZRGB>);
-//        inter = clusterCloud;
-
-//        *result = *inter2 + *inter;
-//    }
-
-
-    //////////////////////////////////////////////////////////////////////////////
-    ///
-    /// after all the vertical clusters added the two extent horizontal
-    /// clusters are added
-    ///
-    /////////////////////////////////////////////////////////////////////////////
-
-
-//    PointCloud <PointXYZRGB>::Ptr _1(new PointCloud <PointXYZRGB>);
-//    PointCloud <PointXYZRGB>::Ptr _inter_1(new PointCloud <PointXYZRGB>);
-//    _inter_1 = result;
-//    filtrerG.setIndices(my_HOR_clusters[maxSeg]);
-//    filtrerG.filter(*_1);
-//    PointCloud <PointXYZRGB>::Ptr inter_1(new PointCloud <PointXYZRGB>);
-//    inter_1 = _1;
-//    *result = *_inter_1 + *inter_1;
-
-//    PointCloud <PointXYZRGB>::Ptr _2(new PointCloud <PointXYZRGB>);
-//    PointCloud <PointXYZRGB>::Ptr _inter_2(new PointCloud <PointXYZRGB>);
-//    _inter_2 = result;
-//    filtrerG.setIndices(my_HOR_clusters[minSeg]);
-//    filtrerG.filter(*_2);
-//    PointCloud <PointXYZRGB>::Ptr inter_2(new PointCloud <PointXYZRGB>);
-//    inter_2 = _2;
-//    *result = *_inter_2 + *inter_2;
-
-
-
     vector <PointIndices::Ptr> extent_clusters;
 
     extent_clusters = my_VERT_clusters;
