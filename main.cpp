@@ -87,7 +87,7 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud){
 }
 
 PointCloud <PointXYZRGB>::Ptr
-boundingBox(PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer,string s){
+boundingBox(PointCloud <PointXYZRGB>::Ptr cloud){
     pcl::MomentOfInertiaEstimation <PointXYZRGB> feature_extractor;
     feature_extractor.setInputCloud (cloud);
     feature_extractor.compute ();
@@ -97,8 +97,17 @@ boundingBox(PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualiza
     PointXYZRGB position_OBB;
     Eigen::Matrix3f rotational_matrix_OBB;
 
+    pcl::PointXYZRGB min_point_AABB;
+    pcl::PointXYZRGB max_point_AABB;
+
+    feature_extractor.getAABB (min_point_AABB, max_point_AABB);
     feature_extractor.getOBB (min_point_OBB, max_point_OBB, position_OBB, rotational_matrix_OBB);
+
+
+
     Eigen::Vector3f position (position_OBB.x, position_OBB.y, position_OBB.z);
+
+
 
     Eigen::Vector3f p1 (min_point_OBB.x, min_point_OBB.y, min_point_OBB.z);
     Eigen::Vector3f p2 (min_point_OBB.x, min_point_OBB.y, max_point_OBB.z);
@@ -109,6 +118,7 @@ boundingBox(PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualiza
     Eigen::Vector3f p7 (max_point_OBB.x, max_point_OBB.y, max_point_OBB.z);
     Eigen::Vector3f p8 (max_point_OBB.x, max_point_OBB.y, min_point_OBB.z);
 
+
     p1 = rotational_matrix_OBB * p1 + position;
     p2 = rotational_matrix_OBB * p2 + position;
     p3 = rotational_matrix_OBB * p3 + position;
@@ -118,32 +128,6 @@ boundingBox(PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualiza
     p7 = rotational_matrix_OBB * p7 + position;
     p8 = rotational_matrix_OBB * p8 + position;
 
-    pcl::PointXYZ pt1 (p1 (0), p1 (1), p1 (2));
-    pcl::PointXYZ pt2 (p2 (0), p2 (1), p2 (2));
-    pcl::PointXYZ pt3 (p3 (0), p3 (1), p3 (2));
-    pcl::PointXYZ pt4 (p4 (0), p4 (1), p4 (2));
-    pcl::PointXYZ pt5 (p5 (0), p5 (1), p5 (2));
-    pcl::PointXYZ pt6 (p6 (0), p6 (1), p6 (2));
-    pcl::PointXYZ pt7 (p7 (0), p7 (1), p7 (2));
-    pcl::PointXYZ pt8 (p8 (0), p8 (1), p8 (2));
-
-     viewer->addLine (pt1, pt2, 1.0, 0.0, 0.0, "1 edge"+s);
-     viewer->addLine (pt1, pt4, 1.0, 0.0, 0.0, "2 edge"+s);
-     viewer->addLine (pt1, pt5, 1.0, 0.0, 0.0, "3 edge"+s);
-     viewer->addLine (pt5, pt6, 1.0, 0.0, 0.0, "4 edge"+s);
-     viewer->addLine (pt5, pt8, 1.0, 0.0, 0.0, "5 edge"+s);
-     viewer->addLine (pt2, pt6, 1.0, 0.0, 0.0, "6 edge"+s);
-     viewer->addLine (pt6, pt7, 1.0, 0.0, 0.0, "7 edge"+s);
-     viewer->addLine (pt7, pt8, 1.0, 0.0, 0.0, "8 edge"+s);
-     viewer->addLine (pt2, pt3, 1.0, 0.0, 0.0, "9 edge"+s);
-     viewer->addLine (pt4, pt8, 1.0, 0.0, 0.0, "10 edge"+s);
-     viewer->addLine (pt3, pt4, 1.0, 0.0, 0.0, "11 edge"+s);
-     viewer->addLine (pt3, pt7, 1.0, 0.0, 0.0, "12 edge"+s);
-     while(!viewer->wasStopped())
-     {
-       viewer->spinOnce (100);
-       boost::this_thread::sleep (boost::posix_time::microseconds (100000));
-     }
 
 
     PointCloud <PointXYZRGB> returnCloud;
@@ -294,14 +278,14 @@ ExtractPlaneIntersections(vector <PointIndices::Ptr> indices, PointCloud <PointX
 }
 
 PointCloud <PointXYZRGB>::Ptr
-cornersOfSegment(PointIndices::Ptr indices, PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer,string s){
+cornersOfSegment(PointIndices::Ptr indices, PointCloud <PointXYZRGB>::Ptr cloud){
     PointCloud <PointXYZRGB>::Ptr segment(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filter (true);
     filter.setInputCloud (cloud);
     filter.setIndices(indices);
     filter.filter(*segment);
 
-    PointCloud <PointXYZRGB>::Ptr segmentEDGE = boundingBox(segment,viewer,s);
+    PointCloud <PointXYZRGB>::Ptr segmentEDGE = boundingBox(segment);
 
     return segmentEDGE;
 }
@@ -358,14 +342,14 @@ ExtractCornerPoints(vector<ModelCoefficients> lines, vector <PointIndices::Ptr> 
 
 
 //    visualization::PCLVisualizer viewer("TEST");
-         boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
+//         boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
 
     for(int i = 0; i < vector_of_segments.size();++i){
         PointCloud <PointXYZRGB>::Ptr corners(new PointCloud <PointXYZRGB>);
-        std::string s = std::to_string(i);
-        corners = cornersOfSegment(vector_of_segments[i], cloud,viewer,s);
-        cout<<i<<endl;
 
+        corners = cornersOfSegment(vector_of_segments[i], cloud);
+//        cout<<i<<endl;
+        std::string s = std::to_string(i);
 //        viewer.addPointCloud(corners,s);
 
 //        for i in corners:
@@ -386,11 +370,6 @@ ExtractCornerPoints(vector<ModelCoefficients> lines, vector <PointIndices::Ptr> 
         }
 
     }
-//    viewer.setBackgroundColor (1.0, 1.0, 1.0);
-//    while (!viewer.wasStopped ())
-//    {
-//      viewer.spinOnce ();
-//    }
 
     return mainCornerPoints;
 }
@@ -403,8 +382,8 @@ main()
 {
     displayTime();
     cout<<"Start"<< endl;
-//    string filename = "../ptClouds/DeepSpace-CutDown";
-    string filename = "../ptClouds/box";
+    string filename = "../ptClouds/GTL-CutDown";
+//    string filename = "../ptClouds/box";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
