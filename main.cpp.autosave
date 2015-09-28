@@ -87,7 +87,7 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud){
 }
 
 PointCloud <PointXYZRGB>::Ptr
-boundingBox(PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer,string s){
+boundingBox(PointCloud <PointXYZRGB>::Ptr cloud){
     pcl::MomentOfInertiaEstimation <PointXYZRGB> feature_extractor;
     feature_extractor.setInputCloud (cloud);
     feature_extractor.compute ();
@@ -127,18 +127,18 @@ boundingBox(PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualiza
     pcl::PointXYZ pt7 (p7 (0), p7 (1), p7 (2));
     pcl::PointXYZ pt8 (p8 (0), p8 (1), p8 (2));
 
-     viewer->addLine (pt1, pt2, 1.0, 0.0, 0.0, "1 edge"+s);
-     viewer->addLine (pt1, pt4, 1.0, 0.0, 0.0, "2 edge"+s);
-     viewer->addLine (pt1, pt5, 1.0, 0.0, 0.0, "3 edge"+s);
-     viewer->addLine (pt5, pt6, 1.0, 0.0, 0.0, "4 edge"+s);
-     viewer->addLine (pt5, pt8, 1.0, 0.0, 0.0, "5 edge"+s);
-     viewer->addLine (pt2, pt6, 1.0, 0.0, 0.0, "6 edge"+s);
-     viewer->addLine (pt6, pt7, 1.0, 0.0, 0.0, "7 edge"+s);
-     viewer->addLine (pt7, pt8, 1.0, 0.0, 0.0, "8 edge"+s);
-     viewer->addLine (pt2, pt3, 1.0, 0.0, 0.0, "9 edge"+s);
-     viewer->addLine (pt4, pt8, 1.0, 0.0, 0.0, "10 edge"+s);
-     viewer->addLine (pt3, pt4, 1.0, 0.0, 0.0, "11 edge"+s);
-     viewer->addLine (pt3, pt7, 1.0, 0.0, 0.0, "12 edge"+s);
+     viewer->addLine (pt1, pt2, 1.0, 0.0, 0.0, "1 edge");
+     viewer->addLine (pt1, pt4, 1.0, 0.0, 0.0, "2 edge");
+     viewer->addLine (pt1, pt5, 1.0, 0.0, 0.0, "3 edge");
+     viewer->addLine (pt5, pt6, 1.0, 0.0, 0.0, "4 edge");
+     viewer->addLine (pt5, pt8, 1.0, 0.0, 0.0, "5 edge");
+     viewer->addLine (pt2, pt6, 1.0, 0.0, 0.0, "6 edge");
+     viewer->addLine (pt6, pt7, 1.0, 0.0, 0.0, "7 edge");
+     viewer->addLine (pt7, pt8, 1.0, 0.0, 0.0, "8 edge");
+     viewer->addLine (pt2, pt3, 1.0, 0.0, 0.0, "9 edge");
+     viewer->addLine (pt4, pt8, 1.0, 0.0, 0.0, "10 edge");
+     viewer->addLine (pt3, pt4, 1.0, 0.0, 0.0, "11 edge");
+     viewer->addLine (pt3, pt7, 1.0, 0.0, 0.0, "12 edge");
      while(!viewer->wasStopped())
      {
        viewer->spinOnce (100);
@@ -294,14 +294,14 @@ ExtractPlaneIntersections(vector <PointIndices::Ptr> indices, PointCloud <PointX
 }
 
 PointCloud <PointXYZRGB>::Ptr
-cornersOfSegment(PointIndices::Ptr indices, PointCloud <PointXYZRGB>::Ptr cloud,boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer,string s){
+cornersOfSegment(PointIndices::Ptr indices, PointCloud <PointXYZRGB>::Ptr cloud){
     PointCloud <PointXYZRGB>::Ptr segment(new PointCloud <PointXYZRGB>);
     ExtractIndices<PointXYZRGB> filter (true);
     filter.setInputCloud (cloud);
     filter.setIndices(indices);
     filter.filter(*segment);
 
-    PointCloud <PointXYZRGB>::Ptr segmentEDGE = boundingBox(segment,viewer,s);
+    PointCloud <PointXYZRGB>::Ptr segmentEDGE = boundingBox(segment);
 
     return segmentEDGE;
 }
@@ -362,11 +362,11 @@ ExtractCornerPoints(vector<ModelCoefficients> lines, vector <PointIndices::Ptr> 
 
     for(int i = 0; i < vector_of_segments.size();++i){
         PointCloud <PointXYZRGB>::Ptr corners(new PointCloud <PointXYZRGB>);
-        std::string s = std::to_string(i);
-        corners = cornersOfSegment(vector_of_segments[i], cloud,viewer,s);
-        cout<<i<<endl;
 
-//        viewer.addPointCloud(corners,s);
+        corners = cornersOfSegment(vector_of_segments[i], cloud);
+        cout<<i<<endl;
+        std::string s = std::to_string(i);
+        viewer.addPointCloud(corners,s);
 
 //        for i in corners:
         for (int j = 0; j < corners->points.size();++j){

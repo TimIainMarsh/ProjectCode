@@ -125,3 +125,80 @@ BoundryDetection(PointCloud<PointXYZRGB>::Ptr cloud, int decide){
     }
 }
 
+
+tuple<vector <Eigen::Vector3f> ,vector <Eigen::Vector3f> >
+getPointsOnLine(vector <Eigen::Vector3f> OBBOuterPoints, vector <Eigen::Vector3f> OBBInnerPoints, Eigen::VectorXf line){
+
+    int closestPointOuter = 0;\
+    int secondClosestOuter = 0;
+    float dist = INT8_MAX;
+    float prevD = INT8_MAX;
+
+    for (int i=0; i < OBBOuterPoints.size(); i++)
+    {
+        Eigen::Vector3f pt = OBBOuterPoints[i];
+//        cout<<pt.x()<<" "<<pt.y()<<" "<<pt.z()<<" "<<endl;
+        Eigen::Vector3f line_pt;
+        line_pt.x() = line[0];
+        line_pt.y() = line[1];
+        line_pt.z() = line[2];
+
+        Eigen::Vector3f line_dir;
+        line_dir.x() = line[3];
+        line_dir.y() = line[4];
+        line_dir.z() = line[5];
+        double d = (line_dir.cross(line_pt - pt)).squaredNorm () / line_dir.squaredNorm ();
+//       cout<<d<<endl;
+        if (d <= prevD ){
+            prevD = dist;
+            secondClosestOuter = i;
+        }
+
+        if (d < dist){
+            prevD = dist;
+            dist = d;
+            closestPointOuter = i;
+        }
+    }
+
+    int closestPointInner = 0;\
+    int secondClosestInner = 0;
+    dist = INT8_MAX;
+    prevD = INT8_MAX;
+
+    for (int i=0; i < OBBInnerPoints.size(); i++)
+    {
+        Eigen::Vector3f pt = OBBInnerPoints[i];
+//        cout<<pt.x()<<" "<<pt.y()<<" "<<pt.z()<<" "<<endl;
+        Eigen::Vector3f line_pt;
+        line_pt.x() = line[0];
+        line_pt.y() = line[1];
+        line_pt.z() = line[2];
+
+        Eigen::Vector3f line_dir;
+        line_dir.x() = line[3];
+        line_dir.y() = line[4];
+        line_dir.z() = line[5];
+        double d = (line_dir.cross(line_pt - pt)).squaredNorm () / line_dir.squaredNorm ();
+
+        if (d <= prevD ){
+            prevD = dist;
+            secondClosestInner = i;
+        }
+
+        if (d < dist){
+            prevD = dist;
+            dist = d;
+            closestPointInner = i;
+        }
+    }
+
+
+
+    OBBOuterPoints[closestPointOuter] = projectOntoLine(line,OBBOuterPoints[closestPointOuter]);
+    OBBOuterPoints[secondClosestOuter] = projectOntoLine(line,OBBOuterPoints[secondClosestOuter]);
+    OBBInnerPoints[closestPointInner] = projectOntoLine(line,OBBInnerPoints[closestPointInner]);
+    OBBInnerPoints[secondClosestInner] = projectOntoLine(line,OBBInnerPoints[secondClosestInner]);
+
+    return make_tuple(OBBOuterPoints,OBBInnerPoints);
+}
