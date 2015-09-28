@@ -128,7 +128,7 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
 //    cout<<min_Z<<" - "<<max_Z<<" - "<<gap<<endl;
 
-    if(gap > 0.75){
+    if(gap > 1.00){
         return 1;
     }
     else{
