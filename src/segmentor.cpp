@@ -266,9 +266,9 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
         reg.setCurvatureThreshold (RGC.CurvatureThreshold);
     }
     vector <PointIndices> clusters;
-    cout<<"Cluster Extracton Starting..."<< endl;
+//    cout<<"Cluster Extracton Starting..."<< endl;
     reg.extract (clusters);
-    cout<<"Cluster Extracton Sucessfull..."<< endl;
+//    cout<<"Cluster Extracton Sucessfull..."<< endl;
 
     vector <PointIndices::Ptr> my_clusters;
 
@@ -291,22 +291,22 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     /////////////////////////////////////////////////////////////////////////
 
     cout<<" "<<endl;
-    cout<<" Staring Cluster Removal .. "<<endl;
+//    cout<<" Staring Cluster Removal .. "<<endl;
 
     vector <PointIndices::Ptr> my_VERT_clusters;
 //    vector <PointIndices::Ptr> my_HOR_clusters;
 
     for (int i=0; i < clusters.size(); i++)
     {
-        cout<<"----------------------Start Cluster"<<endl;
-        cout<<"-checking VERT"<<endl;
+//        cout<<"----------------------Start Cluster"<<endl;
+//        cout<<"-checking VERT"<<endl;
         if (removeClusterOnVerticality(segCloud,my_clusters[i]) != 1){
-            cout<<"Removed cluster after VERT check..."<<endl;
+//            cout<<"Removed cluster after VERT check..."<<endl;
             continue;
         }
-        cout<<"-checking SIZE"<<endl;
+//        cout<<"-checking SIZE"<<endl;
         if (removeClusterOnSize(segCloud,my_clusters[i]) != 1){
-            cout<<"Removed cluster after SIZE check..."<<endl;
+//            cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
         }
         else{
@@ -355,7 +355,7 @@ segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr norm
     extent_clusters.push_back(my_HOR_clusters[maxSeg]);
     extent_clusters.push_back(my_HOR_clusters[minSeg]);
 
-    cout<<"-----------------------------------------------"<<endl;
-    cout<<"Returning Segments..."<<endl;
+//    cout<<"-----------------------------------------------"<<endl;
+//    cout<<"Returning Segments..."<<endl;
     return make_tuple(extent_clusters, segCloud);
 }
