@@ -412,18 +412,23 @@ pointsOnLine(ModelCoefficients::Ptr line){
 
 
 PointCloud <PointXYZRGB>::Ptr
-ExtractCornerPoints(vector <PointIndices::Ptr> vector_of_segments, PointCloud <PointXYZRGB>::Ptr cloud){
+ExtractCornerPoints(const vector <PointIndices::Ptr>& vector_of_segments,const PointCloud <PointXYZRGB>::Ptr& cloud){
     PointCloud <PointXYZRGB>::Ptr mainCornerPoints;
 
-    vector <tuple<PointCloud <PointXYZRGB>::Ptr,PointCloud <PointXYZRGB>::Ptr>> SegmentAndBoundry;
+//    vector <tuple<PointCloud <PointXYZRGB>::Ptr, PointCloud <PointXYZRGB>::Ptr> > SegmentAndBoundry;
 
-    for(int i = 0; i < vector_of_segments.size();++i){
-        PointCloud <PointXYZRGB>::Ptr cloud = ExtractSegment(cloud,vector_of_segments[i]);
-        PointCloud <PointXYZRGB>::Ptr cloud_Corners = boundingBox(cloud);
-        SegmentAndBoundry.push_back(make_tuple(cloud,cloud_Corners));
-    }
+//    for(int i = 0; i < vector_of_segments.size();++i){
+//        PointCloud <PointXYZRGB>::Ptr cloud = ExtractSegment(cloud,vector_of_segments[i]);
+//        PointCloud <PointXYZRGB>::Ptr cloud_Corners = boundingBox(cloud);
+//        cout<<"HERE"<<endl;
 
-    cout<<"HERE"<<endl;
+
+
+
+////        SegmentAndBoundry.push_back(tuple<PointCloud <PointXYZRGB>::Ptr, PointCloud <PointXYZRGB>::Ptr>(cloud,cloud_Corners));
+//    }
+
+
     for(int i = 0; i < vector_of_segments.size();++i){
 
         PointCloud <PointXYZRGB>::Ptr cloud1 = ExtractSegment(cloud,vector_of_segments[i]);
@@ -473,8 +478,7 @@ ExtractCornerPoints(vector <PointIndices::Ptr> vector_of_segments, PointCloud <P
             for (int i = 0; i < cloud_2_Corners->points.size(); ++i)
                 cout<<cloud_2_Corners->points[i].x<<"  "<<cloud_2_Corners->points[i].y<<"  "<<cloud_2_Corners->points[i].z<<endl;
 
-
-        }//break;
+        }
     }
     return mainCornerPoints;
 }
