@@ -6,9 +6,9 @@
 #include <pcl/common/io.h>
 #include <pcl/point_types.h>
 
-void Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud);
+void Print(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud);
 
-void write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename);
+void write(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud, std::string filename);
 
 float RandomFloat(float min, float max);
 

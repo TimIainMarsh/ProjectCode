@@ -41,7 +41,7 @@ using namespace std;
 
 
 int
-removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+removeClusterOnVerticality(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices::Ptr& cluster)
 {
 
     if (cluster->indices.size() == 0)
@@ -84,7 +84,7 @@ removeClusterOnVerticality(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndice
 
 
 int
-removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+removeClusterOnSize(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices::Ptr& cluster)
 {
 
     if (cluster->indices.size() == 0)
@@ -138,7 +138,7 @@ removeClusterOnSize(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr 
 
 
 int
-GetHORclusters(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster){
+GetHORclusters(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices::Ptr& cluster){
 
     if (cluster->indices.size() == 0)
         return 0;
@@ -179,7 +179,7 @@ GetHORclusters(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr clust
 }
 
 float
-GetMaxOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+GetMaxOfSeg(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices::Ptr& cluster)
 {
 
 
@@ -207,7 +207,7 @@ GetMaxOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 }
 
 float
-GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
+GetMinOfSeg(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices::Ptr& cluster)
 {
 
 
@@ -235,7 +235,7 @@ GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster)
 }
 
 tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
-segmentor(PointCloud<PointXYZRGB>::Ptr input_cloud, PointCloud<Normal>::Ptr normals){
+segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Normal>::Ptr& normals){
     //////////////////////////////////////////////////////////////////////////////////
     ///
     /// most of the region growing section coppied from here:

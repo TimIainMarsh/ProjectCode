@@ -99,7 +99,7 @@ Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
     viewer.addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "sample cloud");
 
-    viewer.setBackgroundColor (1.0, 1.0, 1.0);
+    viewer.setBackgroundColor (0.0, 0.0, 0.0);
 
     while (!viewer.wasStopped ())
     {

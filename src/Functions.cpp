@@ -4,7 +4,7 @@
 #include "Functions.h"
 
 void
-Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
+Print(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud){
 
     std::set<int> rgbVals;
 
@@ -17,7 +17,7 @@ Print(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud){
 }
 
 void
-write(pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, std::string filename){
+write(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud, std::string filename){
 
     pcl::io::savePCDFileASCII(filename, *cloud);
     std::cout << "Saved " << cloud->points.size () << " data points to "<< filename << std::endl;

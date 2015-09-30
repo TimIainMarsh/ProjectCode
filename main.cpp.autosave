@@ -473,18 +473,7 @@ ExtractCornerPoints(const vector <PointIndices::Ptr>& vector_of_segments,const P
     }
     return mainCornerPoints;
 }
-void
-shadowTest(const vector <PointIndices::Ptr> &indices, const PointCloud <PointXYZRGB>::Ptr &cloud){
 
-    cout<<cloud->sensor_origin_[0]<<" "<<cloud->sensor_origin_[1]<<" "<<cloud->sensor_origin_[2]<<endl;
-
-//    for( int i = 0;1<indices.size();i++){
-//        PointCloud <PointXYZRGB>::Ptr corners = boundingBox(cloud);
-
-
-//    }
-
-}
 
 int
 main()
@@ -510,21 +499,17 @@ main()
     displayTime();
     cout<<"Segmentation Complete..."<< endl;
 
-    shadowTest(vector_of_segments, segCloud);
 
-//    vector<ModelCoefficients> lines = ExtractPlaneIntersections(vector_of_segments,segCloud);
     cout<<"Extracting corner points..."<<endl;
+    PointCloud <PointXYZRGB>::Ptr cornersOfCloud = ExtractCornerPoints(vector_of_segments, segCloud);
 
+    cout<<"Writing Cloud to File..."<<endl;
+    string outputFileName = filename + "-Segmented";
+    write(extentCloud,outputFileName + ".pcd");
+    displayTime();
 
-//    PointCloud <PointXYZRGB>::Ptr cornersOfCloud = ExtractCornerPoints(vector_of_segments, segCloud);
-
-//    cout<<"Writing Cloud to File..."<<endl;
-//    string outputFileName = filename + "-Segmented";
-//    write(extentCloud,outputFileName + ".pcd");
-//    displayTime();
-
-//    cout<<"Displaying Cloud..."<< endl;
-//    Viewer(extentCloud);
+    cout<<"Displaying Cloud..."<< endl;
+    Viewer(extentCloud);
 
 
     cout<<"End"<< endl;
