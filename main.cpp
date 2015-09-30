@@ -195,73 +195,6 @@ ExtractSegment(PointCloud <PointXYZRGB>::Ptr cloud, PointIndices::Ptr segInd){
 }
 
 
-vector<ModelCoefficients>
-ExtractPlaneIntersections(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud)
-{
-//    vector <Eigen::Vector3f> OBBOuterPoints;
-//    vector <Eigen::Vector3f> OBBInnerPoints;
-//    pcl::PointCloud<pcl::PointXYZ> mainOutputPointCloud;
-
-
-    vector<ModelCoefficients> lines_ModCoeff;
-
-    for (int out=0; out < indices.size(); out++){
-        PointIndices::Ptr outerSegment = indices[out];
-        PointCloud <PointXYZRGB>::Ptr outerCloud(new PointCloud <PointXYZRGB>);
-        ExtractIndices<PointXYZRGB> filtrerOuter (true);
-        filtrerOuter.setInputCloud (cloud);
-        filtrerOuter.setIndices(outerSegment);
-        filtrerOuter.filter(*outerCloud);
-//        Viewer(outerCloud);
-        ModelCoefficients::Ptr OuterCoeff = FitPlane(outerCloud);
-//        OBBOuterPoints = boundingBox(outerCloud);
-
-        for (int in=0; in < indices.size(); in++){
-            if(in == out){
-//                cout<<"skipped"<<endl;
-                continue;                
-            }
-            PointIndices::Ptr innerSegment = indices[in];
-            PointCloud <PointXYZRGB>::Ptr innerCloud(new PointCloud <PointXYZRGB>);
-            ExtractIndices<PointXYZRGB> filtrerInner (true);
-            filtrerInner.setInputCloud (cloud);
-            filtrerInner.setIndices(innerSegment);
-            filtrerInner.filter(*innerCloud);
-//            Viewer(innerCloud);
-
-
-            ModelCoefficients::Ptr InnerCoeff = FitPlane(innerCloud);
-//            OBBInnerPoints = boundingBox(innerCloud);
-
-            double angular_tolerance=0.0;
-            Eigen::Vector4f plane_a;
-            plane_a.x()=InnerCoeff->values[0];
-            plane_a.y()=InnerCoeff->values[1];
-            plane_a.z()=InnerCoeff->values[2];
-            plane_a.w()=InnerCoeff->values[3];
-            Eigen::Vector4f plane_b;
-            plane_b.x()=OuterCoeff->values[0];
-            plane_b.y()=OuterCoeff->values[1];
-            plane_b.z()=OuterCoeff->values[2];
-            plane_b.w()=OuterCoeff->values[3];
-
-            Eigen::VectorXf line;
-            pcl::planeWithPlaneIntersection(plane_a,plane_b,line,angular_tolerance);
-            pcl::ModelCoefficients::Ptr l(new pcl::ModelCoefficients ());
-            l->values.resize(6);
-            for (int i=1;i<6;i++)
-            {
-                l->values[i]=line[i];
-            }
-
-            lines_ModCoeff.push_back(*l);
-
-        }//end inner loop
-    }//end outer loop
-    return lines_ModCoeff;
-
-}
-
 double
 findDistToLine(PointXYZRGB Point, ModelCoefficients::Ptr  line){
 
@@ -338,11 +271,7 @@ projectOntoLine(PointXYZRGB Point,ModelCoefficients::Ptr  line){// CHANCES ARE I
 void
 Project( const PointCloud <PointXYZRGB>::Ptr& corner_cloud, const ModelCoefficients::Ptr& intersection){
 
-    pcl::visualization::PCLVisualizer viewer("Cloud");
 
-    viewer.addPointCloud<pcl::PointXYZRGB> (corner_cloud);
-
-    viewer.setBackgroundColor (0.0, 0.0, 0.0);
 
     int min1 = 0;
     int min2 = 1;
@@ -367,33 +296,24 @@ Project( const PointCloud <PointXYZRGB>::Ptr& corner_cloud, const ModelCoefficie
         }
     }
 //    cout<<min1<<" "<<min1D<<" "<<min2<<" "<<min2D<<endl;
-//    PointXYZRGB inter1;
-//    inter1 = projectOntoLine(corner_cloud->points[min1], intersection);
-//    corner_cloud->points[min1].x = inter1.x;
-//    corner_cloud->points[min1].y = inter1.y;
-//    corner_cloud->points[min1].z = inter1.z;
+    PointXYZRGB inter1;
+    inter1 = projectOntoLine(corner_cloud->points[min1], intersection);
+    corner_cloud->points[min1].x = inter1.x;
+    corner_cloud->points[min1].y = inter1.y;
+    corner_cloud->points[min1].z = inter1.z;
 
-//    PointXYZRGB inter2;
-//    inter2 = projectOntoLine(corner_cloud->points[min2], intersection);
-//    corner_cloud->points[min2].x = inter2.x;
-//    corner_cloud->points[min2].y = inter2.y;
-//    corner_cloud->points[min2].z = inter2.z;
+    PointXYZRGB inter2;
+    inter2 = projectOntoLine(corner_cloud->points[min2], intersection);
+    corner_cloud->points[min2].x = inter2.x;
+    corner_cloud->points[min2].y = inter2.y;
+    corner_cloud->points[min2].z = inter2.z;
 
-    viewer.addLine(corner_cloud->points[min1],corner_cloud->points[min2]);
-
-
-
-    while (!viewer.wasStopped ())
-    {
-      viewer.spinOnce ();
-    }
 }
-
-
-
 
 void
 ExtractCornerPoints(const vector <PointIndices::Ptr>& vector_of_segments, const vector < PointCloud<PointXYZRGB>::Ptr> &Boundries,const PointCloud <PointXYZRGB>::Ptr& cloud){
+
+    vector<ModelCoefficients::Ptr> lines;
 
     for(int i = 0; i < vector_of_segments.size();++i){
 
@@ -436,20 +356,21 @@ ExtractCornerPoints(const vector <PointIndices::Ptr>& vector_of_segments, const 
             pcl::ModelCoefficients::Ptr intersection(new pcl::ModelCoefficients ());
             intersection->values.resize(6);
             for (int i=0;i<6;i++){intersection->values[i]=line[i];}
+            lines.push_back(intersection);
 //            cout<<"PROJECT"<<endl;
-//            Project(Boundries[i], intersection);
+            Project(Boundries[i], intersection);
             Project(Boundries[j], intersection);
 
 
-            pointsOnLine(intersection);
+//            pointsOnLine(intersection);
         }
 
     }
-//    cout<<"HERE"<<endl;
-//    for(int j = 0; j < Boundries.size();++j){
-//        for (int i = 0; i < Boundries[j]->points.size(); ++i)
-//            cout<<Boundries[j]->points[i].x<<"  "<<Boundries[j]->points[i].y<<"  "<<Boundries[j]->points[i].z<<endl;
-//    }
+    cout<<"HERE"<<endl;
+    for(int j = 0; j < Boundries.size();++j){
+        for (int i = 0; i < Boundries[j]->points.size(); ++i)
+            cout<<Boundries[j]->points[i].x<<"  "<<Boundries[j]->points[i].y<<"  "<<Boundries[j]->points[i].z<<endl;
+    }
 
 
 }
@@ -476,21 +397,47 @@ getBoundriesOfSegments(const vector <PointIndices::Ptr> &vector_of_segments, con
         Boundries.emplace_back(PointCloud<PointXYZRGB>::Ptr (new PointCloud<PointXYZRGB> (c_Corners)));
 
     }
-//    cout<<"HERE"<<endl;
-//    for (int i = 0; i < Boundries.size(); i++)
-//    {
-////        PointCloud <PointXYZRGB> cl = (Boundries[i]);
-//        cout << "Point Cloud " << i << " has got " << Boundries[i].size() << " Points" << endl;
-//    }
     return Boundries;
 }
+
+//void intersectLines(vector<ModelCoefficients::Ptr> lines){
+
+
+//    for(int i = 0; i < lines.size();++i){
+
+//        Eigen::VectorXf line_a;
+//        line_a.resize(6);
+
+//        for (int k=0;k<6;k++){
+
+//            line_a[k]=lines[i]->values[k];
+
+//        }
+//        for (int j =1; j < lines.size();++j){
+//            if(i == j){continue;}
+
+//            Eigen::VectorXf line_b;
+//            line_b.resize(6);
+//            for (int k=0;k<6;k++){
+//                line_b[k]=lines[j]->values[k];
+//            }
+
+//            Eigen::Vector4f point;
+//            lineWithLineIntersection(line_a,line_b,point);
+//            if((point[0] != 0) && (point[1] != 0) && (point[2] != 0) ){
+//                cout<<point[0]<<" "<<point[1]<<" "<<point[2]<<endl;
+//            }
+
+//        }
+//    }
+//}
 
 int
 main()
 {
     displayTime();
     cout<<"Start"<< endl;
-    string filename = "../ptClouds/GTL-CutDown";
+    string filename = "../ptClouds/DeepSpace-Full";
 //    string filename = "../ptClouds/box";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
@@ -519,7 +466,7 @@ main()
 
     ExtractCornerPoints(vector_of_segments,Boundries, segCloud);
 
-
+//    intersectLines(lines);
 
     cout<<"Writing Cloud to File..."<<endl;
     string outputFileName = filename + "-Segmented";
