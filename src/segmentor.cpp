@@ -278,6 +278,7 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
         my_clusters.push_back(tmp_clusterR);
     }
 
+
     PointCloud <PointXYZRGB>::Ptr segCloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
 
     //////////////////////////////////////////////////////////////////////////

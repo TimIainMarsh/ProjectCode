@@ -14,7 +14,7 @@ public:
 
     bool Triangulation_Y_N = true; //triangulate segments and save them
 
-    int MinClusterSize = 3000;
+    int MinClusterSize = 5000;
     int NumberOfNeighbours = 20;
     float SmoothnessThreshold = (SmoothTresh * M_PI / 180);
     float CurvatureThreshold = 1.0;
