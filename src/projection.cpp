@@ -289,7 +289,7 @@ angleBetweenPlanes(Eigen::Vector4f plane_a,Eigen::Vector4f plane_b){
 }
 
 void
-ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments, const vector < PointCloud<PointXYZRGB>::Ptr> &Boundries,const PointCloud <PointXYZRGB>::Ptr &cloud){
+ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments,  const vector <PointIndices::Ptr> &vector_of_roof_floor, const vector < PointCloud<PointXYZRGB>::Ptr> &Boundries,const PointCloud <PointXYZRGB>::Ptr &cloud){
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// iterrates over all the segments and projects the closest two point of the outer
@@ -299,10 +299,10 @@ ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments, const 
     /// modifies boundries
     //////////////////////////////////////////////////////////////////////////////////////
 
-    for(int i = 0; i < vector_of_segments.size();i++){
-        PointCloud <PointXYZRGB>::Ptr cloud1 = ExtractSegment(cloud,vector_of_segments[i]);
+    for(int i = 0; i < vector_of_roof_floor.size();i++){
+        PointCloud <PointXYZRGB>::Ptr cloud1 = ExtractSegment(cloud,vector_of_roof_floor[i]);
         ModelCoefficients::Ptr cloud1Coeff = FitPlane(cloud1);
-
+        cout<<i<<endl;
         for(int j = 0; j < vector_of_segments.size();j++){
 
 
@@ -339,19 +339,19 @@ ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments, const 
             for (int k=0;k<6;k++){intersection->values[k]=line[k];}
 
 
-//            pcl::ModelCoefficients thing;
-//            thing.values.resize(6);
-//            for (int k=0;k<6;k++){
-//                thing.values[k] = intersection->values[k];
-//            }
+            pcl::ModelCoefficients thing;
+            thing.values.resize(6);
+            for (int k=0;k<6;k++){
+                thing.values[k] = intersection->values[k];
+            }
 
 
-//            pcl::visualization::PCLVisualizer viewer("Cloud");
-//            viewer.addLine(thing);
+            pcl::visualization::PCLVisualizer viewer("Cloud");
+            viewer.addLine(thing);
 
 
-//            viewer.addPointCloud<pcl::PointXYZRGB> (cloud1,"1");
-//            viewer.addPointCloud<pcl::PointXYZRGB> (cloud2,"1.5");
+            viewer.addPointCloud<pcl::PointXYZRGB> (cloud1,"1");
+            viewer.addPointCloud<pcl::PointXYZRGB> (cloud2,"1.5");
 
 //            viewer.addPointCloud<pcl::PointXYZRGB> (Boundries[i],"2");
 //            cout<<i<<" "<<j<<endl;
@@ -359,15 +359,15 @@ ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments, const 
             for (int i=0;i<6;i++){intersection->values[i]=line[i];}
 
 
-            Project(Boundries[i], intersection);
+            Project(Boundries[j], intersection);
 
-//            viewer.addPointCloud<pcl::PointXYZRGB> (Boundries[i],"3");
+            viewer.addPointCloud<pcl::PointXYZRGB> (Boundries[i],"3");
 
-//            while (!viewer.wasStopped ())
-//            {
-//              viewer.spinOnce ();
-//            }
-//            viewer.close();
+            while (!viewer.wasStopped ())
+            {
+              viewer.spinOnce ();
+            }
+            viewer.close();
 //            Project(Boundries[j], intersection);
 
 

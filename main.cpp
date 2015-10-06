@@ -26,7 +26,7 @@ main()
     displayTime();
     cout<<"Start\n"<< endl;
 
-    string filename = "../ptClouds/Ivan-Cloud";
+    string filename = "../ptClouds/DeepSpace-Full";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
@@ -37,18 +37,19 @@ main()
     displayTime();
     cout<<"Segmentation Starting..."<< endl;
     vector <PointIndices::Ptr> vector_of_segments;
+    vector <PointIndices::Ptr> vector_of_roof_floor;
     PointCloud <PointXYZRGB>::Ptr segCloud(new PointCloud <PointXYZRGB>);
-    std::tie(vector_of_segments, segCloud) = segmentor(origCloud, normals);
+
+    std::tie(vector_of_roof_floor,vector_of_segments, segCloud) = segmentor(origCloud, normals);
+
     PointCloud <PointXYZRGB>::Ptr extentCloud = vectorToCloud(vector_of_segments, segCloud);
     cout<<"Segmentation Complete...\n"<< endl;
     displayTime();
 
-    Viewer(extentCloud);
-
     vector < PointCloud<PointXYZRGB>::Ptr> Boundries = getBoundriesOfSegments(vector_of_segments, segCloud);
 
     cout<<"Extracting corner points...\n"<<endl;
-    ExtractCornerPoints(vector_of_segments,Boundries, segCloud);
+    ExtractCornerPoints(vector_of_segments,vector_of_roof_floor,Boundries, segCloud);
     cout<<"Corner points extracted...\n"<<endl;
 
 

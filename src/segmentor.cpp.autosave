@@ -291,8 +291,7 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
     ///
     /////////////////////////////////////////////////////////////////////////
 
-    cout<<" "<<endl;
-//    cout<<" Staring Cluster Removal .. "<<endl;
+
 
     vector <PointIndices::Ptr> my_VERT_clusters;
 //    vector <PointIndices::Ptr> my_HOR_clusters;

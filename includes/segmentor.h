@@ -18,7 +18,7 @@
 
 //float GetMinOfSeg(PointCloud<PointXYZRGB>::Ptr input_cloud, PointIndices::Ptr cluster);
 
-std::tuple<std::vector<pcl::PointIndices::Ptr> , pcl::PointCloud<pcl::PointXYZRGB>::Ptr>
+std::tuple<  std::vector <pcl::PointIndices::Ptr>, std::vector <pcl::PointIndices::Ptr> , pcl::PointCloud<pcl::PointXYZRGB>::Ptr  >
 segmentor(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& input_cloud, const pcl::PointCloud<pcl::Normal>::Ptr& normals);
 
 #endif // SEGMENTOR_H
