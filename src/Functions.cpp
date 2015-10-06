@@ -23,7 +23,7 @@ void
 write(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud, std::string filename){
 
     pcl::io::savePCDFileASCII(filename, *cloud);
-    std::cout << "Saved " << cloud->points.size () << " data points to "<< filename << std::endl;
+    std::cout << "Saved " << cloud->points.size () << " data points to "<< filename << "\n"<<std::endl;
 
 }
 

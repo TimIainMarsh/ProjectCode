@@ -24,13 +24,13 @@ int
 main()
 {
     displayTime();
-    cout<<"Start"<< endl;
+    cout<<"Start\n"<< endl;
 
     string filename = "../ptClouds/DeepSpace-CutDown";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
-    cout<<"Calculating Normals..."<< endl;
+    cout<<"Calculating Normals...\n"<< endl;
     PointCloud<Normal>::Ptr normals = normalCalc(origCloud);
     cout<<"Normals Calculated...\n"<< endl;
 
@@ -40,26 +40,26 @@ main()
     PointCloud <PointXYZRGB>::Ptr segCloud(new PointCloud <PointXYZRGB>);
     std::tie(vector_of_segments, segCloud) = segmentor(origCloud, normals);
     PointCloud <PointXYZRGB>::Ptr extentCloud = vectorToCloud(vector_of_segments, segCloud);
-    cout<<"Segmentation Complete..."<< endl;
+    cout<<"Segmentation Complete...\n"<< endl;
     displayTime();
 
     vector < PointCloud<PointXYZRGB>::Ptr> Boundries = getBoundriesOfSegments(vector_of_segments, segCloud);
 
-    cout<<"Extracting corner points..."<<endl;
+    cout<<"Extracting corner points...\n"<<endl;
     ExtractCornerPoints(vector_of_segments,Boundries, segCloud);
-    cout<<"Corner points extracted..."<<endl;
+    cout<<"Corner points extracted...\n"<<endl;
 
 
-    cout<<"Writing boundry to .obj file..."<<endl;
+    cout<<"Writing boundry to .obj file...\n"<<endl;
     CreateCornerFile(Boundries,filename);
 
-    cout<<"Writing Cloud to File..."<<endl;
+    cout<<"Writing Cloud to File...\n"<<endl;
     string outputFileName = filename + "-Segmented";
     write(extentCloud,outputFileName + ".pcd");
     displayTime();
 
 
-    cout<<"Displaying Cloud..."<< endl;
+    cout<<"Displaying Cloud...\n"<< endl;
     Viewer(extentCloud);
 
 
