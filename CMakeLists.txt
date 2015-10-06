@@ -20,6 +20,7 @@ SET(SOURCE
     src/Functions.cpp
     src/cloudoperations.cpp
     src/segmentor.cpp
+    src/projection.cpp
 )
 
 SET(HEADERS
@@ -29,6 +30,7 @@ SET(HEADERS
     includes/cloudoperations.h
     includes/constants.h
     includes/segmentor.h
+    includes/projection.h
 )
 
 

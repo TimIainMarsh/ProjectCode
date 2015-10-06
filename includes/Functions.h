@@ -12,4 +12,6 @@ void write(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud, std::string file
 
 float RandomFloat(float min, float max);
 
+void CreateCornerFile(const std::vector <pcl::PointCloud<pcl::PointXYZRGB>::Ptr> &Boundries, std::string filename);
+
 #endif // Functions_H

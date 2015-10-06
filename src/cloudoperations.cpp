@@ -105,6 +105,8 @@ Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud){
     {
       viewer.spinOnce ();
     }
+
+    viewer.close();
 }
 
 void
