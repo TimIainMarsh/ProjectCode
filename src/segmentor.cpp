@@ -252,6 +252,8 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
 
     pass.filter (*indices);
 
+
+    /////////////////////////////////////////////////////
     RegionGrowing<PointXYZRGB, Normal> reg;
 
     reg.setMinClusterSize (RGC.MinClusterSize);
@@ -265,10 +267,15 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
         reg.setSmoothnessThreshold (RGC.SmoothnessThreshold);
         reg.setCurvatureThreshold (RGC.CurvatureThreshold);
     }
+
     vector <PointIndices> clusters;
-//    cout<<"Cluster Extracton Starting..."<< endl;
+
     reg.extract (clusters);
-//    cout<<"Cluster Extracton Sucessfull..."<< endl;
+
+    ////////////////////////////////////////////////////////
+
+    cout<<"---Segmented"<<endl;
+
 
     vector <PointIndices::Ptr> my_clusters;
 
@@ -278,8 +285,9 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
         my_clusters.push_back(tmp_clusterR);
     }
 
+    cout<<"---Clusters Saved Correctly"<<endl;
 
-    PointCloud <PointXYZRGB>::Ptr segCloud = reg.getColoredCloud(); //replaces the input cloud with one coloured accoring to segments
+    PointCloud <PointXYZRGB>::Ptr segCloud = reg.getColoredCloud();
 
     //////////////////////////////////////////////////////////////////////////
     ///
@@ -291,8 +299,7 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
     ///
     /////////////////////////////////////////////////////////////////////////
 
-    cout<<" "<<endl;
-//    cout<<" Staring Cluster Removal .. "<<endl;
+
 
     vector <PointIndices::Ptr> my_VERT_clusters;
 //    vector <PointIndices::Ptr> my_HOR_clusters;
@@ -314,6 +321,8 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
             my_VERT_clusters.push_back(my_clusters[i]);
         }
     }
+
+    cout<<"---Vertical clusters extracted"<<endl;
 
     ////////////////////////////////////////////////////////////////////////////
     ///
@@ -349,13 +358,15 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
         }
     }
 
+    cout<<"---Horizontal clusters extracted"<<endl;
+
     vector <PointIndices::Ptr> extent_clusters;
 //    extent_clusters = my_VERT_clusters;
+    extent_clusters.resize(2);
 
-    extent_clusters.push_back(my_HOR_clusters[maxSeg]);
-    extent_clusters.push_back(my_HOR_clusters[minSeg]);
+    extent_clusters[0] = my_HOR_clusters[maxSeg];
+    extent_clusters[1] = my_HOR_clusters[minSeg];
 
-//    cout<<"-----------------------------------------------"<<endl;
-//    cout<<"Returning Segments..."<<endl;
+    cout<<"---Returning Segments"<<endl;
     return std::make_tuple(extent_clusters,my_VERT_clusters, segCloud);
 }

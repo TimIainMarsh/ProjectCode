@@ -339,35 +339,35 @@ ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments,  const
             for (int k=0;k<6;k++){intersection->values[k]=line[k];}
 
 
-            pcl::ModelCoefficients thing;
-            thing.values.resize(6);
-            for (int k=0;k<6;k++){
-                thing.values[k] = intersection->values[k];
-            }
+//            pcl::ModelCoefficients thing;
+//            thing.values.resize(6);
+//            for (int k=0;k<6;k++){
+//                thing.values[k] = intersection->values[k];
+//            }
 
 
-            pcl::visualization::PCLVisualizer viewer("Cloud");
-            viewer.addLine(thing);
+//            pcl::visualization::PCLVisualizer viewer("Cloud");
+//            viewer.addLine(thing);
 
 
-            viewer.addPointCloud<pcl::PointXYZRGB> (cloud1,"1");
-            viewer.addPointCloud<pcl::PointXYZRGB> (cloud2,"1.5");
+//            viewer.addPointCloud<pcl::PointXYZRGB> (cloud1,"1");
+//            viewer.addPointCloud<pcl::PointXYZRGB> (cloud2,"1.5");
 
-//            viewer.addPointCloud<pcl::PointXYZRGB> (Boundries[i],"2");
-//            cout<<i<<" "<<j<<endl;
+////            viewer.addPointCloud<pcl::PointXYZRGB> (Boundries[i],"2");
+////            cout<<i<<" "<<j<<endl;
 
-            for (int i=0;i<6;i++){intersection->values[i]=line[i];}
+//            for (int i=0;i<6;i++){intersection->values[i]=line[i];}
 
 
             Project(Boundries[j], intersection);
 
-            viewer.addPointCloud<pcl::PointXYZRGB> (Boundries[i],"3");
+//            viewer.addPointCloud<pcl::PointXYZRGB> (Boundries[i],"3");
 
-            while (!viewer.wasStopped ())
-            {
-              viewer.spinOnce ();
-            }
-            viewer.close();
+//            while (!viewer.wasStopped ())
+//            {
+//              viewer.spinOnce ();
+//            }
+//            viewer.close();
 //            Project(Boundries[j], intersection);
 
 
