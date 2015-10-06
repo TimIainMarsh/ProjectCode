@@ -43,8 +43,6 @@ main()
     cout<<"Segmentation Complete...\n"<< endl;
     displayTime();
 
-    Viewer(extentCloud);
-
     vector < PointCloud<PointXYZRGB>::Ptr> Boundries = getBoundriesOfSegments(vector_of_segments, segCloud);
 
     cout<<"Extracting corner points...\n"<<endl;
