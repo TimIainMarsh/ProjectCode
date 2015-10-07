@@ -107,6 +107,8 @@ removeClusterOnSize(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const Point
     filtrerG.setIndices(cluster);
     filtrerG.filter(*cloud);
 
+    Viewer(cloud);
+
     float max_Z = cloud->points[0].z;
     float min_Z = cloud->points[0].z;
 
@@ -235,7 +237,7 @@ GetMinOfSeg(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices:
 }
 
 tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
-segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Normal>::Ptr& normals){
+Awsegmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Normal>::Ptr& normals){
     //////////////////////////////////////////////////////////////////////////////////
     ///
     /// most of the region growing section coppied from here:
