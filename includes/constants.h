@@ -7,12 +7,10 @@
 
 class RegionGrowingConst{
 private:
-    int SmoothTresh = 3.0; //Degrees
+    int SmoothTresh = 1.0; //Degrees
 
 public:
     bool fast = false;  //faster Calculation of segments. faster = not as good
-
-    bool Triangulation_Y_N = true; //triangulate segments and save them
 
     int MinClusterSize = 5000;
     int NumberOfNeighbours = 20;

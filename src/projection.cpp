@@ -324,7 +324,7 @@ ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments, const 
 
 
 
-            if(angleBetweenPlanes(plane_a,plane_b) < 15.0){
+            if(angleBetweenPlanes(plane_a,plane_b) < 15.0 || std::isnan(angleBetweenPlanes(plane_a,plane_b)) == 1){
                 //making sure planes are not parallel or too close to it
                 continue;
              }
@@ -357,7 +357,11 @@ ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments, const 
 //            cout<<i<<" "<<j<<endl;
 
             for (int i=0;i<6;i++){intersection->values[i]=line[i];}
-
+//            cout<<"--------------------------------------------------------------"<<endl;
+//            cout<<"-->"<<angleBetweenPlanes(plane_a,plane_b)<<" "<<std::isnan(angleBetweenPlanes(plane_a,plane_b))<<endl;
+//            cout<<plane_a[0]<<" "<<plane_a[1]<<" "<<plane_a[2]<<" "<<plane_a[3]<<endl;
+//            cout<<plane_b[0]<<" "<<plane_b[1]<<" "<<plane_b[2]<<" "<<plane_b[3]<<endl;
+//            cout<<"--------------------------------------------------------------"<<endl;
 
             Project(Boundries[i], intersection);
 

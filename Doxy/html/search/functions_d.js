@@ -1,0 +1,5 @@
+var searchData=
+[
+  ['vectortocloud',['vectorToCloud',['../cloudoperations_8h.html#ae8febb096046fb04eb63a0393f70af44',1,'vectorToCloud(vector&lt; PointIndices::Ptr &gt; indices, PointCloud&lt; PointXYZRGB &gt;::Ptr cloud):&#160;cloudoperations.cpp'],['../cloudoperations_8cpp.html#ae8febb096046fb04eb63a0393f70af44',1,'vectorToCloud(vector&lt; PointIndices::Ptr &gt; indices, PointCloud&lt; PointXYZRGB &gt;::Ptr cloud):&#160;cloudoperations.cpp']]],
+  ['viewer',['Viewer',['../cloudoperations_8h.html#ad2b774a18f5738971b7d44147e3c8722',1,'Viewer(PointCloud&lt; PointXYZRGB &gt;::Ptr cloud, PointCloud&lt; Normal &gt;::Ptr normals):&#160;cloudoperations.h'],['../cloudoperations_8h.html#a59a8a56db593e639d5a10f721bd8ad7b',1,'Viewer(PointCloud&lt; PointXYZRGB &gt;::Ptr cloud):&#160;cloudoperations.h'],['../cloudoperations_8cpp.html#acc38fe527086c5f8a8ed80e3b26fa4e4',1,'Viewer(pcl::PointCloud&lt; pcl::PointXYZRGB &gt;::Ptr cloud):&#160;cloudoperations.cpp'],['../cloudoperations_8cpp.html#a2464b8f170bf8d85d31f4f25d5104693',1,'Viewer(pcl::PointCloud&lt; pcl::PointXYZRGB &gt;::Ptr cloud, pcl::PointCloud&lt; pcl::Normal &gt;::Ptr normals):&#160;cloudoperations.cpp']]]
+];

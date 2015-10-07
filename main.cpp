@@ -19,6 +19,8 @@
 
 #include <pcl/visualization/cloud_viewer.h>
 
+using namespace std;
+using namespace pcl;
 
 int
 main()
@@ -26,7 +28,7 @@ main()
     displayTime();
     cout<<"Start\n"<< endl;
 
-    string filename = "../ptClouds/Ivan-Cloud";
+    string filename = "../ptClouds/DeepSpace-Full";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
@@ -42,8 +44,6 @@ main()
     PointCloud <PointXYZRGB>::Ptr extentCloud = vectorToCloud(vector_of_segments, segCloud);
     cout<<"Segmentation Complete...\n"<< endl;
     displayTime();
-
-    Viewer(extentCloud);
 
     vector < PointCloud<PointXYZRGB>::Ptr> Boundries = getBoundriesOfSegments(vector_of_segments, segCloud);
 
