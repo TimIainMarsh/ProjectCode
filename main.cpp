@@ -29,13 +29,15 @@ main()
     displayTime();
     cout<<"Start\n"<< endl;
 
-    string filename = "../ptClouds/Ivan-Sampled";
+    string filename = "../ptClouds/Passage";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
     cout<<"Calculating Normals...\n"<< endl;
     PointCloud<Normal>::Ptr normals = normalCalc(origCloud);
     cout<<"Normals Calculated...\n"<< endl;
+
+//    Viewer(origCloud,normals);
 
     displayTime();
     cout<<"Segmentation Starting...\n"<< endl;

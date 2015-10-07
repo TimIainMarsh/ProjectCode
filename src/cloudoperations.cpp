@@ -117,7 +117,7 @@ Viewer(pcl::PointCloud <pcl::PointXYZRGB>::Ptr cloud, pcl::PointCloud<pcl::Norma
     pcl::visualization::PointCloudColorHandlerRGBField<pcl::PointXYZRGB> rgb(cloud);
     viewer.addPointCloud<pcl::PointXYZRGB> (cloud, rgb, "sample cloud");
 
-    viewer.setBackgroundColor (0.0, 0.0, 0.0);
+    viewer.setBackgroundColor (1.0, 1.0, 0.0);
     viewer.addPointCloudNormals<pcl::PointXYZRGB,pcl::Normal>(cloud, normals,400, 0.5, "normals");
 
     while (!viewer.wasStopped ())
