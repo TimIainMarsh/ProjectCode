@@ -237,7 +237,7 @@ GetMinOfSeg(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices:
 }
 
 tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
-Awsegmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Normal>::Ptr& normals){
+segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Normal>::Ptr& normals){
     //////////////////////////////////////////////////////////////////////////////////
     ///
     /// most of the region growing section coppied from here:
