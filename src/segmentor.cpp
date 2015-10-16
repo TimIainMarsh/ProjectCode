@@ -73,10 +73,10 @@ removeClusterOnVerticality(const PointCloud<PointXYZRGB>::Ptr& input_cloud, cons
 
     float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
 //    cout<<angleFromVert<<endl;
-    if (angleFromVert >= 30.0){
-            return 1;
+    if (angleFromVert >= 30.0) {
+        return 1;
     }
-    else{
+    else {
         return 0;
     }
 
@@ -107,19 +107,18 @@ removeClusterOnSize(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const Point
     filtrerG.setIndices(cluster);
     filtrerG.filter(*cloud);
 
-    Viewer(cloud);
 
     float max_Z = cloud->points[0].z;
     float min_Z = cloud->points[0].z;
 
-    for(int i = 0; i < cloud->points.size(); i++ ){
-        if(cloud->points[i].z >= max_Z){
+    for(int i = 0; i < cloud->points.size(); i++ ) {
+        if(cloud->points[i].z >= max_Z) {
             max_Z = cloud->points[i].z;
         }
     }
 
-    for(int j = 0; j < cloud->points.size(); j++ ){
-        if(cloud->points[j].z <= min_Z){
+    for(int j = 0; j < cloud->points.size(); j++ ) {
+        if(cloud->points[j].z <= min_Z) {
             min_Z = cloud->points[j].z;
         }
     }
@@ -130,17 +129,17 @@ removeClusterOnSize(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const Point
 
 //    cout<<min_Z<<" - "<<max_Z<<" - "<<gap<<endl;
 
-    if(gap > 1.00){
+    if(gap > 1.00) {
         return 1;
     }
-    else{
+    else {
         return 0;
     }
 }
 
 
 int
-GetHORclusters(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices::Ptr& cluster){
+GetHORclusters(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices::Ptr& cluster) {
 
     if (cluster->indices.size() == 0)
         return 0;
@@ -171,10 +170,10 @@ GetHORclusters(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndic
 
     float angleFromVert = acos(plane_normal.dot(vert_axis))* 180.0/M_PI;
 //    cout<<angleFromVert<<endl;
-    if (angleFromVert <= 60.0){
-            return 1;
+    if (angleFromVert <= 60.0) {
+        return 1;
     }
-    else{
+    else {
         return 0;
     }
 
@@ -200,8 +199,8 @@ GetMaxOfSeg(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices:
 
     float max_Z = cloud->points[0].z;
 
-    for(int i = 0; i < cloud->points.size(); i++ ){
-        if(cloud->points[i].z >= max_Z){
+    for(int i = 0; i < cloud->points.size(); i++ ) {
+        if(cloud->points[i].z >= max_Z) {
             max_Z = cloud->points[i].z;
         }
     }
@@ -228,8 +227,8 @@ GetMinOfSeg(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices:
 
     float min_Z = cloud->points[0].z;
 
-    for(int i = 0; i < cloud->points.size(); i++ ){
-        if(cloud->points[i].z <= min_Z){
+    for(int i = 0; i < cloud->points.size(); i++ ) {
+        if(cloud->points[i].z <= min_Z) {
             min_Z = cloud->points[i].z;
         }
     }
@@ -237,7 +236,7 @@ GetMinOfSeg(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointIndices:
 }
 
 tuple<  vector <PointIndices::Ptr> , PointCloud<PointXYZRGB>::Ptr  >
-segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Normal>::Ptr& normals){
+segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Normal>::Ptr& normals) {
     //////////////////////////////////////////////////////////////////////////////////
     ///
     /// most of the region growing section coppied from here:
@@ -263,7 +262,7 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
     reg.setIndices (indices);
     reg.setInputNormals (normals);
 
-    if (!RGC.fast){
+    if (!RGC.fast) {
         reg.setSmoothnessThreshold (RGC.SmoothnessThreshold);
         reg.setCurvatureThreshold (RGC.CurvatureThreshold);
     }
@@ -303,16 +302,16 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
     {
 //        cout<<"----------------------Start Cluster"<<endl;
 //        cout<<"-checking VERT"<<endl;
-        if (removeClusterOnVerticality(segCloud,my_clusters[i]) != 1){
+        if (removeClusterOnVerticality(segCloud,my_clusters[i]) != 1) {
 //            cout<<"Removed cluster after VERT check..."<<endl;
             continue;
         }
 //        cout<<"-checking SIZE"<<endl;
-        if (removeClusterOnSize(segCloud,my_clusters[i]) != 1){
+        if (removeClusterOnSize(segCloud,my_clusters[i]) != 1) {
 //            cout<<"Removed cluster after SIZE check..."<<endl;
             continue;
         }
-        else{
+        else {
             my_VERT_clusters.push_back(my_clusters[i]);
         }
     }
@@ -328,7 +327,7 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
 
     for (int i=0; i < clusters.size(); i++)
     {
-        if (GetHORclusters(segCloud,my_clusters[i]) == 1){
+        if (GetHORclusters(segCloud,my_clusters[i]) == 1) {
             my_HOR_clusters.push_back(my_clusters[i]);
             continue;
         }
@@ -340,12 +339,12 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
     for (int i=0; i < my_HOR_clusters.size(); i++)
     {
         float HighsegHeight = GetMaxOfSeg(segCloud,my_HOR_clusters[i]);
-        if (HighsegHeight >= maxSegHeight){
+        if (HighsegHeight >= maxSegHeight) {
             maxSegHeight = HighsegHeight;
             maxSeg = i;
         }
         float LowsegHeight = GetMinOfSeg(segCloud,my_HOR_clusters[i]);
-        if (LowsegHeight <= minSegHeight){
+        if (LowsegHeight <= minSegHeight) {
             minSegHeight = LowsegHeight;
             minSeg = i;
         }
@@ -360,5 +359,5 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
 
 //    cout<<"-----------------------------------------------"<<endl;
 //    cout<<"Returning Segments..."<<endl;
-    return make_tuple(extent_clusters, segCloud);
+    return make_tuple(my_clusters, segCloud);
 }

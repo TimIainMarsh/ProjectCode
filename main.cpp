@@ -28,7 +28,7 @@ main()
     displayTime();
     cout<<"Start\n"<< endl;
 
-    string filename = "../ptClouds/DeepSpace-CutDown";
+    string filename = "../ptClouds/GTL-CutDown";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
@@ -44,6 +44,8 @@ main()
     PointCloud <PointXYZRGB>::Ptr extentCloud = vectorToCloud(vector_of_segments, segCloud);
     cout<<"Segmentation Complete...\n"<< endl;
     displayTime();
+
+//    Viewer(extentCloud);
 
     vector < PointCloud<PointXYZRGB>::Ptr> Boundries = getBoundriesOfSegments(vector_of_segments, segCloud);
 

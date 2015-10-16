@@ -12,7 +12,7 @@ private:
 public:
     bool fast = false;  //faster Calculation of segments. faster = not as good
 
-    int MinClusterSize = 5000;
+    int MinClusterSize = 100;
     int NumberOfNeighbours = 20;
     float SmoothnessThreshold = (SmoothTresh * M_PI / 180);
     float CurvatureThreshold = 1.0;
