@@ -336,7 +336,7 @@ ExtractCornerPoints(const vector <PointIndices::Ptr> &vector_of_segments, const 
             intersection->values.resize(6);
 
 
-            for (int k=0;k<6;k++){intersection->values[k]=line[k];}
+//            for (int k=0;k<6;k++){intersection->values[k]=line[k];}
 
 
 //            pcl::ModelCoefficients thing;

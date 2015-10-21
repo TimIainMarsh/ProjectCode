@@ -28,7 +28,7 @@ main()
     displayTime();
     cout<<"Start\n"<< endl;
 
-    string filename = "../ptClouds/GTL-CutDown";
+    string filename = "../ptClouds/GTL-Full";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
