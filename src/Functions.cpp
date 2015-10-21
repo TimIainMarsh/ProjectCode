@@ -135,7 +135,7 @@ CreateCornerFile(const vector < PointCloud<PointXYZRGB>::Ptr> &Boundries, string
                 myfile<<"v "<<Boundries[j]->points[i].x<<"  "<<Boundries[j]->points[i].y<<"  "<<Boundries[j]->points[i].z<<"\n";
 //                cout<<Boundries[j]->points[i].x<<"  "<<Boundries[j]->points[i].y<<"  "<<Boundries[j]->points[i].z<<endl;
             }
-        myfile<<"f "<<vertCount + 1<<" "<< vertCount + 2<<" "<< vertCount + 4<<" "<< vertCount + 3<<" "<<vertCount + 1<<"\n";
+        myfile<<"l "<<vertCount + 1<<" "<< vertCount + 2<<" "<< vertCount + 4<<" "<< vertCount + 3<<" "<<vertCount + 1<<"\n";
         myfile<<"\n";
         vertCount += 4;
     }

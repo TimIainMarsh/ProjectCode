@@ -359,5 +359,5 @@ segmentor(const PointCloud<PointXYZRGB>::Ptr& input_cloud, const PointCloud<Norm
 
 //    cout<<"-----------------------------------------------"<<endl;
 //    cout<<"Returning Segments..."<<endl;
-    return make_tuple(my_clusters, segCloud);
+    return make_tuple(extent_clusters, segCloud);
 }
