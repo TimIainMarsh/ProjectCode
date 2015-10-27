@@ -23,6 +23,8 @@ PointCloud <PointNormal>::Ptr XYZRGBtoPointNormal(PointCloud <PointXYZRGB>::Ptr 
 
 //ModelCoefficients::Ptr planeFitting(PointCloud <PointXYZRGB>::Ptr cloud);
 
+void SubSampleCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud);
+
 void saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <PointXYZRGB>::Ptr hull,int i);
 
 PointCloud<PointXYZRGB>::Ptr vectorToCloud(vector <PointIndices::Ptr> indices, PointCloud <PointXYZRGB>::Ptr cloud);

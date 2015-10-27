@@ -171,6 +171,18 @@ normalCalc(PointCloud<PointXYZRGB>::Ptr cloud){
     return normals;
 }
 
+void
+SubSampleCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& cloud){
+
+
+    PointCloud<Normal>::Ptr normals (new PointCloud<Normal>);
+
+    pcl::VoxelGrid<PointXYZRGB> Vox;
+    Vox.setInputCloud (cloud);
+    Vox.setLeafSize (1,1,1);
+    Vox.filter (*cloud);
+}
+
 
 void
 saveTriangles(PointCloud <PointXYZRGB>::Ptr pre_Filtered_cloud,PointCloud <PointXYZRGB>::Ptr hull,int i){

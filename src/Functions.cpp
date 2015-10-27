@@ -97,24 +97,28 @@ FixDuplicatePoints(const vector < PointCloud<PointXYZRGB>::Ptr> &Boundries){
         Eigen::Vector4f centerV;
         compute3DCentroid(*all_corners_Ptr, cluster_indices[i],centerV);
         cout<<centerV[0]<<" "<<centerV[1]<<" "<<centerV[2]<<endl;
-//        PointXYZRGB center;
-//        center.x = centerV[0];
-//        center.y = centerV[1];
-//        center.z = centerV[2];
+        PointXYZRGB center;
+        center.x = centerV[0];
+        center.y = centerV[1];
+        center.z = centerV[2];
 
 
 
 
-//        for(int j = 0; j < all_corners_Ptr->points.size();j++){
-//            if (euclideanDistance(center, all_corners_Ptr->points[j]) > 0.3 ){
-//                cout<<"changed  "<<euclideanDistance(center, all_corners_Ptr->points[j])<<endl;
-//                all_corners_Ptr->points[j].x = center.x;
-//                all_corners_Ptr->points[j].y = center.y;
-//                all_corners_Ptr->points[j].z = center.z;
-//            }
-//        }
+        for(int j = 0; j < all_corners_Ptr->points.size();j++){
+            if (euclideanDistance(center, all_corners_Ptr->points[j]) < 0.3 ){
+                cout<<"changed  "<<euclideanDistance(center, all_corners_Ptr->points[j])<<endl;
+                all_corners_Ptr->points[j].x = center.x;
+                all_corners_Ptr->points[j].y = center.y;
+                all_corners_Ptr->points[j].z = center.z;
+            }
+        }
     }
 
+
+    for(int j = 0; j < all_corners_Ptr->points.size();j++){
+
+        }
 
 }
 
@@ -135,7 +139,7 @@ CreateCornerFile(const vector < PointCloud<PointXYZRGB>::Ptr> &Boundries, string
                 myfile<<"v "<<Boundries[j]->points[i].x<<"  "<<Boundries[j]->points[i].y<<"  "<<Boundries[j]->points[i].z<<"\n";
 //                cout<<Boundries[j]->points[i].x<<"  "<<Boundries[j]->points[i].y<<"  "<<Boundries[j]->points[i].z<<endl;
             }
-        myfile<<"l "<<vertCount + 1<<" "<< vertCount + 2<<" "<< vertCount + 4<<" "<< vertCount + 3<<" "<<vertCount + 1<<"\n";
+        myfile<<"l "<<vertCount + 1<<" "<< vertCount + 2<<" "<< vertCount + 4<<" "<< vertCount + 3<<"\n";
         myfile<<"\n";
         vertCount += 4;
     }
