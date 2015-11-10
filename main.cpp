@@ -28,7 +28,7 @@ main()
     displayTime();
     cout<<"Start\n"<< endl;
 
-    string filename = "../ptClouds/More/GTL-subsampled-0_01";
+    string filename = "../ptClouds/DeepSpace-CutDown";
 
     PointCloud<PointXYZRGB>::Ptr origCloud =  openCloud(filename + ".pcd");
 
